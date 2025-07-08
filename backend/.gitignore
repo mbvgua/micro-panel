@@ -1,0 +1,8 @@
+# the node modules
+node_modules/
+
+# dist folder
+dist/
+
+#environement variables
+.env
