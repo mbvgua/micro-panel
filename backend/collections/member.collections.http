@@ -1,0 +1,29 @@
+###
+# add new members to system
+POST http://localhost:4000/v1/members
+Content-Type: application/json
+
+{
+    "admin_id":"87170795-aa5d-4b4f-bc5a-ce7df6be8b79",
+    "sacco_id":"sacco-002",
+    "first_name":"Member1",
+    "last_name":"sugu",
+    "user_name":"lilies",
+    "user_email":"lily@gmail.com",
+    "phone_number":"0791745978",
+    "password":"@Lance25"
+}
+
+###
+# get all members
+GET http://localhost:4000/v1/members
+
+###
+# activate exixting members in system
+PUT localhost:4000/v1/members/activate/725b9c8e-71e5-420a-b124-54b7301c9eae
+Content-Type: application/json
+
+{
+    "user_id":"725b9c8e-71e5-420a-b124-54b7301c9eae"
+}
+###
