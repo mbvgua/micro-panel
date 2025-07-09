@@ -20,14 +20,5 @@ const sqlConfig:sqlConfigOptions = {
   keepAliveInitialDelay: 0,
 };
 
-const pool = mysql.createPool(sqlConfig)
+export const pool = mysql.createPool(sqlConfig)
 
-async function getDbConnection(){
-    const connection = await pool.getConnection()
-    const [results] = await connection.query("SELECT 1+1;")
-    console.log("-----ayee------")
-    console.log(results)
-}
-
-
-getDbConnection()
