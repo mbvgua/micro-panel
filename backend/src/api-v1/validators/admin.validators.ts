@@ -43,7 +43,7 @@ export const adminRegSchema = Joi.object({
       tlds: { allow: ["com", "net"] },
     })
     .messages({
-      "string.base": "Email msut be a string",
+      "string.base": "Email must be a string",
       "any.required": "Email is required",
       "string.email":
         "Email can only have two domains, e.g example.com whose tlds can either be '.com' or '.net'",

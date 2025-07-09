@@ -62,6 +62,27 @@ BEGIN
     SET user_status="active" WHERE id=user_id;
 END#
 
+-- createMicrofinance
+CREATE PROCEDURE createMicrofinance(
+    IN id VARCHAR(255),
+    IN registration_number VARCHAR(100),
+    IN sacco_name VARCHAR(100),
+    IN sacco_email VARCHAR(100),
+    IN sacco_phone_number VARCHAR(100),
+    IN location VARCHAR(100),
+    IN sacco_status ENUM("active","inactive","pending")
+)
+BEGIN
+    INSERT INTO saccos(id,registration_number,sacco_name,sacco_email,sacco_phone_number,location,sacco_status)
+    VALUES (id,registration_number,sacco_name,sacco_email,sacco_phone_number,location,sacco_status);
+END#
+
+-- getAllMicrofinances
+CREATE PROCEDURE getAllMicrofinances()
+BEGIN
+    SELECT * FROM saccos;
+END#
+
 delimiter ;
 
 
