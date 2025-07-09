@@ -5,7 +5,11 @@ import bcrypt from "bcrypt";
 import { pool } from "../../config/db.config";
 import { UserRoles, Users, UserStatus } from "../models/users.models";
 import { sqlError } from "../models/db.models";
-import { adminRegSchema } from "../validators/admin.validators";
+import {
+  adminRegSchema,
+  emailLoginSchema,
+  usernameLoginSchema,
+} from "../validators/admin.validators";
 
 export async function adminRegistration(request: Request, response: Response) {
   /**
@@ -87,3 +91,159 @@ export async function adminRegistration(request: Request, response: Response) {
   }
 }
 
+export async function adminLogin(request: Request, response: Response) {
+  /*
+   * Login existing admins into the system
+   */
+
+  const { userNameOrEmail, password } = request.body;
+  const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
+
+  try {
+    // if using email
+    if (emailRegex.test(userNameOrEmail)) {
+      const { error } = emailLoginSchema.validate(request.body);
+      if (error) {
+        return response.status(422).json({
+          code: 422,
+          status: "error",
+          message: "Validation error occurred",
+          data: {
+            path: error.details[0].path[0],
+            error: error.details[0].message,
+          },
+          metadata: {},
+        });
+      }
+
+      // if no error in email validation
+      const connection = await pool.getConnection();
+      const [rows] = await connection.query(
+        `SELECT * FROM users
+        WHERE user_email='${userNameOrEmail}'
+        AND user_status="active"
+        AND is_deleted="0";`,
+      );
+      const users = rows as Users[];
+
+      //users exists
+      if (users.length > 0) {
+        // check to see is passwords match
+        const isMatch = await bcrypt.compare(
+          password,
+          users[0].hashed_password,
+        );
+        if (isMatch) {
+          return response.status(200).json({
+            code: 200,
+            status: "success",
+            message: "Succesful login",
+            data: {
+              username: userNameOrEmail,
+            },
+            metadata: {},
+          });
+        }
+        // else passwords do not match
+        return response.status(422).json({
+          code: 422,
+          status: "error",
+          message: "Invalid password. Try again?",
+          data: {
+            email: userNameOrEmail,
+            password: password,
+          },
+          metadata: {},
+        });
+      } else {
+        // no user match found
+        return response.status(404).json({
+          code: 404,
+          status: "error",
+          message: "User not found",
+          data: {
+            email: userNameOrEmail,
+            password: password,
+          },
+          metadata: {},
+        });
+      }
+    } else {
+      // else if not using email
+      const { error } = usernameLoginSchema.validate(request.body);
+      if (error) {
+        return response.status(422).json({
+          code: 422,
+          status: "error",
+          message: "Validation error occurred",
+          data: {
+            path: error.details[0].path[0],
+            error: error.details[0].message,
+          },
+          metadata: {},
+        });
+      }
+
+      // if no error in username validation
+      const connection = await pool.getConnection();
+      const [rows] = await connection.query(
+        `SELECT * FROM users
+        WHERE user_name='${userNameOrEmail}'
+        AND user_status="active"
+        AND is_deleted="0";`,
+      );
+      const users = rows as Users[];
+
+      //users exists
+      if (users.length > 0) {
+        // check to see is passwords match
+        const isMatch = await bcrypt.compare(
+          password,
+          users[0].hashed_password,
+        );
+        if (isMatch) {
+          return response.status(200).json({
+            code: 200,
+            status: "success",
+            message: "Succesful login",
+            data: {
+              username: userNameOrEmail,
+            },
+            metadata: {},
+          });
+        }
+        // else passwords do not match
+        return response.status(422).json({
+          code: 422,
+          status: "error",
+          message: "Invalid password. Try again?",
+          data: {
+            username: userNameOrEmail,
+            password: password,
+          },
+          metadata: {},
+        });
+      } else {
+        // no user match found
+        return response.status(404).json({
+          code: 404,
+          status: "error",
+          message: "User not found",
+          data: {
+            username: userNameOrEmail,
+            password: password,
+          },
+          metadata: {},
+        });
+      }
+    }
+  } catch (error: sqlError | any) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: error,
+      metadata: {},
+    });
+  }
+}

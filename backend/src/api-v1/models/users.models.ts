@@ -17,7 +17,7 @@ export interface Users {
   user_name: string;
   user_email: string;
   phone_number: string;
-  password: string;
+  hashed_password: string;
   user_role: UserRoles;
   user_status: UserStatus;
   created_at?: string;

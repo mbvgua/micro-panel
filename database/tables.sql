@@ -19,6 +19,10 @@ CREATE TABLE saccos(
 -- sacco indexes
 CREATE INDEX sacco_status_index ON saccos(sacco_status);
 
+-- dummy values
+INSERT INTO saccos(id,registration_number,sacco_name,sacco_email,sacco_phone_number,location,sacco_status)
+VALUES ('0000', '000-000', 'Dummy Sacco', 'dummysacco@sacco.com', '0700000001', 'anywhere', 'active');
+
 CREATE TABLE users(
     id VARCHAR(255) PRIMARY KEY,
     sacco_id VARCHAR(255),
