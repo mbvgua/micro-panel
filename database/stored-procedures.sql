@@ -38,17 +38,28 @@ BEGIN
     AND is_deleted=0;
 END#
 
--- getActiveUsers
-CREATE PROCEDURE getActiveUsers()
-BEGIN
-    SELECT * FROM users WHERE user_status="active"
-    AND is_deleted=0;
-END#
-
 -- getAllUsers
 CREATE PROCEDURE getAllUsers()
 BEGIN
     SELECT * FROM users WHERE is_deleted=0;
+END#
+
+-- getInactiveUsers
+CREATE PROCEDURE getInactiveUsersById(
+    IN user_id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM users WHERE user_status="pending"
+    AND id=user_id AND is_deleted=0;
+END#
+
+-- activateUserById
+CREATE PROCEDURE activateUserById(
+    IN user_id VARCHAR(255)
+)
+BEGIN
+    UPDATE users
+    SET user_status="active" WHERE id=user_id;
 END#
 
 delimiter ;

@@ -25,7 +25,7 @@ VALUES ('0000', '000-000', 'Dummy Sacco', 'dummysacco@sacco.com', '0700000001', 
 
 CREATE TABLE users(
     id VARCHAR(255) PRIMARY KEY,
-    sacco_id VARCHAR(255),
+    sacco_id VARCHAR(255) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     user_name VARCHAR(100) UNIQUE,

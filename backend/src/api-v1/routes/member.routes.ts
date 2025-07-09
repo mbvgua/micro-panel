@@ -1,9 +1,10 @@
 import {Router} from "express"
-import { createMember } from "../controllers/member.controllers"
+import { activateMember, createMember, getMembers } from "../controllers/member.controllers"
 
 const memberRouter = Router()
 
 memberRouter.post("/members",createMember)
-//memberRouter.get("/members",createMember)
+memberRouter.get("/members",getMembers)
+memberRouter.put("/members/activate/:id",activateMember)
 
 export default memberRouter

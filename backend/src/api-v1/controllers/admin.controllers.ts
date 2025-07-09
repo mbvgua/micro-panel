@@ -4,7 +4,6 @@ import bcrypt from "bcrypt";
 
 import { pool } from "../../config/db.config";
 import { UserRoles, Users, UserStatus } from "../models/users.models";
-import { sqlError } from "../models/db.models";
 import {
   adminRegSchema,
   emailLoginSchema,
@@ -47,8 +46,8 @@ export async function adminRegistration(request: Request, response: Response) {
       });
     }
 
-    const saltRounds = 9;
-    const hashed_password = await bcrypt.hash(password, saltRounds);
+    const salt_rounds = 9;
+    const hashed_password = await bcrypt.hash(password, salt_rounds);
 
     const connection = await pool.getConnection();
     await connection.query(`CALL addUser(?,?,?,?,?,?,?,?,?,?)`, [
@@ -69,16 +68,16 @@ export async function adminRegistration(request: Request, response: Response) {
     return response.status(201).json({
       code: 201,
       status: "success",
-      message: "User registration success",
+      message: "Admin successfully registered",
       data: {
-        id: id,
-        user_name: user_name,
-        user_email: user_email,
-        user_role: user_role,
+        id,
+        user_name,
+        user_email,
+        user_role,
       },
       metadata: {},
     });
-  } catch (error: sqlError | any) {
+  } catch (error) {
     return response.status(500).json({
       code: 500,
       status: "error",
@@ -92,14 +91,16 @@ export async function adminRegistration(request: Request, response: Response) {
 export async function adminLogin(request: Request, response: Response) {
   /*
    * Login existing admins into the system
+   * went with userNameOrEmail not user_name_or_email as the latter takes
+   * up too much space
    */
 
   const { userNameOrEmail, password } = request.body;
-  const emailRegex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
+  const email_regex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 
   try {
     // if using email
-    if (emailRegex.test(userNameOrEmail)) {
+    if (email_regex.test(userNameOrEmail)) {
       const { error } = emailLoginSchema.validate(request.body);
       if (error) {
         return response.status(422).json({
@@ -125,12 +126,12 @@ export async function adminLogin(request: Request, response: Response) {
       //users exists
       if (users.length > 0) {
         // check to see is passwords match
-        const isMatch = await bcrypt.compare(
+        const is_match = await bcrypt.compare(
           password,
           users[0].hashed_password,
         );
-        console.log(isMatch);
-        if (isMatch) {
+
+        if (is_match) {
           return response.status(200).json({
             code: 200,
             status: "success",
@@ -192,11 +193,11 @@ export async function adminLogin(request: Request, response: Response) {
       //users exists
       if (users.length > 0) {
         // check to see is passwords match
-        const isMatch = await bcrypt.compare(
+        const is_match = await bcrypt.compare(
           password,
           users[0].hashed_password,
         );
-        if (isMatch) {
+        if (is_match) {
           return response.status(200).json({
             code: 200,
             status: "success",
@@ -232,7 +233,7 @@ export async function adminLogin(request: Request, response: Response) {
         });
       }
     }
-  } catch (error: sqlError | any) {
+  } catch (error ) {
     return response.status(500).json({
       code: 500,
       status: "error",

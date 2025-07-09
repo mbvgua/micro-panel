@@ -12,10 +12,3 @@ export interface sqlConfigOptions {
   keepAliveInitialDelay: number;
 }
 
-export interface sqlError {
-  code: string;
-  errno: number;
-  sql: string;
-  sqlState: string;
-  sqlMessage: string;
-}
