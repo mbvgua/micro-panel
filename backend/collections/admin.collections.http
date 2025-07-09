@@ -1,4 +1,6 @@
 ###
+# register new admisn into system
+
 POST http://localhost:4000/v1/auth/register/admin
 Content-Type: application/json
 
@@ -10,4 +12,16 @@ Content-Type: application/json
     "phone_number":"0712345678",
     "password":"@Lance25"
 }
+
+###
+# login existing admin into system
+
+POST http://localhost:4000/v1/auth/login/admin
+Content-Type: application/json
+
+{
+    "userNameOrEmail":"sirlance",
+    "password":"@Lance25"
+}
+
 ###
