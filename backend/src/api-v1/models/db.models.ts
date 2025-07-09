@@ -11,3 +11,11 @@ export interface sqlConfigOptions {
   enableKeepAlive: boolean;
   keepAliveInitialDelay: number;
 }
+
+export interface sqlError {
+  code: string;
+  errno: number;
+  sql: string;
+  sqlState: string;
+  sqlMessage: string;
+}
