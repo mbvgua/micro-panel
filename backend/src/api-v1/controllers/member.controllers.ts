@@ -224,9 +224,3 @@ export async function activateMember(
   }
 }
 
-export async function deleteMember(request: Request, response: Response) {
-  /*
-   * used by admin to delete a members acc.
-   * cannot delete anotheer admins acc. must be admin to perform this
-   */
-}
