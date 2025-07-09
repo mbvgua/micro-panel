@@ -51,20 +51,18 @@ export async function adminRegistration(request: Request, response: Response) {
     const hashed_password = await bcrypt.hash(password, saltRounds);
 
     const connection = await pool.getConnection();
-    await connection.query(
-      `INSERT INTO users(id,sacco_id,first_name,last_name,user_name,user_email,phone_number,hashed_password,user_role,user_status) 
-    VALUES(
-        "${id}",
-        "${sacco_id}",
-        "${first_name}",
-        "${last_name}",
-        "${user_name}",
-        "${user_email}",
-        "${phone_number}",
-        "${hashed_password}",
-        "${user_role}",
-        "${user_status}");`,
-    );
+    await connection.query(`CALL addUser(?,?,?,?,?,?,?,?,?,?)`, [
+      id,
+      sacco_id,
+      first_name,
+      last_name,
+      user_name,
+      user_email,
+      phone_number,
+      hashed_password,
+      user_role,
+      user_status,
+    ]);
     // release connection
     connection.release();
 
@@ -118,13 +116,11 @@ export async function adminLogin(request: Request, response: Response) {
 
       // if no error in email validation
       const connection = await pool.getConnection();
-      const [rows] = await connection.query(
-        `SELECT * FROM users
-        WHERE user_email='${userNameOrEmail}'
-        AND user_status="active"
-        AND is_deleted="0";`,
-      );
-      const users = rows as Users[];
+      const [rows] = await connection.query(`CALL getUserByNameOrEmail(?)`, [
+        userNameOrEmail,
+      ]);
+      const users = rows[0] as Users[]; //runs despite error from LSP
+      connection.release();
 
       //users exists
       if (users.length > 0) {
@@ -133,6 +129,7 @@ export async function adminLogin(request: Request, response: Response) {
           password,
           users[0].hashed_password,
         );
+        console.log(isMatch);
         if (isMatch) {
           return response.status(200).json({
             code: 200,
@@ -186,13 +183,11 @@ export async function adminLogin(request: Request, response: Response) {
 
       // if no error in username validation
       const connection = await pool.getConnection();
-      const [rows] = await connection.query(
-        `SELECT * FROM users
-        WHERE user_name='${userNameOrEmail}'
-        AND user_status="active"
-        AND is_deleted="0";`,
-      );
-      const users = rows as Users[];
+      const [rows] = await connection.query(`CALL getUserByNameOrEmail(?)`, [
+        userNameOrEmail,
+      ]);
+      const users = rows[0] as Users[]; //runs despite error from LSP
+      connection.release();
 
       //users exists
       if (users.length > 0) {
