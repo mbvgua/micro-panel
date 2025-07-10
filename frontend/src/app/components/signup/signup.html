@@ -1,0 +1,118 @@
+<div class="container-fluid px-1 py-1 mx-auto">
+  <div class="row d-flex justify-content-center">
+    <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+
+      <div class="card">
+
+        <h3>Signup for Micro Panel</h3>
+        <p class="blue-text">
+          Just answer a few questions<br />
+          to get you started.
+        </p>
+        <!-- <h5 class="text-center mb-4">Powering Vworld-class companies</h5> -->
+        <form class="form-card" (ngSubmit)="onSubmit()" [formGroup]="signupForm">
+          <!-- 1st row -->
+          <div class="row justify-content-between text-left">
+            <!-- first name -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="first_name" class="form-control-label px-3">
+                First Name <span class="text-danger"> *</span></label>
+              <input formControlName="first_name" type="text" placeholder="Enter first name..." />
+              @if ( signupForm.get("first_name")?.touched || signupForm.get("first_name")?.dirty ) {
+                @if (signupForm.get("first_name")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">First name is required </span>
+              } 
+            }
+            </div>
+
+            <!-- last name -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="last_name" class="form-control-label px-3">
+                Last Name <span class="text-danger"> *</span></label>
+              <input formControlName="last_name" type="text" placeholder="Enter last name..." />
+              @if ( signupForm.get("last_name")?.touched || signupForm.get("last_name")?.dirty ) {
+                 @if (signupForm.get("last_name")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">Last name is required </span>
+              } 
+            }
+            </div>
+          </div>
+
+          <!-- 2nd row -->
+          <div class="row justify-content-between text-left">
+            <!-- username -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="user_name" class="form-control-label px-3">
+                User Name <span class="text-danger"> *</span></label>
+              <input formControlName="user_name" type="text" placeholder="Enter user name..." />
+              @if ( signupForm.get("user_name")?.touched || signupForm.get("user_name")?.dirty ) {
+                @if (signupForm.get("user_name")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">Username is required </span>
+              } 
+            }
+            </div>
+
+            <!-- user email -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="user_email" class="form-control-label px-3">
+                Email <span class="text-danger"> *</span></label>
+              <input formControlName="user_email" type="email" placeholder="Enter email..." />
+              @if ( signupForm.get("user_email")?.touched || signupForm.get("user_email")?.dirty ) {
+                 @if (signupForm.get("user_email")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">Email is required </span>
+                }
+                 @if (signupForm.get("user_email")?.hasError("email")) {
+                  <span class="fst-italic fs-6 text-danger">Input a valid email </span>
+                } 
+              }
+            </div>
+          </div>
+
+          <!-- 3rd row -->
+          <div class="row justify-content-between text-left">
+            <!-- phone number -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="phone_number" class="form-control-label px-3">
+                Phone Number <span class="text-danger"> *</span></label>
+              <br />
+              <input formControlName="phone_number" type="text" placeholder="Enter phone number..." />
+              @if ( signupForm.get("phone_number")?.touched || signupForm.get("phone_number")?.dirty ) {
+                 @if (signupForm.get("phone_number")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">Phone Number is required </span>
+              }
+             }
+            </div>
+
+            <!-- password -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="password" class="form-control-label px-3">
+                Password <span class="text-danger"> *</span></label>
+              <br />
+              <input formControlName="password" type="password" placeholder="Enter password..." />
+              @if ( signupForm.get("password")?.touched || signupForm.get("password")?.dirty ) {
+                 @if (signupForm.get("password")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger">Password is required </span>
+              }
+             }
+            </div>
+          </div>
+
+          <!-- button -->
+          <div class="row justify-content-center mt-4">
+            <!-- <button [disabled]="signupForm.invalid"> Create Account </button> -->
+            <div class="form-group col-sm-6 d-grid gap-2">
+              <button type="submit" class="btn-block btn-primary">
+                Signup
+              </button>
+            </div>
+          </div>
+
+          <!-- login instead section -->
+          <p class="justify-content-center fst-italic">
+            already have an account? <a routerLink="/auth/login/admin" class="fw-bolder"> login </a> instead
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
