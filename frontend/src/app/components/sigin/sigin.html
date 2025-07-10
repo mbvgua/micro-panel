@@ -1,0 +1,69 @@
+<div class="container-fluid px-1 py-1 mx-auto">
+    <div class="row d-flex justify-content-center">
+        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+
+            <div class="card">
+
+                <h3>Sigin to Micro Panel</h3>
+                <p class="blue-text">
+                    Just answer a few questions<br />
+                    to help us remember who you are.
+                </p>
+                <form class="form-card" (ngSubmit)="onSubmit()" [formGroup]="signinForm">
+
+
+                    <!-- 1st row -->
+                    <div class="row justify-content-center text-left">
+                        <!-- userNameOrEmail -->
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label for="userNameOrEmail" class="form-control-label px-3">
+                                Username/Email <span class="text-danger"> *</span></label>
+                            <input formControlName="userNameOrEmail" type="text"
+                                placeholder="Enter username/email..." />
+                            @if ( signinForm.get("userNameOrEmail")?.touched || signinForm.get("userNameOrEmail")?.dirty ) {
+                            @if (signinForm.get("userNameOrEmail")?.hasError("required")) {
+                            <span class="fst-italic fs-6 text-danger">Username/Email is required </span>
+                            }
+                            }
+                        </div>
+
+
+
+                    </div>
+
+                    <!-- 2nd row -->
+                    <div class="row justify-content-center text-left">
+
+                        <!-- password -->
+                        <div class="form-group col-sm-6 flex-column d-flex">
+                            <label for="password" class="form-control-label px-3">
+                                Password <span class="text-danger"> *</span></label>
+                            <input formControlName="password" type="password" placeholder="Enter password..." />
+                            @if ( signinForm.get("password")?.touched || signinForm.get("password")?.dirty ) {
+                             @if (signinForm.get("password")?.hasError("required")) {
+                                <span class="fst-italic fs-6 text-danger">Password is required </span>
+                            } 
+                        }
+                        </div>
+                    </div>
+
+                    <!-- button -->
+                    <div class="row justify-content-center mt-4">
+                        <!-- <button [disabled]="signinForm.invalid"> Create Account </button> -->
+                        <div class="form-group col-sm-6 d-grid gap-2">
+                            <button type="submit" class="btn-block btn-primary">
+                                Signin
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- login instead section -->
+                    <p class="justify-content-center fst-italic">
+                        don't have an account yet? <a routerLink="/auth/register/admin" class="fw-bolder"> register
+                        </a> instead
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
