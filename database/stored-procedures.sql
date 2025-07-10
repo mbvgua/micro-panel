@@ -83,6 +83,36 @@ BEGIN
     SELECT * FROM saccos;
 END#
 
+-- getAllLoans
+CREATE PROCEDURE getAllLoans()
+BEGIN
+    SELECT * FROM loans;
+END#
+
+-- getUserLoansById
+CREATE PROCEDURE getUserLoansById(
+    IN id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM loans WHERE user_id=id;
+END#
+
+-- addLoan
+CREATE PROCEDURE addLoan(
+    IN id VARCHAR(255),
+    IN user_id VARCHAR(255),
+    IN sacco_id VARCHAR(255),
+    IN loan_type ENUM('emergency','development','work','miscallenous'),
+    IN loan_amount DECIMAL(10,2),
+    IN interest_rate DECIMAL(5,2),
+    IN repayment_period ENUM('1','3','6','12'),
+    IN guarantor_details JSON
+)
+BEGIN
+    INSERT INTO loans(id,user_id,sacco_id,loan_type,loan_amount,interest_rate,repayment_period,guarantor_details)
+    VALUES (id,user_id,sacco_id,loan_type,loan_amount,interest_rate,repayment_period,guarantor_details);
+END#
+
 delimiter ;
 
 
