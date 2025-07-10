@@ -173,4 +173,42 @@ export async function getLoans(request: Request, response: Response) {
    * view list of all pending loan applications.
    * use either a view or a join.
    */
+
+  try {
+    const connection = await pool.getConnection();
+    const [rows] = await connection.execute(`CALL getAllLoans();`);
+    connection.release();
+    const loans = rows[0] as Loans[];
+
+    if (loans.length > 0) {
+      const [results] = await connection.execute(`CALL detailedLoans();`);
+      connection.release();
+      const detailed_loans = results[0] as Loans[]; //runs despite error warning
+            console.log(detailed_loans)
+
+      return response.status(200).json({
+        code: 200,
+        status: "success",
+        message: "Successfully retrieved all loans",
+        data: detailed_loans,
+        metadata: {},
+      });
+    }
+    // else if currently no loans in system
+    return response.status(404).json({
+      code: 404,
+      status: "error",
+      message: "No loans found",
+      data: {},
+      metadata: {},
+    });
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: error,
+      meatdata: {},
+    });
+  }
 }

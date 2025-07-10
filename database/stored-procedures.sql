@@ -83,12 +83,6 @@ BEGIN
     SELECT * FROM saccos;
 END#
 
--- getAllLoans
-CREATE PROCEDURE getAllLoans()
-BEGIN
-    SELECT * FROM loans;
-END#
-
 -- getUserLoansById
 CREATE PROCEDURE getUserLoansById(
     IN id VARCHAR(255)
@@ -112,6 +106,19 @@ BEGIN
     INSERT INTO loans(id,user_id,sacco_id,loan_type,loan_amount,interest_rate,repayment_period,guarantor_details)
     VALUES (id,user_id,sacco_id,loan_type,loan_amount,interest_rate,repayment_period,guarantor_details);
 END#
+
+-- getAllLoans
+CREATE PROCEDURE getAllLoans()
+BEGIN
+    SELECT * FROM loans;
+END#
+
+-- get view of detailed loans
+CREATE PROCEDURE detailedLoans()
+BEGIN
+    SELECT * FROM viewLoanApplications;
+END#
+
 
 delimiter ;
 
