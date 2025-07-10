@@ -1,0 +1,24 @@
+###
+# apply member loan
+POST http://localhost:4000/v1/loans
+Content-Type: application/json
+
+{
+    "user_id":"1",
+    "sacco_id":"sacco-001",
+    "loan_type":"work",
+    "loan_amount":10000,
+    "interest_rate":3.2,
+    "repayment_period":3,
+    "guarantor_details":{
+        "id":"1234567",
+        "phone_number":"23445454",
+        "email":"ayee@gmail.com",
+        "relationship":"mother"
+    }
+}
+###
+# get view of current loans
+GET http://localhost:4000/v1/loans
+
+###
