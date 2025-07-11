@@ -34,8 +34,11 @@ More detailed info on project setup can be found within each subdirectory's READ
 
 1. Did not use Laravel as the backend stack: due to time constraints, did not see it feasible to both understand and use laravel for building the backend. As I needed to move fast, I will employ something that I am familiar with.
 2. Each feature will not get its own branch: say `dev/backend` and `dev/frontend`. I was the only one working on the project hence working primarily on the `dev` branch would suffice. Also helps to eliminate possible confusion from the previously stated method.
+3. Integration with the frontend is not yet achieved. Gradually work on all routes.
 
 ## Bonuses
 
 1. Python scripting: build a python script to setup and teardown the db on one command. Recently learnt this and it will be fun to implement this here also.
 2. Plan workflow on Trello: this will help prevent possible confusion you will have your timeline layed out from the get go.
+3. Validation of inputs passed both in the frontend and the backend. Appropriate error messages and response codes also make debugging easier.
+4. Basic testing of the backend module with jest.
