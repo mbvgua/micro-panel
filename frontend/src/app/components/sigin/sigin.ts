@@ -8,6 +8,7 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { Users } from '../../services/users/users';
 import { Observable } from 'rxjs';
+import { Auth } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-sigin',
@@ -16,7 +17,10 @@ import { Observable } from 'rxjs';
   styleUrl: './sigin.scss',
 })
 export class Sigin implements OnInit {
-  constructor(private userService: Users) {}
+  constructor(
+    private userService: Users,
+    private authService:Auth
+  ) {}
 
   obs = new Observable();
   signinForm!: FormGroup;
@@ -28,6 +32,7 @@ export class Sigin implements OnInit {
     console.log(this.signinForm.value);
     this.userService.loginAdmin(this.signinForm.value).subscribe(
       (response) => {
+        this.authService.login()
         //console.log(response.data)
         //console.log(response.data.user_role)
         console.log(response);

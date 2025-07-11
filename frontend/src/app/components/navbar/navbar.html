@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-primary" aria-label="thirteenth navbar">
-  <div class="container-fluid">
+  <div class="container-xxl">
     <button
       class="navbar-toggler"
       type="button"
@@ -13,35 +13,45 @@
     </button>
 
     <div class="collapse navbar-collapse d-lg-flex" id="simple-navbar">
-      <a class="navbar-brand col-lg-3 me-0 link-body-emphasis" href="#">Micro Panel</a>
-      <ul class="navbar-nav col-lg-6 justify-content-lg-center">
-        <li class="nav-item">
-          <a
-            class="nav-link text-secondary-emphasis"
-            routerLink=""
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            >home</a
-          >
-        </li>
- 
-        <li class="nav-item">
-          <a 
-            class="nav-link text-secondary-emphasis"
-            routerLink="pricing"
-            routerLinkActive="active"
-            >pricing</a
-          >
-        </li>
+      <a
+        class="fs-4 fw-semi-bold text-body-emphasis navbar-brand col-lg-3 me-0 link-body-emphasis"
+        href="#"
+        >Micro Panel</a
+      >
+      <ul class="navbar-nav col-lg-6 justify-content-lg-center fs-5">
+        @if (!auth.showStatus()) {
+          <li class="nav-item">
+            <a
+              class="nav-link text-secondary-emphasis text-capitalize"
+              routerLink=""
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              >home</a
+            >
+          </li>
+
+          <li class="nav-item">
+            <a
+              class="nav-link text-secondary-emphasis text-capitalize"
+              routerLink="pricing"
+              routerLinkActive="active"
+              >pricing</a
+            >
+          </li>
+        }
       </ul>
 
       <!--signup/signin button start-->
       <div class="d-lg-flex col-lg-3 justify-content-lg-end">
         <!-- only show when not logged in -->
-        @if (!auth.showStatus()){
-            <button class="btn btn-outline-light" routerLink="/auth/login/admin">
-              signin
-            </button>
+        @if (!auth.showStatus()) {
+          <button
+            type="button"
+            class="btn btn-outline-light btn-lg text-capitalize"
+            routerLink="/auth/login/admin"
+          >
+            signin
+          </button>
         }
       </div>
       <!--signup/signin button end-->

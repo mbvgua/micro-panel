@@ -1,110 +1,141 @@
 <div class="container-fluid px-1 py-1 mx-auto">
-
-    <!-- display message from backend on DOM -->
-    @if (message){
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <div class="toast-container top-0 end-0 p-3">
-
-        <div class="toast show bg-success" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header ">
+  <!-- display message from backend on DOM -->
+  @if (message) {
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div class="toast-container top-0 end-0 p-3">
+        <div
+          class="toast show bg-success"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
             <strong class="me-auto">Success</strong>
             <small class="text-body-secondary">just now</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-            {{message}}
-            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">
+            {{ message }}
+          </div>
         </div>
-
-        </div>
-        </div>
-    }
-        @if (error){
-        <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <div class="toast-container top-0 end-0 p-3">
-
-        <div class="toast show bg-warning" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-header">
+      </div>
+    </div>
+  }
+  @if (error) {
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div class="toast-container top-0 end-0 p-3">
+        <div
+          class="toast show bg-warning"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+        >
+          <div class="toast-header">
             <!-- <img src="..." class="rounded me-2" alt="..."> -->
             <strong class="me-auto">Error</strong>
             <small class="text-body-secondary">just now</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-            <div class="toast-body">
-            {{error}}
-            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="toast-body">
+            {{ error }}
+          </div>
         </div>
-
-        </div>
-        </div>
-    }
-
-
-    <div class="row d-flex justify-content-center">
-        <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
- 
-            <div class="card">
-                
-                <h3>Sigin to Micro Panel</h3>
-                <p class="blue-text">
-                    Just answer a few questions<br />
-                    to help us remember who you are.
-                </p>
-                <form class="form-card" (ngSubmit)="onSubmit()" [formGroup]="signinForm">
-
-
-                    <!-- 1st row -->
-                    <div class="row justify-content-center text-left">
-                        <!-- userNameOrEmail -->
-                        <div class="form-group col-sm-6 flex-column d-flex">
-                            <label for="userNameOrEmail" class="form-control-label px-3">
-                                Username/Email <span class="text-danger"> *</span></label>
-                            <input formControlName="userNameOrEmail" type="text"
-                                placeholder="Enter username/email..." />
-                            @if ( signinForm.get("userNameOrEmail")?.touched || signinForm.get("userNameOrEmail")?.dirty ) {
-                            @if (signinForm.get("userNameOrEmail")?.hasError("required")) {
-                            <span class="fst-italic fs-6 text-danger">Username/Email is required </span>
-                            }
-                            }
-                        </div>
-
-
-
-                    </div>
-
-                    <!-- 2nd row -->
-                    <div class="row justify-content-center text-left">
-
-                        <!-- password -->
-                        <div class="form-group col-sm-6 flex-column d-flex">
-                            <label for="password" class="form-control-label px-3">
-                                Password <span class="text-danger"> *</span></label>
-                            <input formControlName="password" type="password" placeholder="Enter password..." />
-                            @if ( signinForm.get("password")?.touched || signinForm.get("password")?.dirty ) {
-                             @if (signinForm.get("password")?.hasError("required")) {
-                                <span class="fst-italic fs-6 text-danger">Password is required </span>
-                            } 
-                        }
-                        </div>
-                    </div>
-
-                    <!-- button -->
-                    <div class="row justify-content-center mt-4">
-                        <!-- <button [disabled]="signinForm.invalid"> Create Account </button> -->
-                        <div class="form-group col-sm-6 d-grid gap-2">
-                            <button type="submit" class="btn-block btn-primary">
-                                Signin
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- login instead section -->
-                    <p class="justify-content-center fst-italic">
-                        don't have an account yet? <a routerLink="/auth/register/admin" class="fw-bolder"> register
-                        </a> instead
-                    </p>
-                </form>
-            </div>
-        </div>
+      </div>
     </div>
+  }
+
+  <div class="row d-flex justify-content-center">
+    <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+      <div class="card">
+        <h3>Sigin to Micro Panel</h3>
+        <p class="blue-text">
+          Just answer a few questions<br />
+          to help us remember who you are.
+        </p>
+        <form
+          class="form-card"
+          (ngSubmit)="onSubmit()"
+          [formGroup]="signinForm"
+        >
+          <!-- 1st row -->
+          <div class="row justify-content-center text-left">
+            <!-- userNameOrEmail -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="userNameOrEmail" class="form-control-label px-3">
+                Username/Email <span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="userNameOrEmail"
+                type="text"
+                placeholder="Enter username/email..."
+              />
+              @if (
+                signinForm.get("userNameOrEmail")?.touched ||
+                signinForm.get("userNameOrEmail")?.dirty
+              ) {
+                @if (signinForm.get("userNameOrEmail")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger"
+                    >Username/Email is required
+                  </span>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- 2nd row -->
+          <div class="row justify-content-center text-left">
+            <!-- password -->
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="password" class="form-control-label px-3">
+                Password <span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="password"
+                type="password"
+                placeholder="Enter password..."
+              />
+              @if (
+                signinForm.get("password")?.touched ||
+                signinForm.get("password")?.dirty
+              ) {
+                @if (signinForm.get("password")?.hasError("required")) {
+                  <span class="fst-italic fs-6 text-danger"
+                    >Password is required
+                  </span>
+                }
+              }
+            </div>
+          </div>
+
+          <!-- button -->
+          <div class="row justify-content-center mt-4">
+            <div class="col-sm-6 d-grid">
+                <!--[disabled]="signinForm.invalid"-->
+              <button
+                class="btn btn-primary btn-lg text-capitalize"
+              >
+                signin
+              </button>
+            </div>
+          </div>
+        </form>
+        <!-- login instead section -->
+        <p class="justify-content-center fst-italic text-capitalize">
+          don't have an account yet?
+          <a routerLink="/auth/register/admin" class="fw-bolder"> register </a>
+          instead
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
