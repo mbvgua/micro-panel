@@ -46,3 +46,13 @@
 .navbar .form-control {
   padding: .75rem 1rem;
 }
+
+/* modal styling*/
+
+.modal-sheet .modal-dialog {
+  width: 380px;
+  transition: bottom .75s ease-in-out;
+}
+.modal-sheet .modal-footer {
+  padding-bottom: 2rem;
+}
