@@ -1,15 +1,15 @@
-export enum UserRoles {
+enum UserRoles {
   admin = "admin",
   support = "support",
   member = "member",
 }
 
-export enum UserStatus {
+enum UserStatus {
   active = "active",
   pending = "pending",
 }
 
-export interface Users {
+export interface IUsers {
   id: string;
   sacco_id: string;
   first_name: string;

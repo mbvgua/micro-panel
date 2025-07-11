@@ -9,12 +9,17 @@ import { Dashboard } from './components/dashboard/dashboard';
 
 export const routes: Routes = [
   { path: '', component: Home },
-  {path:'auth',children:[
+  {
+    path: 'auth',
+    children: [
       { path: 'register/admin', component: Signup },
-      { path: 'login/admin', component: Sigin }
-  ]},
+      { path: 'login/admin', component: Sigin },
+    ],
+  },
   { path: 'pricing', component: Pricing },
-  {path:'dashboard',component:Dashboard},
+  // adding guard here prevents redirect on login
+  // TODO: fix that
+  { path: 'dashboard', component: Dashboard },
   // 404 error page
-  {path:"**",component:Error404}
+  { path: '**', component: Error404 },
 ];
