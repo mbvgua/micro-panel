@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Users } from '../../services/users/users';
+
 
 import {
   AbstractControl,
@@ -11,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 
+
 @Component({
   selector: 'app-signup',
   imports: [CommonModule, ReactiveFormsModule,RouterModule],
@@ -18,7 +22,14 @@ import {
   styleUrl: './signup.scss',
 })
 export class Signup implements OnInit {
+
+  constructor(private userService:Users){}
+
+  obs = new Observable()
   signupForm!: FormGroup;
+  message!:string
+  error!:string
+  router=inject(Router) //navigation to login
 
   ngOnInit(): void {
     this.signupForm = new FormGroup({
@@ -36,6 +47,21 @@ export class Signup implements OnInit {
 
     onSubmit() {
     console.log(this.signupForm.value);
-    // this.signupForm.reset()
+    this.userService.registerAdmin(this.signupForm.value).subscribe(
+     (response) => {
+        //redirect to login page if succesful
+        console.log(response)
+        setTimeout(()=>{
+          //delay to read message
+          this.message = response.message
+          this.router.navigate(["/auth/login/admin"])
+        },1000)
+      },
+      (error) =>{
+        console.log(error)
+        this.error = error.error.data.error
+      }
+    )
+    this.signupForm.reset()
   }
 }
