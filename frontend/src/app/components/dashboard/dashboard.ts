@@ -2,7 +2,7 @@ import { Component, EventEmitter, inject, OnInit } from '@angular/core';
 import { Users } from '../../services/users/users';
 import { Microfinances } from '../../services/microfinances/microfinances';
 import { Loans } from '../../services/loans/loans';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IUsers } from '../../models/users.models';
 import { ILoans } from '../../models/loans.models';
@@ -10,10 +10,11 @@ import {
   IMicrofinance,
   IMicrofinances,
 } from '../../models/microfinance.models';
+import { Auth } from '../../services/auth/auth';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.scss',
 })
@@ -22,6 +23,7 @@ export class Dashboard implements OnInit {
     private userService: Users,
     private microfinanceService: Microfinances,
     private loansService: Loans,
+    public auth:Auth
   ) {}
 
   obs = new Observable();

@@ -34,8 +34,8 @@ export class Signup implements OnInit {
       (response) => {
         //redirect to login page if succesful
         console.log(response);
-        //delay to read message
-        this.message = response.message;
+          //delay to read message
+          this.message = response.message;
         setTimeout(() => {
           this.router.navigate(['/auth/login/admin']);
         }, 1000);
