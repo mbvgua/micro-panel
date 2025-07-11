@@ -33,6 +33,7 @@ export async function createMicrofinance(request: Request, response: Response) {
           path: error.details[0].path[0],
           error: error.details[0].message,
         },
+        metadata: {},
       });
     }
     //if no validation error

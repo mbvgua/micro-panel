@@ -1,0 +1,39 @@
+enum UserRoles {
+  admin = "admin",
+  support = "support",
+  member = "member",
+}
+
+enum UserStatus {
+  active = "active",
+  pending = "pending",
+}
+
+export interface IUsers {
+  id: string;
+  sacco_id: string;
+  first_name: string;
+  last_name: string;
+  user_name: string;
+  user_email: string;
+  phone_number: string;
+  hashed_password: string;
+  user_role: UserRoles;
+  user_status: UserStatus;
+  created_at?: string;
+  updated_at?: string;
+  is_deleted?: string;
+}
+
+export interface UserResponse{
+  code:string,
+  status:string,
+  message:string,
+  data:{
+    id:string,
+    user_name?:string,
+    user_email?:string,
+    user_role:string,
+  },
+  metadata:{}
+}

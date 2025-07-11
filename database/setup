@@ -1,0 +1,126 @@
+#!/usr/bin/python
+
+import sys
+import subprocess
+
+
+build_db_files = [
+    "tables.sql",
+    "stored-procedures.sql",
+    "views.sql",
+]
+complete_db_file = "db.sql"
+drop_db_file = "drop-db.sql"
+
+
+def remove_file(target_file):
+    print("*=" * 10)
+    print("")
+    print(f"Found the {target_file}. Removing it!")
+    rm_file = subprocess.run(
+        [f"rm {target_file}"],
+        shell=True,
+        capture_output=True,
+    )
+    if rm_file.returncode == 0:
+        print("")
+        print(f"Successfully removed the {target_file} file")
+    elif rm_file.returncode != 0:
+        print("")
+        return rm_file.stderr
+
+
+def build_db():
+    print("Buiding the complete db file:")
+    for file in build_db_files:
+        subprocess.run([f"cat {file} >> {complete_db_file}"], shell=True)
+
+    db_process = subprocess.run(
+        [f"mysql -uroot -p <{complete_db_file}> output.tab"],
+        shell=True,
+        capture_output=True,
+    )
+
+    if db_process.returncode == 0:
+        print(" ")
+        print("Succesfully setup the database. Happy hacking!")
+    elif db_process.returncode != 0:
+        print(" ")
+        print("An error occurred: ", db_process.stderr)
+        sys.exit()
+
+
+# got this from the docs. understood it from python morsels
+def main():
+    print("*=" * 17)
+    try:
+        operation = int(
+            input(
+                """
+        What would you like to do:
+            1.Setup the database.
+            2.Teardown the database.
+
+        To proceed, select one option(1 or 2): """
+            )
+        )
+
+        # is user decides to setup the db
+        if operation == 1:
+            print("")
+            print("You selected setting up the database...")
+            target_files = subprocess.run(["ls"], capture_output=True, text=True)
+            files = target_files.stdout.splitlines()
+            print("")
+            print(f"Current files in this directory are: {files}")
+
+            confirm = "Y"
+            while confirm != "N":
+                current_files = set(build_db_files) & set(files)
+                if current_files:
+                    # if the "db.sql" was already created, remove it
+                    if complete_db_file in files:
+                        remove_file(complete_db_file)
+                        build_db()
+                        break
+                    else:
+                        build_db()
+                        break
+
+        # user chose to drop the db
+        elif operation == 2:
+            print(" ")
+            user_choice = input(
+                "Are you sure you want to delete the entire database?(y/N)"
+            )
+            if user_choice.upper() == "Y":
+                print("Deleting the database. I hope you have backups! ;)")
+                db_process = subprocess.run(
+                    [f"mysql -uroot -p < {drop_db_file}"],
+                    shell=True,
+                    capture_output=True,
+                )
+                if db_process.returncode == 0:
+                    print("")
+                    print("Finished deleting the database!")
+                elif db_process.returncode != 0:
+                    print("")
+                    print(f"An error occurred while dropping the database. Try again?")
+                    sys.stderr.write(str(db_process.stderr))
+                    sys.exit(db_process.returncode)
+                else:
+                    print("")
+                    print("An error occurred")
+            else:
+                print("")
+                print("Database purge avoided. Close call! :)")
+        else:
+            print("")
+            print("Invalid choice. Input must be either 1 or 2")
+    except ValueError as e:
+        # choice not either 1 or 2
+        print("")
+        print("Invalid choice. Input must be a valid number.")
+
+
+main()

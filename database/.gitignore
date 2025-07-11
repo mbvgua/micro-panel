@@ -1,0 +1,8 @@
+# ignore the complete db setup
+db.sql
+
+# ignore output file
+output.tab
+
+# ignore env variables
+.env

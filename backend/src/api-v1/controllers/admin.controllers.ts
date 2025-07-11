@@ -137,7 +137,9 @@ export async function adminLogin(request: Request, response: Response) {
             status: "success",
             message: "Succesful login",
             data: {
-              username: userNameOrEmail,
+              id: users[0].id,
+              user_email: userNameOrEmail,
+              user_role: users[0].user_role,
             },
             metadata: {},
           });
@@ -203,7 +205,9 @@ export async function adminLogin(request: Request, response: Response) {
             status: "success",
             message: "Succesful login",
             data: {
-              username: userNameOrEmail,
+              id: users[0].id,
+              user_name: userNameOrEmail,
+              user_role: users[0].user_role,
             },
             metadata: {},
           });
@@ -233,7 +237,7 @@ export async function adminLogin(request: Request, response: Response) {
         });
       }
     }
-  } catch (error ) {
+  } catch (error) {
     return response.status(500).json({
       code: 500,
       status: "error",

@@ -10,9 +10,9 @@ AS
 
 CREATE view viewLoanApplications
 AS
-    SELECT users.user_name,users.user_email,getSaccoLoans.sacco_name,getSaccoLoans.loan_type,getSaccoLoans.loan_amount,getSaccoLoans.repayment_period,getSaccoLoans.loan_status FROM getSaccoLoans
+    SELECT users.user_name,users.user_email,viewSaccoLoans.sacco_name,viewSaccoLoans.loan_type,viewSaccoLoans.loan_amount,viewSaccoLoans.repayment_period,viewSaccoLoans.loan_status FROM viewSaccoLoans
     INNER JOIN users
-    ON getSaccoLoans.user_id = users.id;
+    ON viewSaccoLoans.user_id = users.id;
 #
 
 delimiter ;
