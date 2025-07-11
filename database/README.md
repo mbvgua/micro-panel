@@ -74,11 +74,31 @@ This tracks all loans handed out or paid back within the system. It contains:
 
 These help in performing repetitive queries with ease. Also greatly help to achieve separation of concerns in the backend, which results to cleaner code. The following are all stored procedures contained in the system:
 
-- addMember() => adds new memebers to the system
-- getMembers() => gets all members within the app
+- addUser() => adds new memebers to the system
+- getUserById() => gets a user from db using their user id
+- getUserByNameOrEmail() => gets a user either using their user_name or user_email
+- getAllUsers() => gets all users from the db
+- getInactiveUsers() => gets all users whose `user_status` is still set to pending
+- activateUserById() => change `user_status` from pending to active using their `id`
+- createMicrofinance() => add new microfinance into the system
+- getAllMicrofinances() => get list of all microfinances in the system
+- getUserLoansById() => takes a `user_id` as input and returns all loans with a matching `user_id` column
+- addLoan() => adds a new loan into the system
+- getAllLoans() => list all loans currenlt in system
+- detailedLoans() => get human readable data of the current loan application in the system
 
 ## Views
+
+Proxy tables that will make get operations from the front end. Currenly only 2 in the database:
+
+- viewSaccoLoans => built to join the loans and saccos data, to allow merging with another table for efficient data retirval. Gets all loans from the various saccos.
+- viewLoanApplications => merges the users table and viewSaccoLoans view allowing one to see the username and id on each loan handed out. This is the main view to be used in the loans module.
+
 ## Triggers
+
+> [ !NOTE ]
+> To build an `ON UPDATE` trigger on the loans column. Where when a loans status changes from `pending` to `active`, the `disbursement_date` will automatically update to the `CURRENT TIMESTAMP`
+
 ## Setup
 
 To run the setup/teardown script, you need to make it an executable first, then run it. This is by:

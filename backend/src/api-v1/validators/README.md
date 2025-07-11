@@ -1,4 +1,4 @@
-i have admin and memeber validators because of 2 reasons:
+I have admin and memeber validators because of 2 reasons:
 
 Admin do not have:
 -> sacco_id

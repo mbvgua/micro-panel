@@ -1,4 +1,5 @@
 import express, { json } from "express";
+import cors from "cors";
 
 import adminRouter from "./api-v1/routes/admin.routes";
 import memberRouter from "./api-v1/routes/member.routes";
@@ -7,8 +8,8 @@ import loanRouter from "./api-v1/routes/loans.routes";
 
 const app = express();
 
-// add body to responses
-app.use(json());
+app.use(cors());
+app.use(json()); // add body to responses
 
 // middleware
 app.use("/v1/auth", adminRouter);

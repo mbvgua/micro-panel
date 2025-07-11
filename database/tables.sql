@@ -44,6 +44,11 @@ CREATE TABLE users(
 CREATE INDEX user_role_index ON users(user_role);
 CREATE INDEX user_status_index ON users(user_status);
 
+-- dummy values
+INSERT INTO users(id,sacco_id,first_name,last_name,user_name,user_email,phone_number,hashed_password,user_role,user_status)
+VALUES ('09d05331-7977-423f-9dcf-905c46084aa9','0000','place','holder','admin','admin@gmail.com','0700000000','61d805ee-42cf-4c1d-9ffd-baa70b7d5fd2','admin','active');
+
+
 CREATE TABLE loans(
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255),

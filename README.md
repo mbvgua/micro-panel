@@ -26,7 +26,7 @@ More detailed info on project setup can be found within each subdirectory's READ
     $ cd micro-panel
 ```
 
-> [ !INFO ]
+>  [!IMPORTANT]
 > Before proceeding on project setup, ensure that you have the individual tools installed on your system. This would include: `@angular/cli` for the frontend, `mysql` database for the db, and a node package manager of your choice, I have used `pnpm` so that might be a good place to start.
 > The backend is also built in `typescript` and compiled to `javascript` so ensure you have it installed to prevent any possible errors. Some database scripting with `python` will be added, hence it would be nice to also have it installed on your system.
 
