@@ -21,10 +21,31 @@ Typescript also needs to be installed on your system. One can also check for thi
 ```
 
 To manually test the backend routes, you can utilize the collections folder, and ensure you have a rest client installed on your machine. This could be either postman, bruno, rest-client extension(on VsCode) or Kulala.nvim (on Neovim)
+To automatically conduct some simple tests, run `pnpm test` and you get and overview of tests that passed and failed respectively. Though currently they are no failing tests.
 
 ## Setup
 
-To get the server up and running, simply start it with npm:
+To get the server up and running, simply begin by installing the desired packages, then and only then can you start the server:
 ```bash
+    $ pnpm install
     $ pnpm start
+    # or if using npm
+    $ npm install
+    $ npm start
 ```
+
+
+> [!NOTE]
+> TODO: Standardize the requests being returned in most of the endpoints. Currently their no stardization makes it virtually impossible to build and keep track of the interfaces in the frontend as each interface has its own special format. Destructuring also becomes difficult. Thinking of going with the simple format:
+>   ```typescript
+>     code: number,
+>     status: string,
+>     message: string,
+>     data: {
+>         users: {},    //have standard items to be returned in each.
+>         microfinance: {},
+>         loans: {}
+>     },
+>     metadata: {}
+> ```
+> Will research and update accordingly.

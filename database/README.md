@@ -96,7 +96,7 @@ Proxy tables that will make get operations from the front end. Currenly only 2 i
 
 ## Triggers
 
-> [ !NOTE ]
+> [!NOTE]
 > To build an `ON UPDATE` trigger on the loans column. Where when a loans status changes from `pending` to `active`, the `disbursement_date` will automatically update to the `CURRENT TIMESTAMP`
 
 ## Setup
@@ -107,7 +107,7 @@ To run the setup/teardown script, you need to make it an executable first, then 
     $ ./setup
 ```
 
-> [ !WARNING ]
+> [!WARNING]
 > To setup the database using the `setup` script contained, you will need to have `python3.10` or higher install on your machine. Scripting was primarily done on `python3.13` and might fail in older versions.
 > You also need to have `mysql-cli` installed. Most people might confuse this with the `MySql Work Bench`, but they are not the same, as the latter cannot be run from the terminal. Installing the former ensures an easier workflow.
 > The `shebang` on the python script is primarily built to run on linux(and *nix) oprerating systems by extension. If you are running this code on a different operating system, say Mac or Windows, you need to figure out the path for linux on your system, then replace the shebang on the script accordingly. A good place to start might be running `which python` on your terminal.
