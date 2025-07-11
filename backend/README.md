@@ -28,3 +28,19 @@ To get the server up and running, simply start it with npm:
 ```bash
     $ pnpm start
 ```
+
+
+> [!NOTE]
+> TODO: Standardize the requests being returned in most of the endpoints. Currently their no stardization makes it virtually impossible to build and keep track of the interfaces in the frontend as each interface has its own special format. Destructuring also becomes difficult. Thinking of going with the simple format:
+>   ```typescript
+>     code: number,
+>     status: string,
+>     message: string,
+>     data: {
+>         users: {},    //have standard items to be returned in each.
+>         microfinance: {},
+>         loans: {}
+>     },
+>     metadata: {}
+> ```
+> Will research and update accordingly.
