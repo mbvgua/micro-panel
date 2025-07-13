@@ -1,18 +1,18 @@
 
 delimiter #
 
-CREATE VIEW viewSaccoLoans
+CREATE VIEW microfinances_loans_view
 AS
-    SELECT saccos.id,saccos.sacco_name,saccos.sacco_email,loans.user_id,loans.loan_type,loans.loan_amount,loans.repayment_period,loans.loan_status,loans.guarantor_details FROM loans
-    INNER JOIN saccos
-    ON loans.sacco_id = saccos.id;
+    SELECT microfinances.id,microfinances.name,microfinances.email,loans.user_id,loans.type,loans.amount,loans.repayment_period,loans.status,loans.guarantor_details FROM loans
+    INNER JOIN microfinances
+    ON loans.microfinance_id = microfinances.id;
 #
 
-CREATE view viewLoanApplications
+CREATE view detailed_loans_view
 AS
-    SELECT users.user_name,users.user_email,viewSaccoLoans.sacco_name,viewSaccoLoans.loan_type,viewSaccoLoans.loan_amount,viewSaccoLoans.repayment_period,viewSaccoLoans.loan_status FROM viewSaccoLoans
+    SELECT users.username,users.email,microfinances_loans_view.name,microfinances_loans_view.type,microfinances_loans_view.amount,microfinances_loans_view.repayment_period,microfinances_loans_view.status FROM microfinances_loans_view
     INNER JOIN users
-    ON viewSaccoLoans.user_id = users.id;
+    ON microfinances_loans_view.id = users.id;
 #
 
 delimiter ;

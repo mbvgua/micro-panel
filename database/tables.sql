@@ -4,69 +4,72 @@ CREATE DATABASE micro_panel;
 -- use the db
 USE micro_panel;
 
-CREATE TABLE saccos(
+CREATE TABLE microfinances(
     id VARCHAR(255) PRIMARY KEY,
-    registration_number VARCHAR(255) UNIQUE,
-    sacco_name VARCHAR(100) UNIQUE,
-    sacco_email VARCHAR(100) UNIQUE,
-    sacco_phone_number VARCHAR(100) NOT NULL,
+    reg_number VARCHAR(255) UNIQUE,
+    name VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    phone_number VARCHAR(100) NOT NULL,
     location VARCHAR(100) NOT NULL,
     created_at DATE DEFAULT(CURRENT_DATE),
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    sacco_status ENUM('active','inactive','pending')
+    status ENUM('active','inactive','pending'),
+    is_deleted BOOLEAN DEFAULT 0
 );
 
 -- sacco indexes
-CREATE INDEX sacco_status_index ON saccos(sacco_status);
+CREATE INDEX microfinance_status_index ON microfinances(status);
 
 -- dummy values
-INSERT INTO saccos(id,registration_number,sacco_name,sacco_email,sacco_phone_number,location,sacco_status)
+INSERT INTO microfinances(id,reg_number,name,email,phone_number,location,status)
 VALUES ('0000', '000-000', 'Dummy Sacco', 'dummysacco@sacco.com', '0700000001', 'anywhere', 'active');
 
 CREATE TABLE users(
     id VARCHAR(255) PRIMARY KEY,
-    sacco_id VARCHAR(255) NOT NULL,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    user_name VARCHAR(100) UNIQUE,
-    user_email VARCHAR(100) UNIQUE,
+    microfinance_id VARCHAR(255) NOT NULL,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    username VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE,
     phone_number VARCHAR(100) UNIQUE,
     hashed_password VARCHAR(255) NOT NULL,
-    user_role ENUM('admin','member','support') NOT NULL,
-    user_status ENUM('active','pending') DEFAULT 'pending',
+    role ENUM('admin','member','support') NOT NULL,
+    status ENUM('active','pending') DEFAULT 'pending',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     is_deleted BOOLEAN DEFAULT 0,
-    FOREIGN KEY (sacco_id) REFERENCES saccos(id)
+    FOREIGN KEY (microfinance_id) REFERENCES microfinances(id)
 );
 
 -- indexes
-CREATE INDEX user_role_index ON users(user_role);
-CREATE INDEX user_status_index ON users(user_status);
+CREATE INDEX user_role_index ON users(role);
+CREATE INDEX user_status_index ON users(status);
 
 -- dummy values
-INSERT INTO users(id,sacco_id,first_name,last_name,user_name,user_email,phone_number,hashed_password,user_role,user_status)
+INSERT INTO users(id,microfinance_id,firstname,lastname,username,email,phone_number,hashed_password,role,status)
 VALUES ('09d05331-7977-423f-9dcf-905c46084aa9','0000','place','holder','admin','admin@gmail.com','0700000000','61d805ee-42cf-4c1d-9ffd-baa70b7d5fd2','admin','active');
 
 
 CREATE TABLE loans(
     id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255),
-    sacco_id VARCHAR(255),
-    loan_type ENUM('emergency','development','work','miscallenous') NOT NULL,
-    loan_amount DECIMAL(10,2) NOT NULL,
+    microfinance_id VARCHAR(255),
+    type ENUM('emergency','development','work','miscallenous') NOT NULL,
+    amount DECIMAL(10,2) NOT NULL,
     interest_rate DECIMAL(5,2) NOT NULL,
     repayment_period ENUM('1','3','6','12') NOT NULL,
-    loan_status ENUM('pending','approved','rejected') DEFAULT 'pending' NOT NULL,
+    status ENUM('pending','approved','rejected') DEFAULT 'pending' NOT NULL,
     disbursment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
-    guarantor_details JSON,
+    guarantor_details JSON NOT NULL,
+    is_cleared BOOLEAN DEFAULT 0,
+    is_deleted BOOLEAN DEFAULT 0,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (sacco_id) REFERENCES saccos(id)
+    FOREIGN KEY (microfinance_id) REFERENCES microfinances(id)
 );
 
 -- indexes
-CREATE INDEX loan_type_index ON loans(loan_type);
-CREATE INDEX loan_amount_index ON loans(loan_amount);
-CREATE INDEX repayment_period_index ON loans(repayment_period);
+CREATE INDEX loan_type_index ON loans(type);
+CREATE INDEX loan_amount_index ON loans(amount);
+CREATE INDEX loan_repayment_period_index ON loans(repayment_period);
 
 
