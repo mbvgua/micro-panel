@@ -78,7 +78,7 @@ export async function getMicrofinances(request: Request, response: Response) {
    */
   try {
     const connection = await pool.getConnection();
-    const [rows] = await connection.execute(`CALL getAllMicrofinances();`);
+    const [rows]:any = await connection.execute(`CALL getAllMicrofinances();`);
     const microfinances = rows[0] as Microfinances[]; //runs despite LSP
     connection.release();
 

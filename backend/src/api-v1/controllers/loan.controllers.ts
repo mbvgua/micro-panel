@@ -39,19 +39,19 @@ export async function applyLoan(request: Request, response: Response) {
     }
     //if no validation error
     const connection = await pool.getConnection();
-    const [rows] = await connection.execute(`CALL getUserById(?);`, [user_id]);
-    const user = rows[0] as Users[]; //runs despite LSP error
+    const [rows]:any = await connection.execute(`CALL getUserById(?);`, [user_id]);
+    const user = rows[0] as Users[];
     connection.release();
 
     if (user.length > 0) {
       //ensure user status is active
       if (user[0].user_status == "active") {
         // ensure no pending loans
-        const [results] = await connection.execute(
+        const [results]:any = await connection.execute(
           `CALL getUserLoansById(?);`,
           [user_id],
         );
-        const loans = results[0] as Loans[]; //runs despite LSP error
+        const loans = results[0] as Loans[];
         connection.release();
 
         //check if user has pending loans
@@ -73,7 +73,7 @@ export async function applyLoan(request: Request, response: Response) {
               });
             } else {
               // else if none is pending
-              const [rows] = await connection.execute(
+              const [rows]:any = await connection.execute(
                 `CALL addLoan(?,?,?,?,?,?,?,?);`,
                 [
                   id,
@@ -86,7 +86,7 @@ export async function applyLoan(request: Request, response: Response) {
                   guarantor_details,
                 ],
               );
-              const user_loan = rows[0] as Loans[]; // runs despite LSP error
+              const user_loan = rows[0] as Loans[];
               connection.release();
 
               return response.status(201).json({
@@ -106,7 +106,7 @@ export async function applyLoan(request: Request, response: Response) {
         }
 
         //else issue loan
-        const [rows] = await connection.execute(
+        const [rows]:any = await connection.execute(
           `CALL addLoan(?,?,?,?,?,?,?,?);`,
           [
             id,
@@ -119,7 +119,7 @@ export async function applyLoan(request: Request, response: Response) {
             guarantor_details,
           ],
         );
-        const user_loan = rows[0] as Loans[]; // runs despite LSP error
+        const user_loan = rows[0] as Loans[];
         connection.release();
 
         return response.status(201).json({
@@ -176,14 +176,14 @@ export async function getLoans(request: Request, response: Response) {
 
   try {
     const connection = await pool.getConnection();
-    const [rows] = await connection.execute(`CALL getAllLoans();`);
+    const [rows]:any = await connection.execute(`CALL getAllLoans();`);
     connection.release();
     const loans = rows[0] as Loans[];
 
     if (loans.length > 0) {
-      const [results] = await connection.execute(`CALL detailedLoans();`);
+      const [results]:any = await connection.execute(`CALL detailedLoans();`);
       connection.release();
-      const detailed_loans = results[0] as Loans[]; //runs despite error warning
+      const detailed_loans = results[0] as Loans[];
             console.log(detailed_loans)
 
       return response.status(200).json({

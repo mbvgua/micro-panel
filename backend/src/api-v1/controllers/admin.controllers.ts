@@ -117,10 +117,12 @@ export async function adminLogin(request: Request, response: Response) {
 
       // if no error in email validation
       const connection = await pool.getConnection();
-      const [rows] = await connection.query(`CALL getUserByNameOrEmail(?)`, [
-        userNameOrEmail,
-      ]);
-      const users = rows[0] as Users[]; //runs despite error from LSP
+      //HACK: prevents type support error
+      const [rows]: any = await connection.query(
+        `CALL getUserByNameOrEmail(?)`,
+        [userNameOrEmail],
+      );
+      const users = rows[0] as Users[];
       connection.release();
 
       //users exists
@@ -186,10 +188,12 @@ export async function adminLogin(request: Request, response: Response) {
 
       // if no error in username validation
       const connection = await pool.getConnection();
-      const [rows] = await connection.query(`CALL getUserByNameOrEmail(?)`, [
-        userNameOrEmail,
-      ]);
-      const users = rows[0] as Users[]; //runs despite error from LSP
+      //HACK: any helps prevent type support error
+      const [rows]: any = await connection.query(
+        `CALL getUserByNameOrEmail(?)`,
+        [userNameOrEmail],
+      );
+      const users = rows[0] as Users[];
       connection.release();
 
       //users exists
