@@ -12,22 +12,22 @@ drop_db_file = "drop-db.sql"
 def remove_file(target_file):
     print("*=" * 10)
     print("")
-    print(f"Found the {target_file}. Removing it!")
+    print(f"Found the {target_file} file. Removing it first...")
     rm_file = subprocess.run(
         [f"rm {target_file}"],
         shell=True,
         capture_output=True,
     )
     if rm_file.returncode == 0:
+        print(f"Successfully removed the {target_file} file!")
         print("")
-        print(f"Successfully removed the {target_file} file")
     elif rm_file.returncode != 0:
         print("")
         return rm_file.stderr
 
 
 def build_db():
-    print("Buiding the complete db file:")
+    print("Now building the 'micro_panel' database:")
     for file in build_db_files:
         subprocess.run([f"cat {file} >> {complete_db_file}"], shell=True)
 
