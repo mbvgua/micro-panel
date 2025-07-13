@@ -43,8 +43,8 @@ export async function createMember(request: Request, response: Response) {
 
     // if no validation errors
     const connection = await pool.getConnection();
-    const [rows] = await connection.query(`CALL getUserById(?)`, [admin_id]);
-    const admin_user = rows[0] as Users[]; //runs despite LSP error
+    const [rows]:any = await connection.query(`CALL getUserById(?)`, [admin_id]);
+    const admin_user = rows[0] as Users[];
 
     if (admin_user[0].user_role == "admin") {
       // hash the user password
@@ -113,7 +113,7 @@ export async function getMembers(request: Request, response: Response) {
    */
   try {
     const connection = await pool.getConnection();
-    const [rows] = await connection.execute(`CALL getAllUsers();`);
+    const [rows]:any = await connection.execute(`CALL getAllUsers();`);
     const users = rows[0] as Users[];
     connection.release();
 
@@ -156,12 +156,12 @@ export async function activateMember(
   const { user_id } = request.body;
   try {
     const connection = await pool.getConnection();
-    const [rows] = await connection.execute(`CALL getUserById(?);`, [admin_id]);
+    const [rows]:any = await connection.execute(`CALL getUserById(?);`, [admin_id]);
     const admin_user = rows[0] as Users[];
     connection.release();
 
     if (admin_user[0].user_role == "admin") {
-      const [results] = await connection.execute(`CALL getInactiveUsersById(?);`, [
+      const [results]:any = await connection.execute(`CALL getInactiveUsersById(?);`, [
         user_id,
       ]);
       const user_to_activate = results[0] as Users[];
@@ -169,7 +169,7 @@ export async function activateMember(
 
       // if user_to_activate exists
       if (user_to_activate.length > 0) {
-        const [results] = await connection.execute(
+        await connection.execute(
           `CALL activateUserById(?);`,
           [user_id],
         );

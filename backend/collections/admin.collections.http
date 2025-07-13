@@ -20,7 +20,7 @@ POST http://localhost:4000/v1/auth/login/admin
 Content-Type: application/json
 
 {
-    "userNameOrEmail":"sirlance",
+    "userNameOrEmail":"arthure",
     "password":"@Lance25"
 }
 
