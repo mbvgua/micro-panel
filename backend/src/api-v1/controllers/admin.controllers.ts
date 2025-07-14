@@ -13,23 +13,13 @@ import {
 export async function adminRegistration(request: Request, response: Response) {
   /**
    *  Registers admins into the system
-   *  Has 3 gotchas:
-   *   -> sacco_id: 0000
-   *   -> user_role: "admin"
-   *   -> status: "active"
    */
-  const {
-    first_name,
-    last_name,
-    user_name,
-    user_email,
-    phone_number,
-    password,
-  } = request.body;
+  const { firstname, lastname, username, email, phone_number, password } =
+    request.body;
   const id = uid();
-  const sacco_id = "0000";
-  const user_role = UserRoles.admin;
-  const user_status = UserStatus.active;
+  const microfinance_id = "0000";
+  const role = UserRoles.admin;
+  const status = UserStatus.active;
 
   try {
     const { error } = adminRegSchema.validate(request.body);
@@ -42,7 +32,7 @@ export async function adminRegistration(request: Request, response: Response) {
           path: error.details[0].path[0],
           error: error.details[0].message,
         },
-        metadata: {},
+        metadata: null,
       });
     }
 
@@ -52,15 +42,15 @@ export async function adminRegistration(request: Request, response: Response) {
     const connection = await pool.getConnection();
     await connection.query(`CALL addUser(?,?,?,?,?,?,?,?,?,?)`, [
       id,
-      sacco_id,
-      first_name,
-      last_name,
-      user_name,
-      user_email,
+      microfinance_id,
+      firstname,
+      lastname,
+      username,
+      email,
       phone_number,
       hashed_password,
-      user_role,
-      user_status,
+      role,
+      status,
     ]);
     // release connection
     connection.release();
@@ -70,12 +60,16 @@ export async function adminRegistration(request: Request, response: Response) {
       status: "success",
       message: "Admin successfully registered",
       data: {
-        id,
-        user_name,
-        user_email,
-        user_role,
+        users: {
+          id,
+          microfinance_id,
+          username,
+          email,
+          role,
+          status,
+        },
       },
-      metadata: {},
+      metadata: null,
     });
   } catch (error) {
     return response.status(500).json({
@@ -83,7 +77,7 @@ export async function adminRegistration(request: Request, response: Response) {
       status: "error",
       message: "Server error",
       data: error,
-      metadata: {},
+      metadata: null,
     });
   }
 }
@@ -95,12 +89,12 @@ export async function adminLogin(request: Request, response: Response) {
    * up too much space
    */
 
-  const { userNameOrEmail, password } = request.body;
+  const { username_or_email, password } = request.body;
   const email_regex = /^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$/;
 
   try {
     // if using email
-    if (email_regex.test(userNameOrEmail)) {
+    if (email_regex.test(username_or_email)) {
       const { error } = emailLoginSchema.validate(request.body);
       if (error) {
         return response.status(422).json({
@@ -111,7 +105,7 @@ export async function adminLogin(request: Request, response: Response) {
             path: error.details[0].path[0],
             error: error.details[0].message,
           },
-          metadata: {},
+          metadata: null,
         });
       }
 
@@ -120,7 +114,7 @@ export async function adminLogin(request: Request, response: Response) {
       //HACK: prevents type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
-        [userNameOrEmail],
+        [username_or_email],
       );
       const users = rows[0] as Users[];
       connection.release();
@@ -139,11 +133,15 @@ export async function adminLogin(request: Request, response: Response) {
             status: "success",
             message: "Succesful login",
             data: {
-              id: users[0].id,
-              user_email: userNameOrEmail,
-              user_role: users[0].user_role,
+              users: {
+                id: users[0].id,
+                microfinance_id: users[0].microfinance_id,
+                email: username_or_email,
+                role: users[0].role,
+                status: users[0].status,
+              },
             },
-            metadata: {},
+            metadata: null,
           });
         }
         // else passwords do not match
@@ -152,10 +150,10 @@ export async function adminLogin(request: Request, response: Response) {
           status: "error",
           message: "Invalid password. Try again?",
           data: {
-            email: userNameOrEmail,
+            email: username_or_email,
             password: password,
           },
-          metadata: {},
+          metadata: null,
         });
       } else {
         // no user match found
@@ -164,10 +162,10 @@ export async function adminLogin(request: Request, response: Response) {
           status: "error",
           message: "User not found",
           data: {
-            email: userNameOrEmail,
+            email: username_or_email,
             password: password,
           },
-          metadata: {},
+          metadata: null,
         });
       }
     } else {
@@ -182,7 +180,7 @@ export async function adminLogin(request: Request, response: Response) {
             path: error.details[0].path[0],
             error: error.details[0].message,
           },
-          metadata: {},
+          metadata: null,
         });
       }
 
@@ -191,7 +189,7 @@ export async function adminLogin(request: Request, response: Response) {
       //HACK: any helps prevent type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
-        [userNameOrEmail],
+        [username_or_email],
       );
       const users = rows[0] as Users[];
       connection.release();
@@ -209,11 +207,15 @@ export async function adminLogin(request: Request, response: Response) {
             status: "success",
             message: "Succesful login",
             data: {
-              id: users[0].id,
-              user_name: userNameOrEmail,
-              user_role: users[0].user_role,
+              users: {
+                id: users[0].id,
+                microfinance_id: users[0].microfinance_id,
+                username: username_or_email,
+                role: users[0].role,
+                status: users[0].status,
+              },
             },
-            metadata: {},
+            metadata: null,
           });
         }
         // else passwords do not match
@@ -222,10 +224,10 @@ export async function adminLogin(request: Request, response: Response) {
           status: "error",
           message: "Invalid password. Try again?",
           data: {
-            username: userNameOrEmail,
+            username: username_or_email,
             password: password,
           },
-          metadata: {},
+          metadata: null,
         });
       } else {
         // no user match found
@@ -234,10 +236,10 @@ export async function adminLogin(request: Request, response: Response) {
           status: "error",
           message: "User not found",
           data: {
-            username: userNameOrEmail,
+            username: username_or_email,
             password: password,
           },
-          metadata: {},
+          metadata: null,
         });
       }
     }
@@ -247,7 +249,7 @@ export async function adminLogin(request: Request, response: Response) {
       status: "error",
       message: "Server error",
       data: error,
-      metadata: {},
+      metadata: null,
     });
   }
 }

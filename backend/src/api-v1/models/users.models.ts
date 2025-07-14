@@ -11,15 +11,15 @@ export enum UserStatus {
 
 export interface Users {
   id: string;
-  sacco_id: string;
-  first_name: string;
-  last_name: string;
-  user_name: string;
-  user_email: string;
+  microfinance_id: string;
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
   phone_number: string;
   hashed_password: string;
-  user_role: UserRoles;
-  user_status: UserStatus;
+  role: UserRoles;
+  status: UserStatus;
   created_at?: string;
   updated_at?: string;
   is_deleted?: string;

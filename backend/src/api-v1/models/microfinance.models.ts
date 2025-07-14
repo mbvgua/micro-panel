@@ -6,12 +6,12 @@ export enum MicrofinanceStatus {
 
 export interface Microfinances {
   id: string;
-  registration_number: string;
-  sacco_name: string;
-  sacco_email: string;
-  sacco_phone_number: string;
+  reg_number: string;
+  name: string;
+  email: string;
+  phone_number: string;
   location: string;
-  sacco_status: MicrofinanceStatus;
+  status: MicrofinanceStatus;
   created_at?: string;
   updated_at?: string;
 }
