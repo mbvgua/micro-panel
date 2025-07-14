@@ -14,10 +14,11 @@ export async function applyLoan(request: Request, response: Response) {
    */
   const id = uid();
   const {
+    admin_id,
     user_id,
-    sacco_id,
-    loan_type,
-    loan_amount,
+    microfinance_id,
+    type,
+    amount,
     interest_rate,
     repayment_period,
     guarantor_details,
@@ -34,53 +35,68 @@ export async function applyLoan(request: Request, response: Response) {
           path: error.details[0].path[0],
           error: error.details[0].message,
         },
-        metadata: {},
+        metadata: null,
       });
     }
     //if no validation error
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.execute(`CALL getUserById(?);`, [user_id]);
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
     const user = rows[0] as Users[];
     connection.release();
 
-    if (user.length > 0) {
-      //ensure user status is active
-      if (user[0].user_status == "active") {
+    // NOTE: 1st if check -> ensure user applying is an admin
+    if (user[0].role == "admin") {
+      const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+        user_id,
+      ]);
+      const applicant_user = rows[0] as Users[];
+      connection.release();
+
+      //NOTE: 2nd if check -> ensure user being applied for is active
+      if (applicant_user.length > 0 && applicant_user[0].status == "active") {
         // ensure no pending loans
-        const [results]:any = await connection.execute(
+        const [results]: any = await connection.execute(
           `CALL getUserLoansById(?);`,
           [user_id],
         );
         const loans = results[0] as Loans[];
         connection.release();
 
-        //check if user has pending loans
-        if (loans) {
-          // loop through all user loans to see if any is pending
+        //NOTE: 3rd if check -> check if active member has any loans
+        if (loans.length > 0) {
+          //NOTE:loops through loans array
           for (let i = 0; i < loans.length; i++) {
-            // if any is pending
-            if (loans[i].loan_status == "pending") {
+            //NOTE: 4th if check -> if any is pending, no loan
+            if (loans[i].status == "pending") {
               return response.status(403).json({
                 code: 403,
                 status: "error",
                 message: "Forbidden. User has pending loans",
                 data: {
-                  user_name: user[0].user_name,
-                  user_email: user[0].user_email,
-                  user_loans: loans,
+                  users: {
+                    id: applicant_user[0].id,
+                    microfinance_id: applicant_user[0].microfinance_id,
+                    username: applicant_user[0].username,
+                    email: applicant_user[0].email,
+                    role: applicant_user[0].role,
+                    status: applicant_user[0].status,
+                  },
+                  loans: { loans },
                 },
-                metadata: {},
+                metadata: null,
               });
+              //NOTE:close 4th if check -> if loans exist, but none is existing, issue loans
             } else {
-              // else if none is pending
-              const [rows]:any = await connection.execute(
+              const [rows]: any = await connection.execute(
                 `CALL addLoan(?,?,?,?,?,?,?,?);`,
                 [
                   id,
-                  user_id,
-                  sacco_id,
-                  loan_type,
-                  loan_amount,
+                  id,
+                  microfinance_id,
+                  type,
+                  amount,
                   interest_rate,
                   repayment_period,
                   guarantor_details,
@@ -94,67 +110,106 @@ export async function applyLoan(request: Request, response: Response) {
                 status: "success",
                 message: "Loan successfully created",
                 data: {
-                  user_id: user[0].id,
-                  user_email: user[0].user_email,
-                  loan_id: user_loan[0].id,
-                  loan_status: user_loan[0].loan_status,
+                  users: {
+                    id: applicant_user[0].id,
+                    microfinance_id: applicant_user[0].microfinance_id,
+                    username: applicant_user[0].username,
+                    email: applicant_user[0].email,
+                    role: applicant_user[0].role,
+                    status: applicant_user[0].status,
+                  },
+                  loans: {
+                    id: user_loan[0].id,
+                    user_id: user_loan[0].user_id,
+                    microfinance_id: user_loan[0].microfinance_id,
+                    amount: user_loan[0].amount,
+                    status: user_loan[0].status,
+                    disbursment_date: user_loan[0].disbursment_date,
+                    guarantor_details: user_loan[0].guarantor_details,
+                  },
                 },
-                metadata: {},
+                metadata: null,
               });
             }
           }
-        }
-
-        //else issue loan
-        const [rows]:any = await connection.execute(
-          `CALL addLoan(?,?,?,?,?,?,?,?);`,
-          [
+        } else {
+          //NOTE: close 3rd if check -> if user status="active" and no loans
+          // issue the loans
+          await connection.execute(`CALL addLoan(?,?,?,?,?,?,?,?);`, [
             id,
             user_id,
-            sacco_id,
-            loan_type,
-            loan_amount,
+            microfinance_id,
+            type,
+            amount,
             interest_rate,
             repayment_period,
             guarantor_details,
-          ],
-        );
-        const user_loan = rows[0] as Loans[];
-        connection.release();
+          ]);
+          const user_loan = rows[0] as Loans[];
+          connection.release();
 
-        return response.status(201).json({
-          code: 201,
-          status: "success",
-          message: "Loan successfully created",
-          data: {
-            user_id: user[0].id,
-            user_email: user[0].user_email,
-            loan_id: user_loan[0].id,
-            loan_status: user_loan[0].loan_status,
-          },
-          metadata: {},
-        });
+          return response.status(201).json({
+            code: 201,
+            status: "success",
+            message: "Loan successfully created",
+            data: {
+              users: {
+                id: applicant_user[0].id,
+                microfinance_id: applicant_user[0].microfinance_id,
+                username: applicant_user[0].username,
+                email: applicant_user[0].email,
+                role: applicant_user[0].role,
+                status: applicant_user[0].status,
+              },
+            },
+            metadata: null,
+          });
+        }
       } else {
-        // else if user status is pending
+        // NOTE: close 2nd if check -> if user status is pending.
+        // or array length is 0. no loan
         return response.status(403).json({
           code: 403,
           status: "error",
-          message: "Forbidden. User cannot apply for loan",
+          message: "Forbidden. User does not exist or has a pending status.",
           data: {
-            user_id: user[0].id,
-            user_role: user[0].user_role,
-            user_status: user[0].user_status,
+            users: {
+              id: applicant_user[0].id,
+              microfinance_id: applicant_user[0].microfinance_id,
+              username: applicant_user[0].username,
+              email: applicant_user[0].email,
+              role: applicant_user[0].role,
+              status: applicant_user[0].status,
+            },
           },
         });
       }
+    } else if (user[0].role == "member" || user[0].role == "support") {
+      // NOTE: close 1st if check -> not an admin initiating action. no loans
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized. Only admins can apply for loans",
+        data: {
+          users: {
+            id: user[0].id,
+            microfinance_id: user[0].microfinance_id,
+            username: user[0].username,
+            email: user[0].email,
+            role: user[0].role,
+            status: user[0].status,
+          },
+        },
+        metadata: null,
+      });
     } else {
-      // else if user does not exist
+      //NOTE: error check 1st if check-> if user does not exist. no loans
       return response.status(404).json({
         code: 422,
         status: "error",
         message: "User not found",
-        data: {},
-        metadata: {},
+        data: null,
+        metadata: null,
       });
     }
   } catch (error) {
@@ -163,7 +218,7 @@ export async function applyLoan(request: Request, response: Response) {
       status: "error",
       message: "Server error",
       data: error,
-      metadata: {},
+      metadata: null,
     });
   }
 }
@@ -171,27 +226,26 @@ export async function applyLoan(request: Request, response: Response) {
 export async function getLoans(request: Request, response: Response) {
   /*
    * view list of all pending loan applications.
-   * use either a view or a join.
    */
 
   try {
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.execute(`CALL getAllLoans();`);
+    const [rows]: any = await connection.execute(`CALL getAllLoans();`);
     connection.release();
     const loans = rows[0] as Loans[];
 
     if (loans.length > 0) {
-      const [results]:any = await connection.execute(`CALL detailedLoans();`);
+      const [results]: any = await connection.execute(
+        `CALL getDetailedLoans();`,
+      );
       connection.release();
       const detailed_loans = results[0] as Loans[];
-            console.log(detailed_loans)
-
       return response.status(200).json({
         code: 200,
         status: "success",
         message: "Successfully retrieved all loans",
-        data: detailed_loans,
-        metadata: {},
+        data: { detailed_loans },
+        metadata: null,
       });
     }
     // else if currently no loans in system
@@ -199,8 +253,8 @@ export async function getLoans(request: Request, response: Response) {
       code: 404,
       status: "error",
       message: "No loans found",
-      data: {},
-      metadata: {},
+      data: null,
+      metadata: null,
     });
   } catch (error) {
     return response.status(500).json({
@@ -208,7 +262,7 @@ export async function getLoans(request: Request, response: Response) {
       status: "error",
       message: "Server error",
       data: error,
-      meatdata: {},
+      meatdata: null,
     });
   }
 }

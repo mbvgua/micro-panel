@@ -12,7 +12,7 @@ CREATE view detailed_loans_view
 AS
     SELECT users.username,users.email,microfinances_loans_view.name,microfinances_loans_view.type,microfinances_loans_view.amount,microfinances_loans_view.repayment_period,microfinances_loans_view.status FROM microfinances_loans_view
     INNER JOIN users
-    ON microfinances_loans_view.id = users.id;
+    ON microfinances_loans_view.id = users.microfinance_id;
 #
 
 delimiter ;

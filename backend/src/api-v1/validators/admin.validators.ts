@@ -2,7 +2,7 @@ import Joi from "joi";
 
 // when registring new admin
 export const adminRegSchema = Joi.object({
-  first_name: Joi.string().required().alphanum().lowercase().trim().messages({
+  firstname: Joi.string().required().alphanum().lowercase().trim().messages({
     "string.base": "First name must be a string",
     "any.required": "First name is required",
     "string.alphanum":
@@ -11,7 +11,7 @@ export const adminRegSchema = Joi.object({
     "string.trim":
       "First name cannot contain any whitespace before or after it",
   }),
-  last_name: Joi.string().required().alphanum().lowercase().trim().messages({
+  lastname: Joi.string().required().alphanum().lowercase().trim().messages({
     "string.base": "Last name must be a string",
     "any.required": "Last name is required",
     "string.alphanum":
@@ -19,7 +19,7 @@ export const adminRegSchema = Joi.object({
     "string.lowercase": "Last name can only be in lowercase",
     "string.trim": "Last name cannot contain any whitespace before or after it",
   }),
-  user_name: Joi.string()
+  username: Joi.string()
     .required()
     .alphanum()
     .lowercase()
@@ -33,10 +33,10 @@ export const adminRegSchema = Joi.object({
         "Username can only contain letters(a-z) and digits(0-9)",
       "string.lowercase": "Username can only be in lowercase",
       "string.trim": "Username cannot contain whitespace before or after it",
-      "string.min": "Username must have a minimum of {#length} characters",
-      "string.max": "Username must have a maximum of {#length} characters",
+      "string.min": "Username must have a minimum of {#limit} characters",
+      "string.max": "Username must have a maximum of {#limit} characters",
     }),
-  user_email: Joi.string()
+  email: Joi.string()
     .required()
     .email({
       minDomainSegments: 2,
@@ -51,8 +51,8 @@ export const adminRegSchema = Joi.object({
   phone_number: Joi.string().required().min(10).max(10).messages({
     "string.base": "Phone number must be a string",
     "any.required": "Phone number is required",
-    "string.min": "Phone number needs to have a min length of {#length} digits",
-    "string.max": "Phone number needs to have a max length of {#length} digits",
+    "string.min": "Phone number needs to have a min length of {#limit} digits",
+    "string.max": "Phone number needs to have a max length of {#limit} digits",
   }),
   password: Joi.string()
     .required()
@@ -71,14 +71,14 @@ export const adminRegSchema = Joi.object({
 
 // when logging in with email
 export const emailLoginSchema = Joi.object({
-  userNameOrEmail: Joi.string()
+  username_or_email: Joi.string()
     .required()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ["com", "net"] },
     })
     .messages({
-      "string.base": "Email msut be a string",
+      "string.base": "Email must be a string",
       "any.required": "Email is required",
       "string.email":
         "Email can only have two domains, e.g example.com whose tlds can either be '.com' or '.net'",
@@ -100,7 +100,7 @@ export const emailLoginSchema = Joi.object({
 
 // when loggin in with username
 export const usernameLoginSchema = Joi.object({
-  userNameOrEmail: Joi.string()
+  username_or_email: Joi.string()
     .required()
     .alphanum()
     .lowercase()
@@ -114,8 +114,8 @@ export const usernameLoginSchema = Joi.object({
         "Username can only contain letters(a-z) and digits(0-9)",
       "string.lowercase": "Username can only be in lowercase",
       "string.trim": "Username cannot contain whitespace before or after it",
-      "string.min": "Username must have a minimum of {#length} characters",
-      "string.max": "Username must have a maximum of {#length} characters",
+      "string.min": "Username must have a minimum of {#limit} characters",
+      "string.max": "Username must have a maximum of {#limit} characters",
     }),
   password: Joi.string()
     .required()
