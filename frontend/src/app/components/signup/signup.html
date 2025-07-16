@@ -57,7 +57,7 @@
   <div class="row d-flex justify-content-center">
     <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
       <div class="card">
-        <h3>Signup for Micro Panel</h3>
+        <h3 class="text-primary">Signup for Micro Panel</h3>
         <p class="blue-text">
           Just answer a few questions<br />
           to get you started.
@@ -71,11 +71,12 @@
           <!-- 1st row -->
           <div class="row justify-content-between text-left">
             <!-- first name -->
-            <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="first_name" class="form-control-label px-3">
+            <div class="form-group col-sm-6 flex-column d-flex px-3">
+              <label for="first_name" class="form-control-label">
                 First Name <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="first_name"
                 type="text"
                 placeholder="Enter first name..."
@@ -94,10 +95,11 @@
 
             <!-- last name -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="last_name" class="form-control-label px-3">
+              <label for="last_name" class="form-control-label">
                 Last Name <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="last_name"
                 type="text"
                 placeholder="Enter last name..."
@@ -116,13 +118,14 @@
           </div>
 
           <!-- 2nd row -->
-          <div class="row justify-content-between text-left">
+          <div class="row justify-content-between text-left px-3">
             <!-- username -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="user_name" class="form-control-label px-3">
+              <label for="user_name" class="form-control-label">
                 User Name <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="user_name"
                 type="text"
                 placeholder="Enter user name..."
@@ -141,10 +144,11 @@
 
             <!-- user email -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="user_email" class="form-control-label px-3">
+              <label for="user_email" class="form-control-label">
                 Email <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="user_email"
                 type="email"
                 placeholder="Enter email..."
@@ -168,14 +172,15 @@
           </div>
 
           <!-- 3rd row -->
-          <div class="row justify-content-between text-left">
+          <div class="row justify-content-between text-left px-3">
             <!-- phone number -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="phone_number" class="form-control-label px-3">
+              <label for="phone_number" class="form-control-label">
                 Phone Number <span class="text-danger"> *</span></label
               >
               <br />
               <input
+                class="form-control"
                 formControlName="phone_number"
                 type="text"
                 placeholder="Enter phone number..."
@@ -194,11 +199,12 @@
 
             <!-- password -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="password" class="form-control-label px-3">
+              <label for="password" class="form-control-label">
                 Password <span class="text-danger"> *</span></label
               >
               <br />
               <input
+                class="form-control"
                 formControlName="password"
                 type="password"
                 placeholder="Enter password..."
@@ -227,9 +233,9 @@
           </div>
         </form>
         <!-- login instead section -->
-        <p class="justify-content-center fst-italic text-capitalize">
+        <p class="justify-content-center fst-italic text-capitalize pt-3">
           already have an account?
-          <a routerLink="/auth/login/admin" class="fw-bolder"> login </a>
+          <a routerLink="/signin" class="fw-bolder"> login </a>
           instead
         </p>
       </div>
