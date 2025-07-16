@@ -1,0 +1,43 @@
+<div class="container">
+  <header class="d-flex justify-content-center py-2">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a
+          routerLink="get-microfinances"
+          routerLinkActive="active"
+          class="nav-link"
+          >Get Microfinances</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          routerLink="add-microfinances"
+          routerLinkActive="active"
+          class="nav-link"
+          >Add Microfinance</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          routerLink="update-microfinances"
+          routerLinkActive="active"
+          class="nav-link"
+          >Update Microfinances</a
+        >
+      </li>
+      <!--use the get users and nest a button in there-->
+      <!--<li class="nav-item">-->
+      <!--  <a routerLink="delete-microfinances" routerLinkActive="active" class="nav-link"-->
+      <!--    >Delete Microfinance</a-->
+      <!--  >-->
+      <!--</li>-->
+    </ul>
+  </header>
+</div>
+
+<hr />
+
+<!--here lies the next nested component-->
+<div class="p-2">
+  <router-outlet></router-outlet>
+</div>

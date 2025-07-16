@@ -57,7 +57,7 @@
   <div class="row d-flex justify-content-center">
     <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
       <div class="card">
-        <h3>Sigin to Micro Panel</h3>
+        <h3 class="text-primary">Sigin to Micro Panel</h3>
         <p class="blue-text">
           Just answer a few questions<br />
           to help us remember who you are.
@@ -75,6 +75,7 @@
                 Username/Email <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="userNameOrEmail"
                 type="text"
                 placeholder="Enter username/email..."
@@ -100,6 +101,7 @@
                 Password <span class="text-danger"> *</span></label
               >
               <input
+                class="form-control"
                 formControlName="password"
                 type="password"
                 placeholder="Enter password..."
@@ -130,9 +132,9 @@
           </div>
         </form>
         <!-- login instead section -->
-        <p class="justify-content-center fst-italic text-capitalize">
+        <p class="justify-content-center fst-italic text-capitalize pt-3">
           don't have an account yet?
-          <a routerLink="/auth/register/admin" class="fw-bolder"> register </a>
+          <a routerLink="/signup" class="fw-bolder"> register </a>
           instead
         </p>
       </div>

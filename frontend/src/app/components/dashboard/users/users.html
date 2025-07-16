@@ -1,0 +1,34 @@
+<div class="container">
+  <header class="d-flex justify-content-center py-2">
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <a routerLink="get-users" routerLinkActive="active" class="nav-link"
+          >Get Users</a
+        >
+      </li>
+      <li class="nav-item">
+        <a routerLink="add-users" routerLinkActive="active" class="nav-link"
+          >Add User</a
+        >
+      </li>
+      <li class="nav-item">
+        <a routerLink="update-users" routerLinkActive="active" class="nav-link"
+          >Update Users</a
+        >
+      </li>
+      <!--use the get users and nest a button in there-->
+      <!--<li class="nav-item">-->
+      <!--  <a routerLink="delete-users" routerLinkActive="active" class="nav-link"-->
+      <!--    >Delete Users</a-->
+      <!--  >-->
+      <!--</li>-->
+    </ul>
+  </header>
+</div>
+
+<hr />
+
+<!--here lies the next nested component-->
+<div class="p-2">
+  <router-outlet></router-outlet>
+</div>
