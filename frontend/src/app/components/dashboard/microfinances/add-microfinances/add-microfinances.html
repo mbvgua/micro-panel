@@ -1,1 +1,186 @@
-<p>add-microfinances works!</p>
+<div class="container-fluid px-1 mx-auto">
+  <div class="row d-flex justify-content-center">
+    <div class="text-center">
+      <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
+      <h3>Add a new Microfinance into the System</h3>
+      <!--<p class="text-primary fs-5">-->
+      <!--  Start managing your birds the smart way.<br />-->
+      <!--  It only takes a minute to get set up-->
+      <!--</p>-->
+      <div class="card">
+        <form
+          [formGroup]="addMicrofinanceForm"
+          (ngSubmit)="addMicrofinance()"
+          class="form-card"
+        >
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="reg_number"
+                >Reg. Number<span class="text-danger"> *</span></label
+              >
+              <input
+                id="reg_number"
+                formControlName="reg_number"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the reg. number"
+              />
+
+              @if (
+                addMicrofinanceForm.get("reg_number")?.touched ||
+                addMicrofinanceForm.get("reg_number")?.dirty
+              ) {
+                @if (
+                  addMicrofinanceForm.get("reg_number")?.hasError("required")
+                ) {
+                  <div class="form-text text-danger">
+                    Registration number is required
+                  </div>
+                }
+                @if (
+                  addMicrofinanceForm.get("reg_number")?.hasError("maxlength")
+                ) {
+                  <div class="form-text text-danger">
+                    Registration cannot be more than 150 characters long
+                  </div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="name"
+                >Microfinance Name<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="name"
+                id="name"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the name"
+              />
+              @if (
+                addMicrofinanceForm.get("name")?.touched ||
+                addMicrofinanceForm.get("name")?.dirty
+              ) {
+                @if (addMicrofinanceForm.get("name")?.hasError("required")) {
+                  <div class="form-text text-danger">Name is required</div>
+                }
+                @if (addMicrofinanceForm.get("name")?.hasError("maxlength")) {
+                  <div class="form-text text-danger">
+                    Name cannot be more than 60 characters long
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="email"
+                >Microfinance Email<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="email"
+                id="email"
+                class="form-control form-control-lg"
+                type="email"
+                placeholder="example@gmail.com"
+              />
+              @if (
+                addMicrofinanceForm.get("email")?.touched ||
+                addMicrofinanceForm.get("email")?.dirty
+              ) {
+                @if (addMicrofinanceForm.get("email")?.hasError("required")) {
+                  <div class="form-text text-danger">Email is required</div>
+                }
+                @if (addMicrofinanceForm.get("email")?.hasError("email")) {
+                  <div class="form-text text-danger">
+                    Please input a valid email
+                  </div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="phone_number"
+                >Phone No.<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="phone_number"
+                id="phone_number"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the phone number"
+              />
+              @if (
+                addMicrofinanceForm.get("phone_number")?.touched ||
+                addMicrofinanceForm.get("phone_number")?.dirty
+              ) {
+                @if (
+                  addMicrofinanceForm.get("phone_number")?.hasError("required")
+                ) {
+                  <div class="form-text text-danger">
+                    Phone number is required
+                  </div>
+                }
+                @if (
+                  addMicrofinanceForm.get("phone_number")?.hasError("minlength")
+                ) {
+                  <div class="form-text text-danger">
+                    Phone number cannot be less than 10 digits
+                  </div>
+                }
+                @if (
+                  addMicrofinanceForm.get("phone_number")?.hasError("maxlength")
+                ) {
+                  <div class="form-text text-danger">
+                    Phone number cannot exceed 10 digits
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="location"
+                >Location<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="location"
+                id="location"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the location"
+              />
+              @if (
+                addMicrofinanceForm.get("location")?.touched ||
+                addMicrofinanceForm.get("location")?.dirty
+              ) {
+                @if (
+                  addMicrofinanceForm.get("location")?.hasError("required")
+                ) {
+                  <div class="form-text text-danger">Location if required</div>
+                }
+              }
+
+              <!--<div id="passwordHelpBlock" class="form-text text-danger">-->
+              <!--  Your password must be 8-20 characters long, contain letters and-->
+              <!--  numbers, and must not contain spaces, special characters, or-->
+              <!--  emoji.-->
+              <!--</div>-->
+            </div>
+          </div>
+          <!-- button -->
+          <div class="row justify-content-center mt-4">
+            <div class="col-sm-6 d-grid">
+              <button
+                [disabled]="addMicrofinanceForm.invalid"
+                class="btn btn-primary btn-lg text-capitalize"
+              >
+                create microfinance
+              </button>
+            </div>
+          </div>
+          <!-- button end -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
