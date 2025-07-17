@@ -109,7 +109,7 @@ export async function createMember(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: {error},
       metadata: null,
     });
   }
@@ -150,7 +150,7 @@ export async function getMembers(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: {error},
       metadata: null,
     });
   }
@@ -238,7 +238,7 @@ export async function activateMember(
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: {error},
       metadata: null,
     });
   }

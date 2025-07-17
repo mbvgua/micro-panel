@@ -63,7 +63,7 @@ export async function createMicrofinance(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: { error },
       metadata: null,
     });
   }
@@ -102,7 +102,7 @@ export async function getMicrofinances(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: { error },
       metadata: null,
     });
   }

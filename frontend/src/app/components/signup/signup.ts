@@ -12,6 +12,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { UserResponse } from '../../models/users.models';
 
 @Component({
   selector: 'app-signup',
@@ -22,27 +23,30 @@ import {
 export class Signup implements OnInit {
   constructor(private userService: Users) {}
 
-  obs = new Observable();
   signupForm!: FormGroup;
   message!: string;
-  error!: string;
+  status!: string;
   router = inject(Router); //navigation to login
+  ufala!: any;
 
   onSubmit() {
-    console.log(this.signupForm.value);
+    //console.log(this.signupForm.value);
     this.userService.registerAdmin(this.signupForm.value).subscribe(
-      (response) => {
-        //redirect to login page if succesful
-        console.log(response);
-        //delay to read message
+      (response: UserResponse) => {
+        //console.log(response);
         this.message = response.message;
+        this.status = response.status;
+        //console.log('the message: ', this.message);
+        //console.log('the status: ', this.status);
         setTimeout(() => {
-          this.router.navigate(['/auth/login/admin']);
+          //redirect to login page if succesful
+          this.router.navigate(['/auth/login']);
         }, 1000);
       },
-      (error) => {
+      (error: any) => {
         console.log(error);
-        this.error = error.error.data.error;
+        this.message = error.data.error;
+        this.status = error.status;
       },
     );
     //this.signupForm.reset();
@@ -50,14 +54,15 @@ export class Signup implements OnInit {
 
   ngOnInit(): void {
     this.signupForm = new FormGroup({
-      first_name: new FormControl(null, Validators.required),
-      last_name: new FormControl(null, Validators.required),
-      user_name: new FormControl(null, Validators.required),
-      user_email: new FormControl(null, [
+      firstname: new FormControl(null, Validators.required),
+      lastname: new FormControl(null, Validators.required),
+      username: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+      phone_number: new FormControl(null, [
         Validators.required,
-        Validators.email,
+        Validators.minLength(10),
+        Validators.maxLength(10),
       ]),
-      phone_number: new FormControl(null, Validators.required),
       password: new FormControl(null, Validators.required),
     });
   }

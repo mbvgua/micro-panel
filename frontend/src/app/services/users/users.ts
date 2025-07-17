@@ -11,19 +11,13 @@ export class Users {
   private readonly userUrl = 'http://localhost:4000/v1/';
 
   //register admin
-  registerAdmin(newUser: IUsers): Observable<UserResponse> {
-    return this.http.post<UserResponse>(
-      this.userUrl + 'auth/register/admin',
-      newUser,
-    );
+  registerAdmin(newUser: IUsers): Observable<any> {
+    return this.http.post(this.userUrl + 'auth/register/admin', newUser);
   }
 
   //login admin
-  loginAdmin(existingUser: IUsers): Observable<UserResponse> {
-    return this.http.post<UserResponse>(
-      this.userUrl + 'auth/login/admin',
-      existingUser,
-    );
+  loginAdmin(existingUser: IUsers): Observable<any> {
+    return this.http.post(this.userUrl + 'auth/login/admin', existingUser);
   }
 
   //get users
