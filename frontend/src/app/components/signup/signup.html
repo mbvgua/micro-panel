@@ -1,63 +1,37 @@
 <div class="container-fluid px-1 py-1 mx-auto">
-  <!-- display message from backend on DOM -->
+  <!--NOTE: you have to click twice to see the messages. not sure why-->
+  <!--TODO: make this show on first click. Vital, moreso for errors-->
+  <!--show alert message -->
   @if (message) {
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-      <div class="toast-container top-0 end-0 p-3">
-        <div
-          class="toast show bg-success"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="toast-header">
-            <strong class="me-auto">Success</strong>
-            <small class="text-body-secondary">just now</small>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body">
-            {{ message }}
-          </div>
-        </div>
+    <!--if success-->
+    @if (status == "success") {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulations!</strong> {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
+    }
+    <!--if error-->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Oops!</strong> {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
     </div>
   }
-  @if (error) {
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-      <div class="toast-container top-0 end-0 p-3">
-        <div
-          class="toast show bg-warning"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="toast-header">
-            <!-- <img src="..." class="rounded me-2" alt="..."> -->
-            <strong class="me-auto">Error</strong>
-            <small class="text-body-secondary">just now</small>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body">
-            {{ error }}
-          </div>
-        </div>
-      </div>
-    </div>
-  }
+  <!--show alert message -->
 
   <div class="row d-flex justify-content-center">
     <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
       <div class="card">
-        <h3>Signup for Micro Panel</h3>
+        <h3 class="text-primary">Signup for Micro Panel</h3>
         <p class="blue-text">
           Just answer a few questions<br />
           to get you started.
@@ -71,20 +45,21 @@
           <!-- 1st row -->
           <div class="row justify-content-between text-left">
             <!-- first name -->
-            <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="first_name" class="form-control-label px-3">
+            <div class="form-group col-sm-6 flex-column d-flex px-3">
+              <label for="firstname" class="form-control-label">
                 First Name <span class="text-danger"> *</span></label
               >
               <input
-                formControlName="first_name"
+                class="form-control"
+                formControlName="firstname"
                 type="text"
                 placeholder="Enter first name..."
               />
               @if (
-                signupForm.get("first_name")?.touched ||
-                signupForm.get("first_name")?.dirty
+                signupForm.get("firstname")?.touched ||
+                signupForm.get("firstname")?.dirty
               ) {
-                @if (signupForm.get("first_name")?.hasError("required")) {
+                @if (signupForm.get("firstname")?.hasError("required")) {
                   <span class="fst-italic fs-6 text-danger"
                     >First name is required
                   </span>
@@ -94,19 +69,20 @@
 
             <!-- last name -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="last_name" class="form-control-label px-3">
+              <label for="lastname" class="form-control-label">
                 Last Name <span class="text-danger"> *</span></label
               >
               <input
-                formControlName="last_name"
+                class="form-control"
+                formControlName="lastname"
                 type="text"
                 placeholder="Enter last name..."
               />
               @if (
-                signupForm.get("last_name")?.touched ||
-                signupForm.get("last_name")?.dirty
+                signupForm.get("lastname")?.touched ||
+                signupForm.get("lastname")?.dirty
               ) {
-                @if (signupForm.get("last_name")?.hasError("required")) {
+                @if (signupForm.get("lastname")?.hasError("required")) {
                   <span class="fst-italic fs-6 text-danger"
                     >Last name is required
                   </span>
@@ -116,22 +92,23 @@
           </div>
 
           <!-- 2nd row -->
-          <div class="row justify-content-between text-left">
+          <div class="row justify-content-between text-left px-3">
             <!-- username -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="user_name" class="form-control-label px-3">
+              <label for="username" class="form-control-label">
                 User Name <span class="text-danger"> *</span></label
               >
               <input
-                formControlName="user_name"
+                class="form-control"
+                formControlName="username"
                 type="text"
                 placeholder="Enter user name..."
               />
               @if (
-                signupForm.get("user_name")?.touched ||
-                signupForm.get("user_name")?.dirty
+                signupForm.get("username")?.touched ||
+                signupForm.get("username")?.dirty
               ) {
-                @if (signupForm.get("user_name")?.hasError("required")) {
+                @if (signupForm.get("username")?.hasError("required")) {
                   <span class="fst-italic fs-6 text-danger"
                     >Username is required
                   </span>
@@ -141,24 +118,25 @@
 
             <!-- user email -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="user_email" class="form-control-label px-3">
+              <label for="email" class="form-control-label">
                 Email <span class="text-danger"> *</span></label
               >
               <input
-                formControlName="user_email"
+                class="form-control"
+                formControlName="email"
                 type="email"
                 placeholder="Enter email..."
               />
               @if (
-                signupForm.get("user_email")?.touched ||
-                signupForm.get("user_email")?.dirty
+                signupForm.get("email")?.touched ||
+                signupForm.get("email")?.dirty
               ) {
-                @if (signupForm.get("user_email")?.hasError("required")) {
+                @if (signupForm.get("email")?.hasError("required")) {
                   <span class="fst-italic fs-6 text-danger"
                     >Email is required
                   </span>
                 }
-                @if (signupForm.get("user_email")?.hasError("email")) {
+                @if (signupForm.get("email")?.hasError("email")) {
                   <span class="fst-italic fs-6 text-danger"
                     >Input a valid email
                   </span>
@@ -168,14 +146,15 @@
           </div>
 
           <!-- 3rd row -->
-          <div class="row justify-content-between text-left">
+          <div class="row justify-content-between text-left px-3">
             <!-- phone number -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="phone_number" class="form-control-label px-3">
+              <label for="phone_number" class="form-control-label">
                 Phone Number <span class="text-danger"> *</span></label
               >
               <br />
               <input
+                class="form-control"
                 formControlName="phone_number"
                 type="text"
                 placeholder="Enter phone number..."
@@ -189,16 +168,27 @@
                     >Phone Number is required
                   </span>
                 }
+                @if (signupForm.get("phone_number")?.hasError("minlength")) {
+                  <span class="fst-italic fs-6 text-danger"
+                    >Phone Number cannot be less than 10 digits
+                  </span>
+                }
+                @if (signupForm.get("phone_number")?.hasError("maxlength")) {
+                  <span class="fst-italic fs-6 text-danger"
+                    >Phone Number cannot exceed 10 digits
+                  </span>
+                }
               }
             </div>
 
             <!-- password -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="password" class="form-control-label px-3">
+              <label for="password" class="form-control-label">
                 Password <span class="text-danger"> *</span></label
               >
               <br />
               <input
+                class="form-control"
                 formControlName="password"
                 type="password"
                 placeholder="Enter password..."
@@ -227,9 +217,9 @@
           </div>
         </form>
         <!-- login instead section -->
-        <p class="justify-content-center fst-italic text-capitalize">
+        <p class="justify-content-center fst-italic text-capitalize pt-3">
           already have an account?
-          <a routerLink="/auth/login/admin" class="fw-bolder"> login </a>
+          <a routerLink="/signin" class="fw-bolder"> login </a>
           instead
         </p>
       </div>

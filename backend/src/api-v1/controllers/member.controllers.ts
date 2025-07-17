@@ -13,17 +13,17 @@ export async function createMember(request: Request, response: Response) {
    */
   const {
     admin_id,
-    sacco_id,
-    first_name,
-    last_name,
-    user_name,
-    user_email,
+    microfinance_id,
+    firstname,
+    lastname,
+    username,
+    email,
     phone_number,
     password,
   } = request.body;
   const id = uid();
-  const user_role = UserRoles.member;
-  const user_status = UserStatus.pending;
+  const role = UserRoles.member;
+  const status = UserStatus.pending;
 
   try {
     // validate user input
@@ -43,10 +43,12 @@ export async function createMember(request: Request, response: Response) {
 
     // if no validation errors
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.query(`CALL getUserById(?)`, [admin_id]);
+    const [rows]: any = await connection.query(`CALL getUserById(?)`, [
+      admin_id,
+    ]);
     const admin_user = rows[0] as Users[];
 
-    if (admin_user[0].user_role == "admin") {
+    if (admin_user[0].role == "admin") {
       // hash the user password
       const salt_rounds = 9;
       const hashed_password = await bcrypt.hash(password, salt_rounds);
@@ -54,15 +56,15 @@ export async function createMember(request: Request, response: Response) {
       // add user to system
       await connection.query(`CALL addUser(?,?,?,?,?,?,?,?,?,?)`, [
         id,
-        sacco_id,
-        first_name,
-        last_name,
-        user_name,
-        user_email,
+        microfinance_id,
+        firstname,
+        lastname,
+        username,
+        email,
         phone_number,
         hashed_password,
-        user_role,
-        user_status,
+        role,
+        status,
       ]);
       // release pool connection
       connection.release();
@@ -72,12 +74,16 @@ export async function createMember(request: Request, response: Response) {
         status: "success",
         message: "Member succesfully created",
         data: {
-          id,
-          user_name,
-          user_email,
-          user_role,
+          users: {
+            id,
+            microfinance_id,
+            username,
+            email,
+            role,
+            status,
+          },
         },
-        metadata: {},
+        metadata: null,
       });
     } else {
       // if not an admin
@@ -86,11 +92,16 @@ export async function createMember(request: Request, response: Response) {
         status: "error",
         message: "Unauthorized. Only admins can create members",
         data: {
-          id: admin_user[0].id,
-          username: admin_user[0].user_name,
-          email: admin_user[0].user_email,
-          role: admin_user[0].user_role,
+          users: {
+            id: admin_user[0].id,
+            microfinance_id: admin_user[0].microfinance_id,
+            username: admin_user[0].username,
+            email: admin_user[0].email,
+            role: admin_user[0].role,
+            status: admin_user[0].status,
+          },
         },
+        metadata: null,
       });
     }
   } catch (error) {
@@ -98,8 +109,8 @@ export async function createMember(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
-      metadata: {},
+      data: {error},
+      metadata: null,
     });
   }
 }
@@ -113,7 +124,7 @@ export async function getMembers(request: Request, response: Response) {
    */
   try {
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.execute(`CALL getAllUsers();`);
+    const [rows]: any = await connection.execute(`CALL getAllUsers();`);
     const users = rows[0] as Users[];
     connection.release();
 
@@ -122,8 +133,8 @@ export async function getMembers(request: Request, response: Response) {
         code: 200,
         status: "success",
         message: "Succesfully retrieved all users from database",
-        data: users,
-        metadata: {},
+        data: { users },
+        metadata: null,
       });
     }
     // if no members in system
@@ -131,16 +142,16 @@ export async function getMembers(request: Request, response: Response) {
       code: 404,
       status: "error",
       message: "No users found",
-      data: {},
-      metadata: {},
+      data: null,
+      metadata: null,
     });
   } catch (error) {
     return response.status(500).json({
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
-      metadata: {},
+      data: {error},
+      metadata: null,
     });
   }
 }
@@ -156,23 +167,23 @@ export async function activateMember(
   const { user_id } = request.body;
   try {
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.execute(`CALL getUserById(?);`, [admin_id]);
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
     const admin_user = rows[0] as Users[];
     connection.release();
 
-    if (admin_user[0].user_role == "admin") {
-      const [results]:any = await connection.execute(`CALL getInactiveUsersById(?);`, [
-        user_id,
-      ]);
+    if (admin_user[0].role == "admin") {
+      const [results]: any = await connection.execute(
+        `CALL getInactiveUsersById(?);`,
+        [user_id],
+      );
       const user_to_activate = results[0] as Users[];
       connection.release();
 
       // if user_to_activate exists
       if (user_to_activate.length > 0) {
-        await connection.execute(
-          `CALL activateUserById(?);`,
-          [user_id],
-        );
+        await connection.execute(`CALL activateUserById(?);`, [user_id]);
         connection.release();
 
         return response.status(200).json({
@@ -180,11 +191,16 @@ export async function activateMember(
           status: "success",
           message: "Succesfully activated user account",
           data: {
-            user_id: user_to_activate[0].id,
-            user_name: user_to_activate[0].user_name,
-            user_email: user_to_activate[0].user_email,
-            user_role: user_to_activate[0].user_role,
+            users: {
+              id: user_to_activate[0].id,
+              microfinance_id: user_to_activate[0].microfinance_id,
+              username: user_to_activate[0].username,
+              email: user_to_activate[0].email,
+              role: user_to_activate[0].role,
+              status: user_to_activate[0].status,
+            },
           },
+          metadata: null,
         });
       } else {
         // if user does not exists
@@ -193,7 +209,9 @@ export async function activateMember(
           status: "error",
           message: "User not found or account is already activated.",
           data: {
-            user_id,
+            users: {
+              id: user_id,
+            },
           },
           metadata: {},
         });
@@ -205,12 +223,14 @@ export async function activateMember(
         status: "error",
         message: "Unauthorized. Only admins can perform this action",
         data: {
-          user_id: admin_user[0].id,
-          user_name: admin_user[0].user_name,
-          user_email: admin_user[0].user_email,
-          user_role: admin_user[0].user_role,
+          id: admin_user[0].id,
+          microfinance_id: admin_user[0].microfinance_id,
+          username: admin_user[0].username,
+          email: admin_user[0].email,
+          role: admin_user[0].role,
+          status: admin_user[0].status,
         },
-        metadata: {},
+        metadata: null,
       });
     }
   } catch (error) {
@@ -218,9 +238,8 @@ export async function activateMember(
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
-      metadata: {},
+      data: {error},
+      metadata: null,
     });
   }
 }
-

@@ -4,13 +4,13 @@ POST http://localhost:4000/v1/members
 Content-Type: application/json
 
 {
-    "admin_id":"87170795-aa5d-4b4f-bc5a-ce7df6be8b79",
-    "sacco_id":"sacco-002",
-    "first_name":"Member1",
-    "last_name":"sugu",
-    "user_name":"lilies",
-    "user_email":"lily@gmail.com",
-    "phone_number":"0791745978",
+    "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9",
+    "microfinance_id":"5d76e5c1-4c91-4897-a98a-a4cb6a022418",
+    "firstname":"lancelot",
+    "lastname":"mucheru",
+    "username":"lance",
+    "email":"lance@gmail.com",
+    "phone_number":"0771795971",
     "password":"@Lance25"
 }
 
@@ -20,10 +20,10 @@ GET http://localhost:4000/v1/members
 
 ###
 # activate exixting members in system
-PUT localhost:4000/v1/members/activate/725b9c8e-71e5-420a-b124-54b7301c9eae
+PUT localhost:4000/v1/members/activate/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
 
 {
-    "user_id":"725b9c8e-71e5-420a-b124-54b7301c9eae"
+    "user_id":"61aea8a1-9c03-4670-bc31-118599caa922"
 }
 ###

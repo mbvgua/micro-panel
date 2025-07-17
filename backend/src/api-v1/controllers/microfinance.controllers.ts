@@ -13,14 +13,8 @@ export async function createMicrofinance(request: Request, response: Response) {
    * used by admin to create new microfinances(SACCOS)
    */
   const id = uid();
-  const sacco_status = MicrofinanceStatus.active;
-  const {
-    registration_number,
-    sacco_name,
-    sacco_email,
-    sacco_phone_number,
-    location,
-  } = request.body;
+  const status = MicrofinanceStatus.active;
+  const { reg_number, name, email, phone_number, location } = request.body;
   try {
     // validate request.body
     const { error } = registerMicroFinanceSchema.validate(request.body);
@@ -33,19 +27,19 @@ export async function createMicrofinance(request: Request, response: Response) {
           path: error.details[0].path[0],
           error: error.details[0].message,
         },
-        metadata: {},
+        metadata: null,
       });
     }
     //if no validation error
     const connection = await pool.getConnection();
-    await connection.execute(`CALL createMicrofinance(?,?,?,?,?,?,?);`, [
+    await connection.execute(`CALL addMicrofinance(?,?,?,?,?,?,?);`, [
       id,
-      registration_number,
-      sacco_name,
-      sacco_email,
-      sacco_phone_number,
+      reg_number,
+      name,
+      email,
+      phone_number,
       location,
-      sacco_status,
+      status,
     ]);
     connection.release();
 
@@ -54,19 +48,23 @@ export async function createMicrofinance(request: Request, response: Response) {
       status: "success",
       message: "Microfinance created successfully",
       data: {
-        microfinance_id: id,
-        microfinance_name: sacco_name,
-        microfinance_email: sacco_email,
-        microfinance_status: sacco_status,
+        microfinances: {
+          id,
+          reg_number,
+          name,
+          email,
+          status,
+        },
       },
+      metadata: null,
     });
   } catch (error) {
     return response.status(500).json({
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
-      metadata: {},
+      data: { error },
+      metadata: null,
     });
   }
 }
@@ -78,7 +76,7 @@ export async function getMicrofinances(request: Request, response: Response) {
    */
   try {
     const connection = await pool.getConnection();
-    const [rows]:any = await connection.execute(`CALL getAllMicrofinances();`);
+    const [rows]: any = await connection.execute(`CALL getAllMicrofinances();`);
     const microfinances = rows[0] as Microfinances[]; //runs despite LSP
     connection.release();
 
@@ -87,7 +85,7 @@ export async function getMicrofinances(request: Request, response: Response) {
         code: 200,
         status: "success",
         message: "Microfinances successfully retrieved",
-        data: microfinances,
+        data: { microfinances },
         metadata: {},
       });
     }
@@ -96,16 +94,16 @@ export async function getMicrofinances(request: Request, response: Response) {
       code: 404,
       status: "error",
       message: "Microfinances not found. Try again later?",
-      data: {},
-      metadata: {},
+      data: null,
+      metadata: null,
     });
   } catch (error) {
     return response.status(500).json({
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
-      metadata: {},
+      data: { error },
+      metadata: null,
     });
   }
 }

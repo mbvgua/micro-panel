@@ -1,0 +1,43 @@
+<div class="text-center">
+  <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
+  <h3>Microfinances List</h3>
+  <table class="table table-secondary table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Reg. Number</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone Number</th>
+        <th scope="col">Location</th>
+        <th scope="col">Status</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (microfinance of microfinances; track microfinance.id) {
+        <tr>
+          <th scope="row">1</th>
+          <td>{{ microfinance.reg_number }}</td>
+          <td>{{ microfinance.name }}</td>
+          <td>{{ microfinance.email }}</td>
+          <td>{{ microfinance.phone_number }}</td>
+          <td>{{ microfinance.location }}</td>
+          <td>{{ microfinance.status }}</td>
+          <td class="d-grid gap-3">
+            <button type="button" class="btn btn-primary bt-sm" disabled>
+              Update
+            </button>
+            <button type="button" class="btn btn-primary bt-sm" disabled>
+              Delete
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8">Nothing to see here</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
