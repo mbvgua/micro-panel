@@ -1,1 +1,340 @@
-<p>add-loans works!</p>
+<div class="container-fluid px-1 mx-auto">
+  <div class="row d-flex justify-content-center">
+    <div class="text-center">
+      <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
+      <h3>Add User Loans into the System</h3>
+      <!--<p class="text-primary fs-5">-->
+      <!--  Start managing your birds the smart way.<br />-->
+      <!--  It only takes a minute to get set up-->
+      <!--</p>-->
+      <div class="card">
+        <form
+          [formGroup]="addLoansForm"
+          (ngSubmit)="addLoan()"
+          class="form-card"
+        >
+          <h3>User Details</h3>
+          <!--first row start-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="microfinance_id"
+                >Microfinance ID.<span class="text-danger"> *</span></label
+              >
+              <input
+                id="microfinance_id"
+                formControlName="microfinance_id"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the microfinance id."
+              />
+
+              @if (
+                addLoansForm.get("microfinance_id")?.touched ||
+                addLoansForm.get("microfinance_id")?.dirty
+              ) {
+                @if (
+                  addLoansForm.get("microfinance_id")?.hasError("required")
+                ) {
+                  <div class="form-text text-danger">
+                    Microfinance number is required
+                  </div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="user_id"
+                >User ID.<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="user_id"
+                id="user_id"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the user id"
+              />
+              @if (
+                addLoansForm.get("user_id")?.touched ||
+                addLoansForm.get("user_id")?.dirty
+              ) {
+                @if (addLoansForm.get("user_id")?.hasError("required")) {
+                  <div class="form-text text-danger">user_id is required</div>
+                }
+                @if (addLoansForm.get("user_id")?.hasError("maxlength")) {
+                  <div class="form-text text-danger">
+                    user_id cannot be more than 20 characters long
+                  </div>
+                }
+                @if (addLoansForm.get("user_id")?.hasError("minlength")) {
+                  <div class="form-text text-danger">
+                    user_id cannot be less than 3 characters long
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <!--first row end-->
+
+          <!--second row start-->
+          <!-- TODO: make both of these to be radio buttons. Either-->
+          <!--("emergency", "development", "work", "miscallenous")-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="type"
+                >Loan Type<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="type"
+                id="type"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the loan type"
+              />
+              @if (
+                addLoansForm.get("type")?.touched ||
+                addLoansForm.get("type")?.dirty
+              ) {
+                @if (addLoansForm.get("type")?.hasError("required")) {
+                  <div class="form-text text-danger">Loan type is required</div>
+                }
+              }
+            </div>
+
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="repayment_period"
+                >Repayment Period<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="repayment_period"
+                id="repayment_period"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the repayment period"
+              />
+              @if (
+                addLoansForm.get("repayment_period")?.touched ||
+                addLoansForm.get("repayment_period")?.dirty
+              ) {
+                @if (
+                  addLoansForm.get("repayment_period")?.hasError("required")
+                ) {
+                  <div class="form-text text-danger">
+                    Repayment period is required
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <!--second row end-->
+
+          <!--third row start-->
+          <!--TODO: make this elements to a slider range element-->
+          <!--amount -> 1000000-->
+          <!--interate rate -> 10-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="amount"
+                >Amount in Kshs.<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="amount"
+                id="amount"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the amount"
+              />
+              @if (
+                addLoansForm.get("amount")?.touched ||
+                addLoansForm.get("amount")?.dirty
+              ) {
+                @if (addLoansForm.get("amount")?.hasError("required")) {
+                  <div class="form-text text-danger">
+                    Amount in Ksh is required
+                  </div>
+                }
+              }
+            </div>
+
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="interest_rate"
+                >Interest Rate(%)<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="interest_rate"
+                id="interest_rate"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the interest rate"
+              />
+              @if (
+                addLoansForm.get("interest_rate")?.touched ||
+                addLoansForm.get("interest_rate")?.dirty
+              ) {
+                @if (addLoansForm.get("interest_rate")?.hasError("required")) {
+                  <div class="form-text text-danger">
+                    Interest rate is required
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <!--third row end-->
+
+          <hr class="py-2" />
+
+          <h3>Guarantor Details</h3>
+          <section formGroupName="guarantor_details">
+            <!--first row start-->
+            <div class="row justify-content-between text-left py-2">
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label for="id"
+                  >Guarantor National Id Number.<span class="text-danger">
+                    *</span
+                  ></label
+                >
+                <input
+                  formControlName="id"
+                  id="id"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Enter the guarantor id "
+                />
+                @if (
+                  addLoansForm.get("guarantor_details.id")?.touched ||
+                  addLoansForm.get("guarantor_details.id")?.dirty
+                ) {
+                  @if (
+                    addLoansForm
+                      .get("guarantor_details.id")
+                      ?.hasError("required")
+                  ) {
+                    <div class="form-text text-danger">
+                      Guarantor ID is required
+                    </div>
+                  }
+                }
+              </div>
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label for="phone_number"
+                  >Phone No.<span class="text-danger"> *</span></label
+                >
+                <input
+                  formControlName="phone_number"
+                  id="phone_number"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Enter the phone number"
+                />
+                @if (
+                  addLoansForm.get("guarantor_details.phone_number")?.touched ||
+                  addLoansForm.get("guarantor_details.phone_number")?.dirty
+                ) {
+                  @if (
+                    addLoansForm
+                      .get("guarantor_details.phone_number")
+                      ?.hasError("required")
+                  ) {
+                    <div class="form-text text-danger">
+                      Phone number is required
+                    </div>
+                  }
+                  @if (
+                    addLoansForm
+                      .get("guarantor_details.phone_number")
+                      ?.hasError("minlength")
+                  ) {
+                    <div class="form-text text-danger">
+                      Phone number cannot be less than 10 digits
+                    </div>
+                  }
+                  @if (
+                    addLoansForm
+                      .get("guarantor_details.phone_number")
+                      ?.hasError("maxlength")
+                  ) {
+                    <div class="form-text text-danger">
+                      Phone number cannot exceed 10 digits
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+            <!--first row end-->
+
+            <!--second row start-->
+            <div class="row justify-content-between text-left py-2">
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label for="email"
+                  >Email<span class="text-danger"> *</span></label
+                >
+                <input
+                  formControlName="email"
+                  id="email"
+                  class="form-control form-control-lg"
+                  type="email"
+                  placeholder="example@gmail.com"
+                />
+                @if (
+                  addLoansForm.get("guarantor_details.email")?.touched ||
+                  addLoansForm.get("guarantor_details.email")?.dirty
+                ) {
+                  @if (
+                    addLoansForm.get("guarantor_details.email")?.hasError("required")
+                  ) {
+                    <div class="form-text text-danger">Email is required</div>
+                  }
+                  @if (
+                    addLoansForm.get("guarantor_details.email")?.hasError("email")
+                  ) {
+                    <div class="form-text text-danger">
+                      Please input a valid email
+                    </div>
+                  }
+                }
+              </div>
+              <div class="form-group col-sm-6 flex-column d-flex">
+                <label for="relationship"
+                  >Relationship<span class="text-danger"> *</span></label
+                >
+                <input
+                  formControlName="relationship"
+                  id="relationship"
+                  class="form-control form-control-lg"
+                  type="text"
+                  placeholder="Enter the phone number"
+                />
+                @if (
+                  addLoansForm.get("guarantor_details.relationship")?.touched ||
+                  addLoansForm.get("guarantor_details.relationship")?.dirty
+                ) {
+                  @if (
+                    addLoansForm
+                      .get("guarantor_details.relationship")
+                      ?.hasError("required")
+                  ) {
+                    <div class="form-text text-danger">
+                      Password is required
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+            <!--second row end-->
+          </section>
+
+          <!-- button -->
+          <div class="row justify-content-center mt-4">
+            <div class="col-sm-6 d-grid">
+              <button
+                [disabled]="addLoansForm.invalid"
+                class="btn btn-primary btn-lg text-capitalize"
+              >
+                create loan
+              </button>
+            </div>
+          </div>
+          <!-- button end -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
