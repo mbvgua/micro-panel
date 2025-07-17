@@ -18,11 +18,11 @@
       @for (user of users; track user.id) {
         <tr>
           <th scope="row">1</th>
+          <td>{{ user.microfinance_id }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone_number }}</td>
           <td>{{ user.role }}</td>
-          <td>{{ user.status }}</td>
           <td>{{ user.status }}</td>
           <td class="d-grid gap-3">
             <button type="button" class="btn btn-primary bt-sm" disabled>

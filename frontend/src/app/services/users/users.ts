@@ -26,7 +26,7 @@ export class Users {
   }
 
   //create users
-  createUser(newUser: IUsers): Observable<any> {
+  addUser(newUser: any): Observable<any> {
     return this.http.post(this.userUrl + 'members', newUser);
   }
 
