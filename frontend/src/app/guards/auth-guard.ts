@@ -3,7 +3,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { Auth } from '../services/auth/auth';
 
 export const authGuard: CanActivateFn = (route, state) => {
-  
+
   const router = inject(Router)
   const auth = inject(Auth)
 
@@ -11,8 +11,8 @@ export const authGuard: CanActivateFn = (route, state) => {
     //allow access. must return boolean
     return true
   } else {
-    //deny access. return boolean 
-    router.navigate(['/auth/login/admin'])
+    //deny access. return boolean
+    router.navigate(['/auth/login'])
     return false
   }
 };

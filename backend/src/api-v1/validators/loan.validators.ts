@@ -1,19 +1,25 @@
 import Joi from "joi";
 
 export const loanSchema = Joi.object({
+  admin_id: Joi.string().required().trim().messages({
+    "string.base": "Admin id must be a string",
+    "any.required": "Admin id is required",
+    "string.trim":
+      "Admin id cannot contain any whistespace character before or after it",
+  }),
   user_id: Joi.string().required().trim().messages({
     "string.base": "User id must be a string",
     "any.required": "User id is required",
     "string.trim":
       "User id cannot contain any whistespace character before or after it",
   }),
-  sacco_id: Joi.string().required().trim().messages({
-    "string.base": "Sacco id must be a string",
-    "any.required": "Sacco id is required",
+  microfinance_id: Joi.string().required().trim().messages({
+    "string.base": "Microfinance id must be a string",
+    "any.required": "Microfinance id is required",
     "string.trim":
-      "Sacco id cannot contain any whistespace character before or after it",
+      "Microfinance id cannot contain any whistespace character before or after it",
   }),
-  loan_type: Joi.string()
+  type: Joi.string()
     .required()
     .valid("emergency", "development", "work", "miscallenous")
     .trim()
@@ -25,23 +31,18 @@ export const loanSchema = Joi.object({
       "string.trim":
         "Loan type cannot have any leading or trailing whitespace characters",
     }),
-  loan_amount: Joi.number()
-    .required()
-    .min(1)
-    .max(1000000)
-    .precision(2)
-    .messages({
-      "number.base": "Loan amount must be a number",
-      "any.required": "Loan amount is required",
-      "number.min": "Loan amount cannot be lower that {#length}",
-      "number.max": "Loan amount cannot be higher than {#length}",
-      "number.integer": "Loan amount needs be to two decimal places",
-    }),
+  amount: Joi.number().required().min(1).max(1000000).precision(2).messages({
+    "number.base": "Loan amount must be a number",
+    "any.required": "Loan amount is required",
+    "number.min": "Loan amount cannot be lower that {#limit}",
+    "number.max": "Loan amount cannot be higher than {#limit}",
+    "number.integer": "Loan amount needs be to two decimal places",
+  }),
   interest_rate: Joi.number().required().min(0).max(100).precision(2).messages({
     "number.base": "Interest rate must be a number",
     "any.required": "Interest rate is required",
-    "number.min": "Interest rate cannot be lower that {#length}",
-    "number.max": "Interest rate cannot be higher than {#length}",
+    "number.min": "Interest rate cannot be lower that {#limit}",
+    "number.max": "Interest rate cannot be higher than {#limit}",
     "number.integer": "Interest rate needs be to two decimal places",
   }),
   repayment_period: Joi.number().required().valid(1, 3, 6, 12).messages({

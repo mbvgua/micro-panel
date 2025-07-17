@@ -4,11 +4,11 @@ POST http://localhost:4000/v1/microfinances
 Content-Type: application/json
 
 {
-    "registration_number":"017",
-    "sacco_name":"Wangwana",
-    "sacco_email":"wangwana@gmail.com",
-    "sacco_phone_number":"0712345678",
-    "location":"kilimani"
+    "reg_number":"0001",
+    "name":"Round Table",
+    "email":"roundtable@gmail.com",
+    "phone_number":"0712345678",
+    "location":"nairobi"
 }
 
 ###

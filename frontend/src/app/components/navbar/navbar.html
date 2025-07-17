@@ -14,7 +14,7 @@
 
     <div class="collapse navbar-collapse d-lg-flex" id="simple-navbar">
       <a
-        class="fs-4 fw-semi-bold text-body-emphasis navbar-brand col-lg-3 me-0 link-body-emphasis"
+        class="fs-3 fw-bold text-white navbar-brand col-lg-3 me-0 link-body-emphasis"
         href="#"
         >Micro Panel</a
       >
@@ -22,7 +22,7 @@
         @if (!auth.showStatus()) {
           <li class="nav-item">
             <a
-              class="nav-link text-secondary-emphasis text-capitalize"
+              class="nav-link text-white text-capitalize"
               routerLink=""
               routerLinkActive="active"
               [routerLinkActiveOptions]="{ exact: true }"
@@ -32,7 +32,7 @@
 
           <li class="nav-item">
             <a
-              class="nav-link text-secondary-emphasis text-capitalize"
+              class="nav-link text-white text-capitalize"
               routerLink="pricing"
               routerLinkActive="active"
               >pricing</a
@@ -48,9 +48,17 @@
           <button
             type="button"
             class="btn btn-outline-light btn-lg text-capitalize"
-            routerLink="/auth/login/admin"
+            routerLink="/login"
           >
             signin
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="btn btn-outline-light btn-lg text-capitalize"
+            (click)="logoutUser()"
+          >
+            signout
           </button>
         }
       </div>

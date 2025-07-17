@@ -21,12 +21,12 @@ export enum RepaymentPeriod {
 export interface Loans {
   id: string;
   user_id: string;
-  sacco_id: string;
-  loan_type: LoanTypes;
-  loan_amount: number;
+  microfinance_id: string;
+  type: LoanTypes;
+  amount: number;
   interest_rate: number;
   repayment_period: RepaymentPeriod;
-  loan_status?: LoanStatus;
+  status?: LoanStatus;
   disbursment_date?: string;
   guarantor_details: {
     id: string;
