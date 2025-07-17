@@ -1,1 +1,222 @@
-<p>add-users works!</p>
+<div class="container-fluid px-1 mx-auto">
+  <div class="row d-flex justify-content-center">
+    <div class="text-center">
+      <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
+      <h3>Add new User into the System</h3>
+      <!--<p class="text-primary fs-5">-->
+      <!--  Start managing your birds the smart way.<br />-->
+      <!--  It only takes a minute to get set up-->
+      <!--</p>-->
+      <div class="card">
+        <form
+          [formGroup]="addUserForm"
+          (ngSubmit)="addUser()"
+          class="form-card"
+        >
+          <!--first row start-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="microfinance_id"
+                >Microfinance ID.<span class="text-danger"> *</span></label
+              >
+              <input
+                id="microfinance_id"
+                formControlName="microfinance_id"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the microfinance id."
+              />
+
+              @if (
+                addUserForm.get("microfinance_id")?.touched ||
+                addUserForm.get("microfinance_id")?.dirty
+              ) {
+                @if (addUserForm.get("microfinance_id")?.hasError("required")) {
+                  <div class="form-text text-danger">
+                    Microfinance number is required
+                  </div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="username"
+                >Username<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="username"
+                id="username"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the username"
+              />
+              @if (
+                addUserForm.get("username")?.touched ||
+                addUserForm.get("username")?.dirty
+              ) {
+                @if (addUserForm.get("username")?.hasError("required")) {
+                  <div class="form-text text-danger">Username is required</div>
+                }
+                @if (addUserForm.get("username")?.hasError("maxlength")) {
+                  <div class="form-text text-danger">
+                    Username cannot be more than 20 characters long
+                  </div>
+                }
+                @if (addUserForm.get("username")?.hasError("minlength")) {
+                  <div class="form-text text-danger">
+                    Username cannot be less than 3 characters long
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <!--first row end-->
+
+          <!--second row start-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="firstname"
+                >First Name<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="firstname"
+                id="firstname"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the firstname"
+              />
+              @if (
+                addUserForm.get("firstname")?.touched ||
+                addUserForm.get("firstname")?.dirty
+              ) {
+                @if (addUserForm.get("firstname")?.hasError("required")) {
+                  <div class="form-text text-danger">Firstname is required</div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="lastname"
+                >Last Name<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="lastname"
+                id="lastname"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the lastname"
+              />
+              @if (
+                addUserForm.get("lastname")?.touched ||
+                addUserForm.get("lastname")?.dirty
+              ) {
+                @if (addUserForm.get("lastname")?.hasError("required")) {
+                  <div class="form-text text-danger">Lastname is required</div>
+                }
+              }
+            </div>
+          </div>
+          <!--second row end-->
+
+          <!--third row start-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="email"
+                >Email<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="email"
+                id="email"
+                class="form-control form-control-lg"
+                type="email"
+                placeholder="example@gmail.com"
+              />
+              @if (
+                addUserForm.get("email")?.touched ||
+                addUserForm.get("email")?.dirty
+              ) {
+                @if (addUserForm.get("email")?.hasError("required")) {
+                  <div class="form-text text-danger">Email is required</div>
+                }
+                @if (addUserForm.get("email")?.hasError("email")) {
+                  <div class="form-text text-danger">
+                    Please input a valid email
+                  </div>
+                }
+              }
+            </div>
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="password"
+                >Password<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="password"
+                id="password"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the phone number"
+              />
+              @if (
+                addUserForm.get("password")?.touched ||
+                addUserForm.get("password")?.dirty
+              ) {
+                @if (addUserForm.get("password")?.hasError("required")) {
+                  <div class="form-text text-danger">Password is required</div>
+                }
+              }
+            </div>
+          </div>
+          <!--third row end-->
+
+          <!--fourth row start-->
+          <div class="row justify-content-between text-left py-2">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="phone_number"
+                >Phone No.<span class="text-danger"> *</span></label
+              >
+              <input
+                formControlName="phone_number"
+                id="phone_number"
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Enter the phone number"
+              />
+              @if (
+                addUserForm.get("phone_number")?.touched ||
+                addUserForm.get("phone_number")?.dirty
+              ) {
+                @if (addUserForm.get("phone_number")?.hasError("required")) {
+                  <div class="form-text text-danger">
+                    Phone number is required
+                  </div>
+                }
+                @if (addUserForm.get("phone_number")?.hasError("minlength")) {
+                  <div class="form-text text-danger">
+                    Phone number cannot be less than 10 digits
+                  </div>
+                }
+                @if (addUserForm.get("phone_number")?.hasError("maxlength")) {
+                  <div class="form-text text-danger">
+                    Phone number cannot exceed 10 digits
+                  </div>
+                }
+              }
+            </div>
+          </div>
+          <!--fourth row end-->
+
+          <!-- button -->
+          <div class="row justify-content-center mt-4">
+            <div class="col-sm-6 d-grid">
+              <button
+                [disabled]="addUserForm.invalid"
+                class="btn btn-primary btn-lg text-capitalize"
+              >
+                create user
+              </button>
+            </div>
+          </div>
+          <!-- button end -->
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
