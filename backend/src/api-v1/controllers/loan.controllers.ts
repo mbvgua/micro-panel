@@ -217,7 +217,7 @@ export async function applyLoan(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: {error},
       metadata: null,
     });
   }
@@ -261,7 +261,7 @@ export async function getLoans(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: error,
+      data: {error},
       meatdata: null,
     });
   }

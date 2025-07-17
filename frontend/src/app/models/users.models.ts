@@ -1,8 +1,8 @@
-export enum UserRoles {
-  admin = 'admin',
-  support = 'support',
-  member = 'member',
-}
+//export enum UserRoles {
+//  admin = 'admin',
+//  support = 'support',
+//  member = 'member',
+//}
 
 export enum UserStatus {
   active = 'active',
@@ -12,13 +12,13 @@ export enum UserStatus {
 export interface IUsers {
   id: string;
   microfinance_id: string;
-  firstname: string;
-  lastname: string;
+  firstname?: string;
+  lastname?: string;
   username: string;
-  email: string;
-  phone_number: string;
-  hashed_password: string;
-  role: UserRoles;
+  email?: string;
+  phone_number?: string;
+  hashed_password?: string;
+  role: 'admin' | 'member' | 'support';
   status: UserStatus;
   created_at?: string;
   updated_at?: string;

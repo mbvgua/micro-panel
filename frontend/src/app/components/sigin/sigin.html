@@ -1,58 +1,30 @@
 <div class="container-fluid px-1 py-1 mx-auto">
   <!-- display message from backend on DOM -->
   @if (message) {
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-      <div class="toast-container top-0 end-0 p-3">
-        <div
-          class="toast show bg-success"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="toast-header">
-            <strong class="me-auto">Success</strong>
-            <small class="text-body-secondary">just now</small>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body">
-            {{ message }}
-          </div>
-        </div>
+    <!--if success-->
+    @if (status == "success") {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulations!</strong> {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
       </div>
+    }
+    <!--if error-->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+      <strong>Oops!</strong> {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
     </div>
   }
-  @if (error) {
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-      <div class="toast-container top-0 end-0 p-3">
-        <div
-          class="toast show bg-warning"
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-        >
-          <div class="toast-header">
-            <!-- <img src="..." class="rounded me-2" alt="..."> -->
-            <strong class="me-auto">Error</strong>
-            <small class="text-body-secondary">just now</small>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="toast"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="toast-body">
-            {{ error }}
-          </div>
-        </div>
-      </div>
-    </div>
-  }
+  <!--show alert message -->
 
   <div class="row d-flex justify-content-center">
     <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
@@ -71,20 +43,20 @@
           <div class="row justify-content-center text-left">
             <!-- userNameOrEmail -->
             <div class="form-group col-sm-6 flex-column d-flex">
-              <label for="userNameOrEmail" class="form-control-label px-3">
+              <label for="username_or_email" class="form-control-label px-3">
                 Username/Email <span class="text-danger"> *</span></label
               >
               <input
                 class="form-control"
-                formControlName="userNameOrEmail"
+                formControlName="username_or_email"
                 type="text"
                 placeholder="Enter username/email..."
               />
               @if (
-                signinForm.get("userNameOrEmail")?.touched ||
-                signinForm.get("userNameOrEmail")?.dirty
+                signinForm.get("username_or_email")?.touched ||
+                signinForm.get("username_or_email")?.dirty
               ) {
-                @if (signinForm.get("userNameOrEmail")?.hasError("required")) {
+                @if (signinForm.get("username_or_email")?.hasError("required")) {
                   <span class="fst-italic fs-6 text-danger"
                     >Username/Email is required
                   </span>
@@ -122,10 +94,8 @@
           <!-- button -->
           <div class="row justify-content-center mt-4">
             <div class="col-sm-6 d-grid">
-                <!--[disabled]="signinForm.invalid"-->
-              <button
-                class="btn btn-primary btn-lg text-capitalize"
-              >
+              <!--[disabled]="signinForm.invalid"-->
+              <button class="btn btn-primary btn-lg text-capitalize">
                 signin
               </button>
             </div>
