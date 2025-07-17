@@ -1,0 +1,15 @@
+.card {
+  padding: 30px 40px;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  border: none !important;
+  box-shadow: 0 6px 12px 0 rgba(0, 0, 0, 0.2)
+}
+
+input,
+textarea {
+  padding: 8px 15px;
+  margin: 5px 0px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
