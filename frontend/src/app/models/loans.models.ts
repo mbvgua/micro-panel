@@ -35,18 +35,24 @@ export interface ILoans {
   };
 }
 
+//unique response since fetching from a view
+//not a table
+export interface DetailedLoans {
+  username: string;
+  email: string;
+  name: string;
+  type: string;
+  amount: string;
+  repayment_period: string;
+  status: string;
+}
+
 export interface LoanResponse {
   code: string;
   status: string;
   message: string;
-  data: {};
-  metadata: {};
-}
-
-export interface LoansResponse {
-  code: string;
-  status: string;
-  message: string;
-  data: {};
+  data: {
+    detailed_loans: DetailedLoans[];
+  };
   metadata: {};
 }

@@ -15,41 +15,29 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>mdo</td>
-        <td>mdo</td>
-        <td>mdo</td>
-        <td>mdo</td>
-        <td class="d-grid gap-3">
-          <button
-            type="button" class="btn btn-primary bt-sm" disabled>
-            Update
-          </button>
-          <button type="button" class="btn btn-primary bt-sm" disabled>
-            Delete
-          </button>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>fat</td>
-        <td>fat</td>
-        <td>fat</td>
-        <td>fat</td>
-        <td class="d-grid gap-3">
-          <button type="button" class="btn btn-primary bt-sm" disabled>
-            Update
-          </button>
-          <button type="button" class="btn btn-primary bt-sm" disabled>
-            Delete
-          </button>
-        </td>
-      </tr>
+      @for (microfinance of microfinances; track microfinance.id) {
+        <tr>
+          <th scope="row">1</th>
+          <td>{{ microfinance.reg_number }}</td>
+          <td>{{ microfinance.name }}</td>
+          <td>{{ microfinance.email }}</td>
+          <td>{{ microfinance.phone_number }}</td>
+          <td>{{ microfinance.location }}</td>
+          <td>{{ microfinance.status }}</td>
+          <td class="d-grid gap-3">
+            <button type="button" class="btn btn-primary bt-sm" disabled>
+              Update
+            </button>
+            <button type="button" class="btn btn-primary bt-sm" disabled>
+              Delete
+            </button>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="8">Nothing to see here</td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>
