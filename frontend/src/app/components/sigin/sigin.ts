@@ -50,6 +50,10 @@ export class Sigin implements OnInit {
             this.localStorageSerive.setItem('email',response.data.users['email'],);
             this.localStorageSerive.setItem('role',response.data.users['role'],);
 
+            //login the user
+            this.authService.login()
+            console.log(this.authService.login())
+
             this.router.navigate(['dashboard']);
           }, 1000);
         }

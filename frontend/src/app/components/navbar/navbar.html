@@ -52,6 +52,14 @@
           >
             signin
           </button>
+        } @else {
+          <button
+            type="button"
+            class="btn btn-outline-light btn-lg text-capitalize"
+            (click)="logoutUser()"
+          >
+            signout
+          </button>
         }
       </div>
       <!--signup/signin button end-->
