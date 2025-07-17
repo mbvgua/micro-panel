@@ -1,5 +1,35 @@
 <div class="container-fluid px-1 mx-auto">
   <div class="row d-flex justify-content-center">
+    <!--show alert message -->
+    @if (message) {
+      <!--if success-->
+      @if (status == "success") {
+        <div
+          class="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          <strong>Congratulations!</strong> {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+      }
+      <!--if error-->
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Oops!</strong> {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    }
+    <!--show alert message -->
+
     <div class="text-center">
       <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
       <h3>Add a new Microfinance into the System</h3>

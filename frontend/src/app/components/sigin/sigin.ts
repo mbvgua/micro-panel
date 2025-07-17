@@ -19,7 +19,7 @@ import { Auth } from '../../services/auth/auth';
 export class Sigin implements OnInit {
   constructor(
     private userService: Users,
-    private authService:Auth
+    private authService: Auth,
   ) {}
 
   obs = new Observable();
@@ -32,19 +32,18 @@ export class Sigin implements OnInit {
     console.log(this.signinForm.value);
     this.userService.loginAdmin(this.signinForm.value).subscribe(
       (response) => {
-        this.authService.login()
+        this.authService.login();
         //console.log(response.data)
         //console.log(response.data.user_role)
         console.log(response);
 
-          //delay to read message
-          this.message = response.message;
-        if (response.data.user_role == 'admin') {
+        //delay to read message
+        this.message = response.message;
+        if (response.data.users[0].role == 'admin') {
           setTimeout(() => {
-
             // save critical data to local storage
-            localStorage.setItem('id', response.data.id);
-            localStorage.setItem('user_role', response.data.user_role);
+            localStorage.setItem('id', response.data.users[0].id);
+            localStorage.setItem('user_role', response.data.users[0].role);
 
             this.router.navigate(['/dashboard']);
           }, 1000);
