@@ -4,11 +4,12 @@ import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
   //NOTE: only eagerly load the home route. Lazy load all the rest
-  { path: '', component: Home },
+  { path: '', component: Home, title: 'Home' },
   {
     path: 'pricing',
     loadComponent: () =>
       import('./components/pricing/pricing').then((m) => m.Pricing),
+    title: 'Pricing',
   },
   {
     path: 'auth',
@@ -17,11 +18,13 @@ export const routes: Routes = [
         path: 'register',
         loadComponent: () =>
           import('./components/signup/signup').then((m) => m.Signup),
+        title: 'Signup',
       },
       {
         path: 'login',
         loadComponent: () =>
           import('./components/sigin/sigin').then((m) => m.Sigin),
+        title: 'Signin',
       },
     ],
   },
@@ -36,6 +39,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./components/dashboard/dashboard').then((m) => m.Dashboard),
     canActivate: [authGuard],
+    title: 'Dashboard',
     children: [
       {
         path: 'microfinances',
@@ -139,5 +143,6 @@ export const routes: Routes = [
     path: '**',
     loadComponent: () =>
       import('./components/error-404/error-404').then((m) => m.Error404),
+    title: 'Not Found',
   },
 ];

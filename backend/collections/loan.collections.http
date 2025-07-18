@@ -6,9 +6,9 @@ Content-Type: application/json
 {
     "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9
 ",
-    "user_id":"61aea8a1-9c03-4670-bc31-118599caa922",
+    "user_id":"4cb75c34-e0ae-4471-83e1-9781fcadf522",
     "microfinance_id":"5d76e5c1-4c91-4897-a98a-a4cb6a022418",
-    "type":"work",
+    "type":"development",
     "amount":10000,
     "interest_rate":3.2,
     "repayment_period":3,
