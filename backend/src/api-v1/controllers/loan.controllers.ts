@@ -6,6 +6,9 @@ import { Users } from "../models/users.models";
 import { Loans, LoanStatus } from "../models/loans.models";
 import { loanSchema } from "../validators/loan.validators";
 
+//BUG: major bug will add loan for entire length of loans array.
+//Break it and build from scratch. Too many if...else are confusing
+//reduce those.
 export async function applyLoan(request: Request, response: Response) {
   /*
    * admin applies on behalf of member. A member recives loan if:
@@ -93,7 +96,7 @@ export async function applyLoan(request: Request, response: Response) {
                 `CALL addLoan(?,?,?,?,?,?,?,?);`,
                 [
                   id,
-                  id,
+                  user_id,
                   microfinance_id,
                   type,
                   amount,
@@ -217,7 +220,7 @@ export async function applyLoan(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
       metadata: null,
     });
   }
@@ -261,7 +264,7 @@ export async function getLoans(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
       meatdata: null,
     });
   }
