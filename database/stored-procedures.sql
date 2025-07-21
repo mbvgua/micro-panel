@@ -63,6 +63,14 @@ BEGIN
     SET status="active" WHERE id=user_id;
 END#
 
+--deleteUser
+CREATE PROCEDURE deleteUser(
+    IN user_id VARCHAR(255)
+)
+BEGIN
+    UPDATE users SET is_deleted=1 WHERE id=user_id;
+END#
+
 -- createMicrofinance
 CREATE PROCEDURE addMicrofinance(
     IN id VARCHAR(255),
@@ -82,6 +90,22 @@ END#
 CREATE PROCEDURE getAllMicrofinances()
 BEGIN
     SELECT * FROM microfinances WHERE is_deleted=0;
+END#
+
+--getMicrofinanceById
+CREATE PROCEDURE getMicrofinanceById(
+    IN microfinance_id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM microfinances WHERE id=microfinance_id AND is_deleted=0;
+END#
+
+--deleteMicrofinance
+CREATE PROCEDURE deleteMicrofinance(
+    IN microfinance_id VARCHAR(255)
+)
+BEGIN
+    UPDATE microfinances SET is_deleted=1 WHERE id=microfinance_id;
 END#
 
 -- getUserLoansById
@@ -114,12 +138,27 @@ BEGIN
     SELECT * FROM loans WHERE is_deleted=0;
 END#
 
+--getLoanById
+CREATE PROCEDURE getLoanById(
+    IN loan_id VARCHAR(255)
+)
+BEGIN
+    SELECT * FROM loans WHERE id=loan_id AND is_deleted=0;
+END#
+
 -- get view of detailed loans
 CREATE PROCEDURE getDetailedLoans()
 BEGIN
     SELECT * FROM detailed_loans_view;
 END#
 
+--deleteLoan
+CREATE PROCEDURE deleteLoan(
+    IN loan_id VARCHAR(255)
+)
+BEGIN
+    UPDATE loans SET is_deleted=1 WHERE id=loan_id;
+END#
 
 delimiter ;
 

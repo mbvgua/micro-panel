@@ -4,10 +4,9 @@ POST http://localhost:4000/v1/loans
 Content-Type: application/json
 
 {
-    "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9
-",
-    "user_id":"4cb75c34-e0ae-4471-83e1-9781fcadf522",
-    "microfinance_id":"5d76e5c1-4c91-4897-a98a-a4cb6a022418",
+    "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9",
+    "user_id":"2138bb62-3ac2-4960-bf2a-29860462632a",
+    "microfinance_id":"c23848b5-4408-4671-8d76-83b6fb30e325",
     "type":"development",
     "amount":10000,
     "interest_rate":3.2,
@@ -24,3 +23,11 @@ Content-Type: application/json
 GET http://localhost:4000/v1/loans
 
 ###
+#delete a loan
+PUT http://localhost:4000/v1/loans/delete/09d05331-7977-423f-9dcf-905c46084aa9
+Content-Type: application/json
+
+{
+    "loan_id":"7002f748-f9df-4e9d-8416-b6c1c9429f7c"
+}
+

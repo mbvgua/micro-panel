@@ -7,6 +7,7 @@ import {
   MicrofinanceStatus,
 } from "../models/microfinance.models";
 import { registerMicroFinanceSchema } from "../validators/microfinance.validators";
+import { UserRoles, Users } from "../models/users.models";
 
 export async function createMicrofinance(request: Request, response: Response) {
   /*
@@ -97,6 +98,99 @@ export async function getMicrofinances(request: Request, response: Response) {
       data: null,
       metadata: null,
     });
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: { error },
+      metadata: null,
+    });
+  }
+}
+
+export async function deleteMicrofinance(
+  request: Request<{ id: string }>,
+  response: Response,
+) {
+  /*
+   * delete microfinances from the system
+   * can only be performed by the admin
+   */
+  const admin_id = request.params.id;
+  const { microfinance_id } = request.body;
+
+  try {
+    const connection = await pool.getConnection();
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
+    const admin_user = rows[0] as Users[];
+
+    if (admin_user.length > 0 && admin_user[0].role == UserRoles.admin) {
+      const [rows]: any = await connection.execute(
+        `CALL getMicrofinanceById(?);`,
+        [microfinance_id],
+      );
+      const microfinance = rows[0] as Microfinances[];
+
+      //if microfinance exists deleted
+      console.log(microfinance.length);
+      if (microfinance.length > 0) {
+        await connection.execute(`CALL deleteMicrofinance(?);`, [
+          microfinance_id,
+        ]);
+
+        return response.status(201).json({
+          code: 201,
+          status: "success",
+          message: "Successfully deleted microfinance",
+          data: {
+            users: {
+              id: admin_user[0].id,
+              username: admin_user[0].username,
+              email: admin_user[0].email,
+              role: admin_user[0].role,
+            },
+            microfinances: {
+              id: microfinance[0].id,
+              name: microfinance[0].name,
+              reg_number: microfinance[0].reg_number,
+            },
+          },
+        });
+        // else if microfinance does not exist
+      } else {
+        return response.status(400).json({
+          code: 400,
+          status: "error",
+          message: "Microfinance not found or has already been deleted",
+          data: {
+            microfinances: {
+              id: microfinance_id,
+            },
+          },
+          metadata: null,
+        });
+      }
+
+      //if not an admin user
+    } else {
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized. Only admin can perform this action",
+        data: {
+          users: {
+            id: admin_id,
+          },
+          microfinances: {
+            id: microfinance_id,
+          },
+        },
+        metadata: null,
+      });
+    }
   } catch (error) {
     return response.status(500).json({
       code: 500,

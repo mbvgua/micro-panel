@@ -109,7 +109,7 @@ export async function createMember(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
       metadata: null,
     });
   }
@@ -150,7 +150,7 @@ export async function getMembers(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
       metadata: null,
     });
   }
@@ -238,7 +238,92 @@ export async function activateMember(
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
+      metadata: null,
+    });
+  }
+}
+
+export async function deleteMember(
+  request: Request<{ id: string }>,
+  response: Response,
+) {
+  /*
+   * delete user from db
+   * can only be performed by and admin
+   */
+
+  const admin_id = request.params.id;
+  const { user_id } = request.body;
+
+  try {
+    const connection = await pool.getConnection();
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
+    const admin_user = rows[0] as Users[];
+
+    //ensure only admins can perform this action
+    if (admin_user[0].role == UserRoles.admin) {
+      const [results]: any = await connection.execute(`CALL getUserById(?);`, [
+        user_id,
+      ]);
+      const user_to_be_deleted = results[0] as Users[];
+
+      //ensure user exists in db
+      if (user_to_be_deleted.length > 0) {
+        await connection.execute(`CALL deleteUser(?);`, [user_id]);
+
+        return response.status(201).json({
+          code: 201,
+          status: "error",
+          message: "Succesfully deleted user",
+          data: {
+            users: {
+              id: user_to_be_deleted[0].id,
+              username: user_to_be_deleted[0].username,
+              email: user_to_be_deleted[0].email,
+              microfinance_id: user_to_be_deleted[0].microfinance_id,
+            },
+          },
+          metadata: null,
+        });
+        //if user is not in db
+      } else {
+        return response.status(404).json({
+          code: 404,
+          status: "error",
+          message: "User not found or has already already been deleted",
+          data: {
+            users: {
+              id: user_id,
+            },
+          },
+          metadata: null,
+        });
+      }
+      //error if action not performed by and admin
+    } else {
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized. Only admins can perform this action",
+        data: {
+          users: {
+            username: admin_user[0].username,
+            email: admin_user[0].email,
+            role: admin_user[0].role,
+          },
+        },
+        metadata: null,
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: { error },
       metadata: null,
     });
   }
