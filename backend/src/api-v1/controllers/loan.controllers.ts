@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { v4 as uid } from "uuid";
 
 import { pool } from "../../config/db.config";
-import { Users } from "../models/users.models";
+import { UserRoles, Users } from "../models/users.models";
 import { Loans, LoanStatus } from "../models/loans.models";
 import { loanSchema } from "../validators/loan.validators";
 
@@ -266,6 +266,97 @@ export async function getLoans(request: Request, response: Response) {
       message: "Server error",
       data: { error },
       meatdata: null,
+    });
+  }
+}
+
+export async function deleteLoan(
+  request: Request<{ id: string }>,
+  response: Response,
+) {
+  /*
+   * delete a loan from system
+   * can only be performed by admin
+   */
+
+  const admin_id = request.params.id;
+  const { loan_id } = request.body;
+
+  try {
+    const connection = await pool.getConnection();
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
+    const admin_user = rows[0] as Users[];
+
+    if (admin_user.length > 0 && admin_user[0].role == UserRoles.admin) {
+      const [rows]: any = await connection.execute(`CALL getLoanById(?);`, [
+        loan_id,
+      ]);
+      const loan = rows[0] as Loans[];
+
+      //if loan exists
+      if (loan.length > 0) {
+        await connection.execute(`CALL deleteLoan(?);`, [loan_id]);
+
+        return response.status(201).json({
+          code: 201,
+          status: "success",
+          message: "Successfully deleted loan",
+          data: {
+            users: {
+              id: admin_user[0].id,
+              username: admin_user[0].username,
+              email: admin_user[0].email,
+              role: admin_user[0].role,
+            },
+            loans: {
+              id: loan[0].id,
+              user_id: loan[0].user_id,
+              microfinance_id: loan[0].microfinance_id,
+              amount: loan[0].amount,
+              status: loan[0].status,
+            },
+          },
+        });
+
+        //else if loan does not exists
+      } else {
+        return response.status(404).json({
+          code: 404,
+          status: "error",
+          messages: "Loan not found or has already been deleted",
+          data: {
+            loans: {
+              id: loan_id,
+            },
+          },
+          metadata: null,
+        });
+      }
+    } else {
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized. Only admin can perform this action",
+        data: {
+          users: {
+            id: admin_id,
+          },
+          loans: {
+            id: loan_id,
+          },
+        },
+        metadata: null,
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: { error },
+      metadata: null,
     });
   }
 }
