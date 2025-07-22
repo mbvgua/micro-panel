@@ -82,9 +82,9 @@ export const memberRegSchema = Joi.object({
 
 export const updateMemberSchema = Joi.object({
   user_id: Joi.string().trim().messages({
-    "string.base": "Microfinance id must be a string",
+    "string.base": "User id must be a string",
     "string.trim":
-      "Microfinance id cannot contain any whistespace character before or after it",
+      "User id cannot contain any whistespace character before or after it",
   }),
   microfinance_id: Joi.string().trim().messages({
     "string.base": "Microfinance id must be a string",

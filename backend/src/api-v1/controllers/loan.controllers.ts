@@ -4,7 +4,7 @@ import { v4 as uid } from "uuid";
 import { pool } from "../../config/db.config";
 import { UserRoles, Users } from "../models/users.models";
 import { Loans, LoanStatus } from "../models/loans.models";
-import { loanSchema } from "../validators/loan.validators";
+import { loanSchema, updateLoanSchema } from "../validators/loan.validators";
 
 //BUG: major bug will add loan for entire length of loans array.
 //Break it and build from scratch. Too many if...else are confusing
@@ -266,6 +266,118 @@ export async function getLoans(request: Request, response: Response) {
       message: "Server error",
       data: { error },
       meatdata: null,
+    });
+  }
+}
+
+export async function updateLoan(
+  request: Request<{ id: string }>,
+  response: Response,
+) {
+  /*
+   * admin updates a loans details
+   */
+  const admin_id = request.params.id;
+  const { loan_id, type, amount, interest_rate, repayment_period } =
+    request.body;
+
+  try {
+    const { error } = updateLoanSchema.validate(request.body);
+    if (error) {
+      return response.status(422).json({
+        code: 422,
+        status: "error",
+        message: "Validation error occurred",
+        data: {
+          path: error.details[0].path[0],
+          error: error.details[0].message,
+        },
+        metadata: null,
+      });
+    }
+
+    //if no validation error
+    const connection = await pool.getConnection();
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      admin_id,
+    ]);
+    const admin_user = rows[0] as Users[];
+
+    if (admin_user.length > 0 && admin_user[0].role == UserRoles.admin) {
+      const [rows]: any = await connection.execute(`CALL getLoanById(?);`, [
+        loan_id,
+      ]);
+      const loan_to_be_updated = rows[0] as Loans[];
+
+      //if loan exists and has not bee approved yet
+      if (
+        loan_to_be_updated.length > 0 &&
+        loan_to_be_updated[0].status == LoanStatus.pending
+      ) {
+        await connection.execute(`CALL updateLoan(?,?,?,?,?);`, [
+          loan_id,
+          type || loan_to_be_updated[0].type,
+          amount || loan_to_be_updated[0].amount,
+          interest_rate || loan_to_be_updated[0].interest_rate,
+          repayment_period || loan_to_be_updated[0].repayment_period,
+        ]);
+
+        return response.status(201).json({
+          code: 201,
+          status: "error",
+          message: "Successfully updated loan",
+          data: {
+            users: {
+              id: admin_user[0].id,
+              username: admin_user[0].username,
+              email: admin_user[0].email,
+              role: admin_user[0].role,
+            },
+            loans: {
+              id: loan_to_be_updated[0].id,
+              microfinance_id: loan_to_be_updated[0].microfinance_id,
+              amount: loan_to_be_updated[0].amount,
+              status: loan_to_be_updated[0].status,
+              disbursment_date: loan_to_be_updated[0].disbursment_date,
+            },
+          },
+          metadata: null,
+        });
+        //else if loan does not exist
+      } else {
+        return response.status(404).json({
+          code: 404,
+          status: "error",
+          messages: "Loan not found or has already been approved",
+          data: {
+            loans: {
+              id: loan_id,
+            },
+          },
+          metadata: null,
+        });
+      }
+      //else if not an admin user
+    } else {
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized. Only admins can perform this action",
+        data: {
+          users: {
+            id: admin_id,
+          },
+        },
+        metadata: null,
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: { error },
+      metadata: null,
     });
   }
 }

@@ -23,6 +23,18 @@ Content-Type: application/json
 GET http://localhost:4000/v1/loans
 
 ###
+PUT localhost:4000/v1/loans/update/09d05331-7977-423f-9dcf-905c46084aa9
+Content-Type: application/json
+
+{
+    "loan_id":"7002f748-f9df-4e9d-8416-b6c1c9429f7c",
+    "type":"emergency",
+    "amount":10,
+    "interest_rate":10,
+    "repayment_period":3
+}
+
+###
 #delete a loan
 PUT http://localhost:4000/v1/loans/delete/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
