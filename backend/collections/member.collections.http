@@ -6,11 +6,11 @@ Content-Type: application/json
 {
     "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9",
     "microfinance_id":"c23848b5-4408-4671-8d76-83b6fb30e325",
-    "firstname":"lancelot",
+    "firstname":"perceival",
     "lastname":"mucheru",
-    "username":"whiteKnight",
-    "email":"kwhite@gmail.com",
-    "phone_number":"0791795971",
+    "username":"percy",
+    "email":"percy@gmail.com",
+    "phone_number":"0711795971",
     "password":"@Lance25"
 }
 
@@ -26,6 +26,20 @@ Content-Type: application/json
 {
     "user_id":"7b80a07f-5c33-4cac-8518-cd8732ac7f3d"
 }
+###
+# update user
+PUT http://localhost:4000/v1/members/update/09d05331-7977-423f-9dcf-905c46084aa9
+Content-Type: application/json
+
+{
+    "user_id": "2138bb62-3ac2-4960-bf2a-29860462632a",
+    "microfinance_id": "c23848b5-4408-4671-8d76-83b6fb30e325",
+    "firstname": "mkuu",
+    "lastname": "bana",
+    "username": "whiteKnight",
+    "password": "@Lance25"
+}
+
 ###
 # delete a member
 PUT http://localhost:4000/v1/members/delete/09d05331-7977-423f-9dcf-905c46084aa9

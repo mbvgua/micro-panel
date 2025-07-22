@@ -63,6 +63,21 @@ BEGIN
     SET status="active" WHERE id=user_id;
 END#
 
+--updateUser
+CREATE PROCEDURE updateUser(
+    IN user_id VARCHAR(255),
+    IN new_microfinance_id VARCHAR(255),
+    IN new_firstname VARCHAR(100),
+    IN new_lastname VARCHAR(100),
+    IN new_username VARCHAR(100),
+    IN new_email VARCHAR(100),
+    IN new_phone_number VARCHAR(100),
+    IN new_hashed_password VARCHAR(255)
+)
+BEGIN
+    UPDATE users SET microfinance_id=new_microfinance_id,firstname=new_firstname,lastname=new_lastname,username=new_username,email=new_email,phone_number=new_phone_number,hashed_password=new_hashed_password WHERE id=user_id;
+END#
+
 --deleteUser
 CREATE PROCEDURE deleteUser(
     IN user_id VARCHAR(255)
