@@ -180,6 +180,18 @@ BEGIN
     SELECT * FROM detailed_loans_view;
 END#
 
+--updateLoan
+CREATE PROCEDURE updateLoan(
+    IN loan_id VARCHAR(255),
+    IN new_type ENUM('emergency','development','work','miscallenous'),
+    IN new_amount DECIMAL(10,2),
+    IN new_interest_rate DECIMAL(5,2),
+    IN new_repayment_period ENUM('1','3','6','12')
+)
+BEGIN
+    UPDATE loans SET type=new_type,amount=new_amount,interest_rate=new_interest_rate,repayment_period=new_repayment_period WHERE id=loan_id;
+END#
+
 --deleteLoan
 CREATE PROCEDURE deleteLoan(
     IN loan_id VARCHAR(255)
