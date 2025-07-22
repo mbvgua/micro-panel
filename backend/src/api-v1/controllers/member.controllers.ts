@@ -4,7 +4,10 @@ import bcrypt from "bcrypt";
 
 import { pool } from "../../config/db.config";
 import { Users, UserStatus, UserRoles } from "../models/users.models";
-import { memberRegSchema } from "../validators/member.validators";
+import {
+  memberRegSchema,
+  updateMemberSchema,
+} from "../validators/member.validators";
 
 export async function createMember(request: Request, response: Response) {
   /*
@@ -229,6 +232,120 @@ export async function activateMember(
           email: admin_user[0].email,
           role: admin_user[0].role,
           status: admin_user[0].status,
+        },
+        metadata: null,
+      });
+    }
+  } catch (error) {
+    return response.status(500).json({
+      code: 500,
+      status: "error",
+      message: "Server error",
+      data: { error },
+      metadata: null,
+    });
+  }
+}
+
+export async function updateMember(
+  request: Request<{ id: string }>,
+  response: Response,
+) {
+  /*
+   * user updates their own profile. admin can update anyones profile
+   * user status must be "active" to be updated
+   */
+
+  const user_making_request_id = request.params.id;
+  const {
+    user_id,
+    microfinance_id,
+    firstname,
+    lastname,
+    username,
+    email,
+    phone_number,
+    password,
+  } = request.body;
+
+  try {
+    // validate user input
+    const { error } = updateMemberSchema.validate(request.body);
+    if (error) {
+      return response.status(422).json({
+        code: 422,
+        status: "error",
+        message: "Validation error occurred",
+        data: {
+          path: error.details[0].path[0],
+          error: error.details[0].message,
+        },
+        metadata: {},
+      });
+    }
+
+    // if no validation errors
+    const connection = await pool.getConnection();
+    const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
+      user_making_request_id,
+    ]);
+    const user_making_request = rows[0] as Users[];
+
+    const [results]: any = await connection.execute(`CALL getUserById(?);`, [
+      user_id,
+    ]);
+    const user_to_be_updated = results[0] as Users[];
+
+    //if its an admin or the actual user
+    if (
+      user_making_request[0].role == UserRoles.admin ||
+      user_making_request_id == user_id
+    ) {
+      //hash the new passwrod
+      //The password MUST be passed in request
+      const salt_rounds = 9;
+      const hashed_password = await bcrypt.hash(password, salt_rounds);
+
+      // The OR option is used if the value is not passed into the request
+      const [rows]: any = await connection.execute(
+        `CALL updateUser(?,?,?,?,?,?,?,?);`,
+        [
+          user_id,
+          microfinance_id || user_to_be_updated[0].microfinance_id,
+          firstname || user_to_be_updated[0].firstname,
+          lastname || user_to_be_updated[0].lastname,
+          username || user_to_be_updated[0].username,
+          email || user_to_be_updated[0].email,
+          phone_number || user_to_be_updated[0].phone_number,
+          hashed_password || user_to_be_updated[0].hashed_password,
+        ],
+      );
+      return response.status(201).json({
+        code: 201,
+        status: "success",
+        message: "Member succesfully updated",
+        data: {
+          users: {
+            microfinance_id,
+            username,
+            email,
+          },
+        },
+        metadata: null,
+      });
+      //else if not an admin or actual user
+    } else {
+      return response.status(401).json({
+        code: 401,
+        status: "error",
+        message:
+          "Unauthorized. Only admins or the user themselves can perform this action",
+        data: {
+          users: {
+            username: user_making_request[0].username,
+            email: user_making_request[0].email,
+            role: user_making_request[0].role,
+          },
         },
         metadata: null,
       });
