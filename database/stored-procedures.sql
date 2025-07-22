@@ -115,6 +115,19 @@ BEGIN
     SELECT * FROM microfinances WHERE id=microfinance_id AND is_deleted=0;
 END#
 
+--updateMicrofinance
+CREATE PROCEDURE updateMicrofinance(
+    IN microfinance_id VARCHAR(255),
+    IN new_reg_number VARCHAR(100),
+    IN new_name VARCHAR(100),
+    IN new_email VARCHAR(100),
+    IN new_phone_number VARCHAR(100),
+    IN new_location VARCHAR(100)
+)
+BEGIN
+    UPDATE microfinances SET reg_number=new_reg_number,name=new_name,email=new_email,phone_number=new_phone_number,location=new_location WHERE id=microfinance_id;
+END#
+
 --deleteMicrofinance
 CREATE PROCEDURE deleteMicrofinance(
     IN microfinance_id VARCHAR(255)

@@ -16,6 +16,19 @@ Content-Type: application/json
 GET http://localhost:4000/v1/microfinances
 
 ###
+# update microfinance
+PUT http://localhost:4000/v1/microfinances/update/09d05331-7977-423f-9dcf-905c46084aa9
+Content-Type: application/json
+
+{
+    "microfinance_id":"c23848b5-4408-4671-8d76-83b6fb30e325",
+    "reg_number":"0002",
+    "name":"Magneto Sacco",
+    "email":"kinara@sacco.com",
+    "phone_number":"0754523554",
+    "location":"mombasa"
+}
+###
 # delete microfinance
 PUT http://localhost:4000/v1/microfinances/delete/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
