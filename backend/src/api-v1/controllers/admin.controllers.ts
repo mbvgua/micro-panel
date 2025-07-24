@@ -9,6 +9,14 @@ import {
   emailLoginSchema,
   usernameLoginSchema,
 } from "../validators/admin.validators";
+import { validationHelper } from "../helpers/validator.helpers";
+import {
+  response200Helper,
+  response201Helper,
+  response404Helper,
+  response422Helper,
+  response500Helper,
+} from "../helpers/response.helpers";
 
 export async function adminRegistration(request: Request, response: Response) {
   /**
@@ -22,19 +30,8 @@ export async function adminRegistration(request: Request, response: Response) {
   const status = UserStatus.active;
 
   try {
-    const { error } = adminRegSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    //validate request body
+    validationHelper(request, response, adminRegSchema);
 
     const salt_rounds = 9;
     const hashed_password = await bcrypt.hash(password, salt_rounds);
@@ -55,30 +52,21 @@ export async function adminRegistration(request: Request, response: Response) {
     // release connection
     connection.release();
 
-    return response.status(201).json({
-      code: 201,
-      status: "success",
-      message: "Admin successfully registered",
-      data: {
-        users: {
-          id,
-          microfinance_id,
-          username,
-          email,
-          role,
-          status,
-        },
+    //send response
+    const message: string = "Admin successfully registered";
+    const data = {
+      users: {
+        id,
+        microfinance_id,
+        username,
+        email,
+        role,
+        status,
       },
-      metadata: null,
-    });
+    };
+    return response201Helper(response, message, data);
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: {error},
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -95,23 +83,10 @@ export async function adminLogin(request: Request, response: Response) {
   try {
     // if using email
     if (email_regex.test(username_or_email)) {
-      const { error } = emailLoginSchema.validate(request.body);
-      if (error) {
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Validation error occurred",
-          data: {
-            path: error.details[0].path[0],
-            error: error.details[0].message,
-          },
-          metadata: null,
-        });
-      }
+      validationHelper(request, response, emailLoginSchema);
 
       // if no error in email validation
       const connection = await pool.getConnection();
-      //HACK: prevents type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
         [username_or_email],
@@ -128,65 +103,41 @@ export async function adminLogin(request: Request, response: Response) {
         );
 
         if (is_match) {
-          return response.status(200).json({
-            code: 200,
-            status: "success",
-            message: "Succesful login",
-            data: {
-              users: {
-                id: users[0].id,
-                microfinance_id: users[0].microfinance_id,
-                email: username_or_email,
-                role: users[0].role,
-                status: users[0].status,
-              },
+          const message: string = "Successful admin login";
+          const data = {
+            users: {
+              id: users[0].id,
+              microfinance_id: users[0].microfinance_id,
+              email: username_or_email,
+              role: users[0].role,
+              status: users[0].status,
             },
-            metadata: null,
-          });
+          };
+          return response200Helper(response, message, data);
         }
         // else passwords do not match
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Invalid password. Try again?",
-          data: {
-            email: username_or_email,
-            password: password,
-          },
-          metadata: null,
-        });
+        const message: string = "Invalid password. Try again?";
+        const data = {
+          email: username_or_email,
+          password: password,
+        };
+        return response422Helper(response, message, data);
       } else {
         // no user match found
-        return response.status(404).json({
-          code: 404,
-          status: "error",
-          message: "User not found",
-          data: {
-            email: username_or_email,
-            password: password,
-          },
-          metadata: null,
-        });
+        const message: string = "User not found";
+        const data = {
+          email: username_or_email,
+          password: password,
+        };
+
+        return response404Helper(response, message, data);
       }
     } else {
       // else if not using email
-      const { error } = usernameLoginSchema.validate(request.body);
-      if (error) {
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Validation error occurred",
-          data: {
-            path: error.details[0].path[0],
-            error: error.details[0].message,
-          },
-          metadata: null,
-        });
-      }
+      validationHelper(request, response, usernameLoginSchema);
 
       // if no error in username validation
       const connection = await pool.getConnection();
-      //HACK: any helps prevent type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
         [username_or_email],
@@ -202,54 +153,36 @@ export async function adminLogin(request: Request, response: Response) {
           users[0].hashed_password,
         );
         if (is_match) {
-          return response.status(200).json({
-            code: 200,
-            status: "success",
-            message: "Succesful login",
-            data: {
-              users: {
-                id: users[0].id,
-                microfinance_id: users[0].microfinance_id,
-                username: username_or_email,
-                role: users[0].role,
-                status: users[0].status,
-              },
+          const message: string = "Successful admin login";
+          const data = {
+            users: {
+              id: users[0].id,
+              microfinance_id: users[0].microfinance_id,
+              email: username_or_email,
+              role: users[0].role,
+              status: users[0].status,
             },
-            metadata: null,
-          });
+          };
+          return response200Helper(response, message, data);
         }
         // else passwords do not match
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Invalid password. Try again?",
-          data: {
-            username: username_or_email,
-            password: password,
-          },
-          metadata: null,
-        });
+        const message: string = "Invalid password. Try again?";
+        const data = {
+          email: username_or_email,
+          password: password,
+        };
+        return response422Helper(response, message, data);
       } else {
         // no user match found
-        return response.status(404).json({
-          code: 404,
-          status: "error",
-          message: "User not found",
-          data: {
-            username: username_or_email,
-            password: password,
-          },
-          metadata: null,
-        });
+        const message: string = "User not found";
+        const data = {
+          username: username_or_email,
+          password: password,
+        };
+        return response404Helper(response, message, data);
       }
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: {error,
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
