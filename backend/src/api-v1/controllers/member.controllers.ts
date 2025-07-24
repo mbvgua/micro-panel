@@ -8,6 +8,7 @@ import {
   memberRegSchema,
   updateMemberSchema,
 } from "../validators/member.validators";
+import { validationHelper } from "../helpers/validator.helpers";
 
 export async function createMember(request: Request, response: Response) {
   /*
@@ -30,19 +31,7 @@ export async function createMember(request: Request, response: Response) {
 
   try {
     // validate user input
-    const { error } = memberRegSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: {},
-      });
-    }
+    validationHelper(request, response, memberRegSchema);
 
     // if no validation errors
     const connection = await pool.getConnection();
@@ -270,19 +259,7 @@ export async function updateMember(
 
   try {
     // validate user input
-    const { error } = updateMemberSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: {},
-      });
-    }
+    validationHelper(request, response, updateMemberSchema);
 
     // if no validation errors
     const connection = await pool.getConnection();
@@ -307,6 +284,7 @@ export async function updateMember(
       const hashed_password = await bcrypt.hash(password, salt_rounds);
 
       // The OR option is used if the value is not passed into the request
+      // Thus it will not be updated as null
       const [rows]: any = await connection.execute(
         `CALL updateUser(?,?,?,?,?,?,?,?);`,
         [
