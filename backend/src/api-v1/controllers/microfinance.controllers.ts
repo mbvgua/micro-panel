@@ -12,6 +12,13 @@ import {
 } from "../validators/microfinance.validators";
 import { UserRoles, Users } from "../models/users.models";
 import { validationHelper } from "../helpers/validator.helpers";
+import {
+  response200Helper,
+  response201Helper,
+  response401Helper,
+  response404Helper,
+  response500Helper,
+} from "../helpers/response.helpers";
 
 export async function createMicrofinance(request: Request, response: Response) {
   /*
@@ -37,29 +44,20 @@ export async function createMicrofinance(request: Request, response: Response) {
     ]);
     connection.release();
 
-    return response.status(201).json({
-      code: 201,
-      status: "success",
-      message: "Microfinance created successfully",
-      data: {
-        microfinances: {
-          id,
-          reg_number,
-          name,
-          email,
-          status,
-        },
+    const message: string = "Microfinance created successfully";
+    const data = {
+      microfinances: {
+        id,
+        reg_number,
+        name,
+        email,
+        status,
       },
-      metadata: null,
-    });
+    };
+
+    return response201Helper(response, message, data);
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -75,30 +73,17 @@ export async function getMicrofinances(request: Request, response: Response) {
     connection.release();
 
     if (microfinances.length > 0) {
-      return response.status(200).json({
-        code: 200,
-        status: "success",
-        message: "Microfinances successfully retrieved",
-        data: { microfinances },
-        metadata: {},
-      });
+      const message: string = "Microfinances successfully retrieved";
+      const data = { microfinances };
+      return response200Helper(response, message, data);
     }
     // else if no microfinances in db currenly in system
-    return response.status(404).json({
-      code: 404,
-      status: "error",
-      message: "Microfinances not found. Try again later?",
-      data: null,
-      metadata: null,
-    });
+    const message: string = "Microfinances not found";
+    const data = null;
+
+    return response404Helper(response, message, data);
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -146,63 +131,49 @@ export async function updateMicrofinance(
           location || microfinance_to_be_updated[0].location,
         ]);
 
-        return response.status(201).json({
-          code: 201,
-          status: "success",
-          message: "Successfully updated microfinance",
-          data: {
-            users: {
-              id: admin_user[0].id,
-              username: admin_user[0].username,
-              email: admin_user[0].email,
-              microfinance_id: admin_user[0].microfinance_id,
-            },
-            microfinances: {
-              id: microfinance_id,
-              name,
-              reg_number,
-              email,
-            },
-          },
-          metadata: null,
-        });
-        //else if microfinance does not exist
-      } else {
-        return response.status(404).json({
-          code: 404,
-          status: "error",
-          message: "Not found. Microfinance does not exist or is not active",
-          data: {
-            microfinances: {
-              id: microfinance_id,
-            },
-          },
-          metadata: null,
-        });
-      }
-
-      //else if not an admin
-    } else {
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Unauthorized. Only admin can perform this action",
-        data: {
+        const message: string = "Successfully updated microfinance";
+        const data = {
           users: {
-            id: admin_id,
+            id: admin_user[0].id,
+            username: admin_user[0].username,
+            email: admin_user[0].email,
+            microfinance_id: admin_user[0].microfinance_id,
           },
+          microfinances: {
+            id: microfinance_id,
+            name,
+            reg_number,
+            email,
+          },
+        };
+
+        return response201Helper(response, message, data);
+      } else {
+        //else if microfinance does not exist
+        const message: string =
+          "Not found. Microfinance does not exist or is not active";
+        const data = {
+          microfinances: {
+            id: microfinance_id,
+          },
+        };
+
+        return response404Helper(response, message, data);
+      }
+    } else {
+      //else if not an admin
+      const message: string =
+        "Unauthorized. Only admins can perform this action";
+      const data = {
+        users: {
+          id: admin_id,
         },
-        metadata: null,
-      });
+      };
+
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -232,69 +203,55 @@ export async function deleteMicrofinance(
       const microfinance = rows[0] as Microfinances[];
 
       //if microfinance exists deleted
-      console.log(microfinance.length);
       if (microfinance.length > 0) {
         await connection.execute(`CALL deleteMicrofinance(?);`, [
           microfinance_id,
         ]);
 
-        return response.status(201).json({
-          code: 201,
-          status: "success",
-          message: "Successfully deleted microfinance",
-          data: {
-            users: {
-              id: admin_user[0].id,
-              username: admin_user[0].username,
-              email: admin_user[0].email,
-              role: admin_user[0].role,
-            },
-            microfinances: {
-              id: microfinance[0].id,
-              name: microfinance[0].name,
-              reg_number: microfinance[0].reg_number,
-            },
-          },
-        });
-        // else if microfinance does not exist
-      } else {
-        return response.status(400).json({
-          code: 400,
-          status: "error",
-          message: "Microfinance not found or has already been deleted",
-          data: {
-            microfinances: {
-              id: microfinance_id,
-            },
-          },
-          metadata: null,
-        });
-      }
-
-      //if not an admin user
-    } else {
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Unauthorized. Only admin can perform this action",
-        data: {
+        const message: string = "Successfully deleted microfinance";
+        const data = {
           users: {
-            id: admin_id,
+            id: admin_user[0].id,
+            username: admin_user[0].username,
+            email: admin_user[0].email,
+            role: admin_user[0].role,
           },
+          microfinances: {
+            id: microfinance[0].id,
+            name: microfinance[0].name,
+            reg_number: microfinance[0].reg_number,
+          },
+        };
+
+        return response201Helper(response, message, data);
+      } else {
+        // else if microfinance does not exist
+        const message: string =
+          "Microfinance not found or has already been deleted";
+        const data = {
           microfinances: {
             id: microfinance_id,
           },
+        };
+
+        return response404Helper(response, message, data);
+      }
+    } else {
+      //if not an admin user
+      const message: string =
+        "Unauthorized. Only admin can perform this action";
+      const data = {
+        users: {
+          id: admin_id,
         },
-        metadata: null,
-      });
+        microfinances: {
+          id: microfinance_id,
+        },
+      };
+
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }

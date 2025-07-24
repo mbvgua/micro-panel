@@ -1,5 +1,6 @@
 ###
 # create new microfinance
+
 POST http://localhost:4000/v1/microfinances
 Content-Type: application/json
 
@@ -13,10 +14,12 @@ Content-Type: application/json
 
 ###
 # get all microfinances
+
 GET http://localhost:4000/v1/microfinances
 
 ###
 # update microfinance
+
 PUT http://localhost:4000/v1/microfinances/update/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
 
@@ -30,9 +33,12 @@ Content-Type: application/json
 }
 ###
 # delete microfinance
+
 PUT http://localhost:4000/v1/microfinances/delete/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
 
 {
     "microfinance_id":"b0664d71-be76-4251-878b-694c3a1b3ae2"
 }
+
+###

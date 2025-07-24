@@ -9,6 +9,13 @@ import {
   updateMemberSchema,
 } from "../validators/member.validators";
 import { validationHelper } from "../helpers/validator.helpers";
+import {
+  response200Helper,
+  response201Helper,
+  response401Helper,
+  response404Helper,
+  response500Helper,
+} from "../helpers/response.helpers";
 
 export async function createMember(request: Request, response: Response) {
   /*
@@ -61,49 +68,38 @@ export async function createMember(request: Request, response: Response) {
       // release pool connection
       connection.release();
 
-      return response.status(201).json({
-        code: 201,
-        status: "success",
-        message: "Member succesfully created",
-        data: {
-          users: {
-            id,
-            microfinance_id,
-            username,
-            email,
-            role,
-            status,
-          },
+      //send response
+      const message: string = "Member succesfully created";
+      const data = {
+        users: {
+          id,
+          microfinance_id,
+          username,
+          email,
+          role,
+          status,
         },
-        metadata: null,
-      });
+      };
+
+      return response201Helper(response, message, data);
     } else {
       // if not an admin
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Unauthorized. Only admins can create members",
-        data: {
-          users: {
-            id: admin_user[0].id,
-            microfinance_id: admin_user[0].microfinance_id,
-            username: admin_user[0].username,
-            email: admin_user[0].email,
-            role: admin_user[0].role,
-            status: admin_user[0].status,
-          },
+      const message: string = "Unauthorized. Only admins can create members";
+      const data = {
+        users: {
+          id: admin_user[0].id,
+          microfinance_id: admin_user[0].microfinance_id,
+          username: admin_user[0].username,
+          email: admin_user[0].email,
+          role: admin_user[0].role,
+          status: admin_user[0].status,
         },
-        metadata: null,
-      });
+      };
+
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -121,30 +117,16 @@ export async function getMembers(request: Request, response: Response) {
     connection.release();
 
     if (users.length > 0) {
-      return response.status(200).json({
-        code: 200,
-        status: "success",
-        message: "Succesfully retrieved all users from database",
-        data: { users },
-        metadata: null,
-      });
+      const message: string = "Succesfully retrieved all users from database";
+      const data = { users };
+      return response200Helper(response, message, data);
     }
     // if no members in system
-    return response.status(404).json({
-      code: 404,
-      status: "error",
-      message: "No users found",
-      data: null,
-      metadata: null,
-    });
+    const message: string = "No users found";
+    const data = null;
+    return response404Helper(response, message, data);
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -178,61 +160,49 @@ export async function activateMember(
         await connection.execute(`CALL activateUserById(?);`, [user_id]);
         connection.release();
 
-        return response.status(200).json({
-          code: 200,
-          status: "success",
-          message: "Succesfully activated user account",
-          data: {
-            users: {
-              id: user_to_activate[0].id,
-              microfinance_id: user_to_activate[0].microfinance_id,
-              username: user_to_activate[0].username,
-              email: user_to_activate[0].email,
-              role: user_to_activate[0].role,
-              status: user_to_activate[0].status,
-            },
+        //send response
+        const message: string = "Succesfully activate user account";
+        const data = {
+          users: {
+            id: user_to_activate[0].id,
+            microfinance_id: user_to_activate[0].microfinance_id,
+            username: user_to_activate[0].username,
+            email: user_to_activate[0].email,
+            role: user_to_activate[0].role,
+            status: user_to_activate[0].status,
           },
-          metadata: null,
-        });
+        };
+
+        return response200Helper(response, message, data);
       } else {
         // if user does not exists
-        return response.status(404).json({
-          code: 404,
-          status: "error",
-          message: "User not found or account is already activated.",
-          data: {
-            users: {
-              id: user_id,
-            },
+        const message: string =
+          "User not found or account is already activated.";
+        const data = {
+          users: {
+            id: user_id,
           },
-          metadata: {},
-        });
+        };
+
+        return response404Helper(response, message, data);
       }
     } else {
       // else if not an admin
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Unauthorized. Only admins can perform this action",
-        data: {
-          id: admin_user[0].id,
-          microfinance_id: admin_user[0].microfinance_id,
-          username: admin_user[0].username,
-          email: admin_user[0].email,
-          role: admin_user[0].role,
-          status: admin_user[0].status,
-        },
-        metadata: null,
-      });
+      const message: string =
+        "Unauthorized. Only admins can perform this action";
+      const data = {
+        id: admin_user[0].id,
+        microfinance_id: admin_user[0].microfinance_id,
+        username: admin_user[0].username,
+        email: admin_user[0].email,
+        role: admin_user[0].role,
+        status: admin_user[0].status,
+      };
+
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -298,44 +268,33 @@ export async function updateMember(
           hashed_password || user_to_be_updated[0].hashed_password,
         ],
       );
-      return response.status(201).json({
-        code: 201,
-        status: "success",
-        message: "Member succesfully updated",
-        data: {
-          users: {
-            microfinance_id,
-            username,
-            email,
-          },
+
+      const message: string = "Memeber succesfully updated";
+      const data = {
+        users: {
+          microfinance_id,
+          username,
+          email,
         },
-        metadata: null,
-      });
-      //else if not an admin or actual user
+      };
+
+      return response201Helper(response, message, data);
     } else {
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message:
-          "Unauthorized. Only admins or the user themselves can perform this action",
-        data: {
-          users: {
-            username: user_making_request[0].username,
-            email: user_making_request[0].email,
-            role: user_making_request[0].role,
-          },
+      //else if not an admin or actual user
+      const message: string =
+        "Unauthorized. Only admins or the user themselves can perform this action";
+      const data = {
+        users: {
+          username: user_making_request[0].username,
+          email: user_making_request[0].email,
+          role: user_making_request[0].role,
         },
-        metadata: null,
-      });
+      };
+
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
 
@@ -369,57 +328,43 @@ export async function deleteMember(
       if (user_to_be_deleted.length > 0) {
         await connection.execute(`CALL deleteUser(?);`, [user_id]);
 
-        return response.status(201).json({
-          code: 201,
-          status: "error",
-          message: "Succesfully deleted user",
-          data: {
-            users: {
-              id: user_to_be_deleted[0].id,
-              username: user_to_be_deleted[0].username,
-              email: user_to_be_deleted[0].email,
-              microfinance_id: user_to_be_deleted[0].microfinance_id,
-            },
-          },
-          metadata: null,
-        });
-        //if user is not in db
-      } else {
-        return response.status(404).json({
-          code: 404,
-          status: "error",
-          message: "User not found or has already already been deleted",
-          data: {
-            users: {
-              id: user_id,
-            },
-          },
-          metadata: null,
-        });
-      }
-      //error if action not performed by and admin
-    } else {
-      return response.status(401).json({
-        code: 401,
-        status: "error",
-        message: "Unauthorized. Only admins can perform this action",
-        data: {
+        const message: string = "Succesfully deleted user";
+        const data = {
           users: {
-            username: admin_user[0].username,
-            email: admin_user[0].email,
-            role: admin_user[0].role,
+            id: user_to_be_deleted[0].id,
+            username: user_to_be_deleted[0].username,
+            email: user_to_be_deleted[0].email,
+            microfinance_id: user_to_be_deleted[0].microfinance_id,
           },
+        };
+
+        return response201Helper(response, message, data);
+      } else {
+        //if user is not in db
+        const message: string =
+          "User not found or has already already been deleted";
+        const data = {
+          users: {
+            id: user_id,
+          },
+        };
+
+        return response404Helper(response, message, data);
+      }
+    } else {
+      //error if action not performed by and admin
+      const message: string =
+        "Unauthorized. Only admins can perform this action";
+      const data = {
+        users: {
+          username: admin_user[0].username,
+          email: admin_user[0].email,
+          role: admin_user[0].role,
         },
-        metadata: null,
-      });
+      };
+      return response401Helper(response, message, data);
     }
   } catch (error) {
-    return response.status(500).json({
-      code: 500,
-      status: "error",
-      message: "Server error",
-      data: { error },
-      metadata: null,
-    });
+    return response500Helper(response, error);
   }
 }
