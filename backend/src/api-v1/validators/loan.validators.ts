@@ -65,3 +65,37 @@ export const loanSchema = Joi.object({
     }),
   }).required(),
 });
+
+export const updateLoanSchema = Joi.object({
+  loan_id: Joi.string().trim().messages({
+    "string.base": "Loan id must be a string",
+    "string.trim":
+      "Loan id cannot contain any whistespace character before or after it",
+  }),
+  type: Joi.string()
+    .valid("emergency", "development", "work", "miscallenous")
+    .trim()
+    .messages({
+      "string.base": "Loan type must be a string",
+      "any.valid":
+        "Loan type can either be 'emergency','development','work' or 'miscallenous'",
+      "string.trim":
+        "Loan type cannot have any leading or trailing whitespace characters",
+    }),
+  amount: Joi.number().min(1).max(1000000).precision(2).messages({
+    "number.base": "Loan amount must be a number",
+    "number.min": "Loan amount cannot be lower that {#limit}",
+    "number.max": "Loan amount cannot be higher than {#limit}",
+    "number.integer": "Loan amount needs be to two decimal places",
+  }),
+  interest_rate: Joi.number().min(0).max(100).precision(2).messages({
+    "number.base": "Interest rate must be a number",
+    "number.min": "Interest rate cannot be lower that {#limit}",
+    "number.max": "Interest rate cannot be higher than {#limit}",
+    "number.integer": "Interest rate needs be to two decimal places",
+  }),
+  repayment_period: Joi.number().valid(1, 3, 6, 12).messages({
+    "number.base": "Repayment period must be a number",
+    "any.valid": "Repayment period can either be '1','3','6' or '12'",
+  }),
+});
