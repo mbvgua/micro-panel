@@ -11,6 +11,7 @@ import {
   updateMicrofinanceSchema,
 } from "../validators/microfinance.validators";
 import { UserRoles, Users } from "../models/users.models";
+import { validationHelper } from "../helpers/validator.helpers";
 
 export async function createMicrofinance(request: Request, response: Response) {
   /*
@@ -21,19 +22,8 @@ export async function createMicrofinance(request: Request, response: Response) {
   const { reg_number, name, email, phone_number, location } = request.body;
   try {
     // validate request.body
-    const { error } = registerMicroFinanceSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    validationHelper(request, response, registerMicroFinanceSchema);
+
     //if no validation error
     const connection = await pool.getConnection();
     await connection.execute(`CALL addMicrofinance(?,?,?,?,?,?,?);`, [
@@ -126,19 +116,8 @@ export async function updateMicrofinance(
 
   try {
     // validate request.body
-    const { error } = updateMicrofinanceSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    validationHelper(request, response, updateMicrofinanceSchema);
+
     //if no validation error
     const connection = await pool.getConnection();
     const [rows]: any = await connection.execute(`CALL getUserById(?);`, [

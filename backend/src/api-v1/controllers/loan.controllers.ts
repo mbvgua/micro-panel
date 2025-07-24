@@ -5,6 +5,7 @@ import { pool } from "../../config/db.config";
 import { UserRoles, Users } from "../models/users.models";
 import { Loans, LoanStatus } from "../models/loans.models";
 import { loanSchema, updateLoanSchema } from "../validators/loan.validators";
+import { validationHelper } from "../helpers/validator.helpers";
 
 //BUG: major bug will add loan for entire length of loans array.
 //Break it and build from scratch. Too many if...else are confusing
@@ -28,19 +29,9 @@ export async function applyLoan(request: Request, response: Response) {
   } = request.body;
 
   try {
-    const { error } = loanSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    //validate request body
+    validationHelper(request, response, loanSchema);
+
     //if no validation error
     const connection = await pool.getConnection();
     const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
@@ -282,19 +273,8 @@ export async function updateLoan(
     request.body;
 
   try {
-    const { error } = updateLoanSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    //validate request body
+    validationHelper(request, response, updateLoanSchema);
 
     //if no validation error
     const connection = await pool.getConnection();

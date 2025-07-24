@@ -9,6 +9,7 @@ import {
   emailLoginSchema,
   usernameLoginSchema,
 } from "../validators/admin.validators";
+import { validationHelper } from "../helpers/validator.helpers";
 
 export async function adminRegistration(request: Request, response: Response) {
   /**
@@ -22,19 +23,8 @@ export async function adminRegistration(request: Request, response: Response) {
   const status = UserStatus.active;
 
   try {
-    const { error } = adminRegSchema.validate(request.body);
-    if (error) {
-      return response.status(422).json({
-        code: 422,
-        status: "error",
-        message: "Validation error occurred",
-        data: {
-          path: error.details[0].path[0],
-          error: error.details[0].message,
-        },
-        metadata: null,
-      });
-    }
+    //validate request body
+    validationHelper(request, response, adminRegSchema);
 
     const salt_rounds = 9;
     const hashed_password = await bcrypt.hash(password, salt_rounds);
@@ -76,7 +66,7 @@ export async function adminRegistration(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error},
+      data: { error },
       metadata: null,
     });
   }
@@ -95,23 +85,10 @@ export async function adminLogin(request: Request, response: Response) {
   try {
     // if using email
     if (email_regex.test(username_or_email)) {
-      const { error } = emailLoginSchema.validate(request.body);
-      if (error) {
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Validation error occurred",
-          data: {
-            path: error.details[0].path[0],
-            error: error.details[0].message,
-          },
-          metadata: null,
-        });
-      }
+      validationHelper(request, response, emailLoginSchema);
 
       // if no error in email validation
       const connection = await pool.getConnection();
-      //HACK: prevents type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
         [username_or_email],
@@ -170,23 +147,10 @@ export async function adminLogin(request: Request, response: Response) {
       }
     } else {
       // else if not using email
-      const { error } = usernameLoginSchema.validate(request.body);
-      if (error) {
-        return response.status(422).json({
-          code: 422,
-          status: "error",
-          message: "Validation error occurred",
-          data: {
-            path: error.details[0].path[0],
-            error: error.details[0].message,
-          },
-          metadata: null,
-        });
-      }
+      validationHelper(request, response, usernameLoginSchema);
 
       // if no error in username validation
       const connection = await pool.getConnection();
-      //HACK: any helps prevent type support error
       const [rows]: any = await connection.query(
         `CALL getUserByNameOrEmail(?)`,
         [username_or_email],
@@ -248,7 +212,7 @@ export async function adminLogin(request: Request, response: Response) {
       code: 500,
       status: "error",
       message: "Server error",
-      data: {error,
+      data: { error },
       metadata: null,
     });
   }
