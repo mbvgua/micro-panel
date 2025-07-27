@@ -21,7 +21,18 @@ export class Microfinances {
     return this.http.get(this.microfinanceUrl);
   }
 
-  //update miicrofinances
+  ////update microfinances
+  updateMicrofinance( admin_id: string, microfinance: IMicrofinance,): Observable<any> {
+    return this.http.put(this.microfinanceUrl + `/${admin_id}`, microfinance);
+  }
 
   //delete microfinances
+  deleteMicrofinance( admin_id: string, microfinance_id: string,): Observable<any> {
+    console.log(admin_id)
+    console.log(microfinance_id)
+    return this.http.put(
+      this.microfinanceUrl + `/delete/${admin_id}`,
+      { microfinance_id }, //made it an object for backend destructuring.else an error
+    );
+  }
 }

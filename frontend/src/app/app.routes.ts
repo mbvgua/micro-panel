@@ -38,7 +38,7 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./components/dashboard/dashboard').then((m) => m.Dashboard),
-    canActivate: [authGuard],
+    //canActivate: [authGuard],
     title: 'Dashboard',
     children: [
       {
@@ -63,14 +63,6 @@ export const routes: Routes = [
               import(
                 './components/dashboard/microfinances/add-microfinances/add-microfinances'
               ).then((m) => m.AddMicrofinances),
-          },
-          //update microfinance
-          {
-            path: 'update-microfinances',
-            loadComponent: () =>
-              import(
-                './components/dashboard/microfinances/update-microfinances/update-microfinances'
-              ).then((m) => m.UpdateMicrofinances),
           },
         ],
       },
