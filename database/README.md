@@ -10,14 +10,14 @@
 
 The schema contains three main tables, each accompanied by a set of views and stored procedures for each. Listing them briefly, they are:
 - users
-- saccos
+- microfinances
 - loans
 
-### Saccos
+### Microfinances
 
-This lists all saccos within the system. Also began with this as each newly created user will have a foreign key constraint to a sacco, hence it should be created prior. The columns contained within are:
+This lists all microfinances within the system. Also began with this as each newly created user will have a foreign key constraint to a sacco, hence it should be created prior. The columns contained within are:
 ```sql
-    CREATE TABLE saccos (
+    CREATE TABLE microfinances (
         id -- unique row identifier,
         reg_number -- uniquely identifies microfinance nation-wide. Usually government issued,
         name -- unique microfinance name to everyday users,
@@ -94,7 +94,7 @@ These help in performing repetitive queries with ease. Also greatly help to achi
 
 Proxy tables that will make get operations from the front end. Currenly only 2 in the database:
 
-- `microfinances_loans_view` => built to join the loans and microfinances data, to allow merging with another table for efficient data retirval. Gets all loans from the various saccos.
+- `microfinances_loans_view` => built to join the loans and microfinances data, to allow merging with another table for efficient data retirval. Gets all loans from the various microfinances.
 - `detailed_loans_view` => merges the users table and microfinances_loans_view view allowing one to see the username and id on each loan handed out. This is the main view to be used in the loans module.
 
 ## Triggers
