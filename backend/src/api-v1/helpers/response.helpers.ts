@@ -17,7 +17,7 @@ export function response200Helper(
    * Success. No new resource created
    */
 
-  return response.status(200).json({
+  response.status(200).json({
     code: 200,
     status: "success",
     message: message,
@@ -35,7 +35,7 @@ export function response201Helper(
    * Success.New resource created.
    */
 
-  return response.status(201).json({
+  response.status(201).json({
     code: 201,
     status: "success",
     message: message,
@@ -53,7 +53,7 @@ export function response401Helper(
    * Unauthorized error
    */
 
-  return response.status(401).json({
+  response.status(401).json({
     code: 401,
     status: "error",
     message: message,
@@ -71,7 +71,7 @@ export function response403Helper(
    * Forbidden errors
    */
 
-  return response.status(403).json({
+  response.status(403).json({
     code: 403,
     status: "error",
     message: message,
@@ -89,7 +89,7 @@ export function response404Helper(
    * Resource not found error
    */
 
-  return response.status(404).json({
+  response.status(404).json({
     code: 404,
     status: "error",
     message: message,
@@ -107,7 +107,7 @@ export function response422Helper(
    * Not authorized errors
    */
 
-  return response.status(422).json({
+  response.status(422).json({
     code: 422,
     status: "error",
     message: message,
@@ -121,7 +121,7 @@ export function response500Helper(response: Response, error: any) {
    * Internal Server errors
    */
 
-  return response.status(500).json({
+  response.status(500).json({
     code: 500,
     status: "error",
     message: "Internal server error",

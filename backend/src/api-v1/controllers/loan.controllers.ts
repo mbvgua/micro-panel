@@ -22,7 +22,7 @@ export async function applyLoan(request: Request, response: Response) {
   /*
    * admin applies on behalf of member. A member recives loan if:
    * 1.)they are active. 2.) no pending loan application,
-   * laon will default to pending after submission.
+   * loan will default to pending after submission.
    */
   const id = uid();
   const {

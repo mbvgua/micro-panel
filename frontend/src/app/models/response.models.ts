@@ -32,3 +32,13 @@ export interface responseBody {
   };
   metadata?: {};
 }
+
+export interface errorResponse {
+  error: {
+    code: string;
+    status: string;
+    message: string;
+    data: {};
+    metadata: {};
+  };
+}

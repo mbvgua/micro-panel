@@ -7,19 +7,23 @@ import { ILoans } from '../../models/loans.models';
   providedIn: 'root',
 })
 export class Loans {
-  private loansUrl = 'http://localhost:4000/v1/loans';
+  private baseUrl = 'http://localhost:4000/v1/loans';
 
   constructor(private http: HttpClient) {}
 
   //create loans
-  addLoan(newLoan: ILoans): Observable<any> {
-    return this.http.post(this.loansUrl, newLoan);
+  addLoan(newLoan: any): Observable<any> {
+    return this.http.post(this.baseUrl, newLoan);
   }
 
   //get loans
   getLoans(): Observable<any> {
-    return this.http.get(this.loansUrl);
+    return this.http.get(this.baseUrl);
   }
   //update loans
+
   //delete loans
+  deleteLoan(admin_id: string, loan_id: string): Observable<any> {
+    return this.http.put(this.baseUrl + `/delete/${admin_id}`, { loan_id });
+  }
 }

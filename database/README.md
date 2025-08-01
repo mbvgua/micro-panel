@@ -10,14 +10,14 @@
 
 The schema contains three main tables, each accompanied by a set of views and stored procedures for each. Listing them briefly, they are:
 - users
-- saccos
+- microfinances
 - loans
 
-### Saccos
+### Microfinances
 
-This lists all saccos within the system. Also began with this as each newly created user will have a foreign key constraint to a sacco, hence it should be created prior. The columns contained within are:
+This lists all microfinances within the system. Also began with this as each newly created user will have a foreign key constraint to a sacco, hence it should be created prior. The columns contained within are:
 ```sql
-    CREATE TABLE saccos (
+    CREATE TABLE microfinances (
         id -- unique row identifier,
         reg_number -- uniquely identifies microfinance nation-wide. Usually government issued,
         name -- unique microfinance name to everyday users,
@@ -94,7 +94,7 @@ These help in performing repetitive queries with ease. Also greatly help to achi
 
 Proxy tables that will make get operations from the front end. Currenly only 2 in the database:
 
-- `microfinances_loans_view` => built to join the loans and microfinances data, to allow merging with another table for efficient data retirval. Gets all loans from the various saccos.
+- `microfinances_loans_view` => built to join the loans and microfinances data, to allow merging with another table for efficient data retirval. Gets all loans from the various microfinances.
 - `detailed_loans_view` => merges the users table and microfinances_loans_view view allowing one to see the username and id on each loan handed out. This is the main view to be used in the loans module.
 
 ## Triggers
@@ -111,6 +111,8 @@ To run the setup/teardown script, you need to make it an executable first, then 
 
 > [!NOTE]
 > To setup the database using the `setup` script contained, you will need to have `python3.10` or higher installed on your machine. Scripting was primarily done on `python3.13` and might fail in older versions.
+>
 > You also need to have `mysql-cli` installed. Do not confuse this with the `MySql Work Bench` application, as they are not the same. The latter cannot be run from the terminal and is a GUI app. Installing the former ensures an easier workflow.
+>
 > The `shebang` on the python script is primarily built to run on linux(and *nix) oprerating systems by extension. If you are running this code on a different operating system, say Mac or Windows, you need to figure out the path for linux on your system, then replace the shebang on the script accordingly. A good place to start might be running `which python` on your terminal.
 

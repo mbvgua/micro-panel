@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,6 +11,7 @@ import { Observable } from 'rxjs';
 import { Auth } from '../../services/auth/auth';
 import { LocalStorage } from '../../services/local-storage/local-storage';
 import { UserResponse } from '../../models/users.models';
+import { errorResponse } from '../../models/response.models';
 
 @Component({
   selector: 'app-sigin',
@@ -22,49 +23,47 @@ export class Sigin implements OnInit {
   constructor(
     private userService: Users,
     private authService: Auth,
-    private localStorageSerive: LocalStorage,
+    private localStorageService: LocalStorage,
   ) {}
 
-  signinForm!: FormGroup;
-  message!: string;
-  status!: string;
   router = inject(Router); //navigation to login
+  signinForm!: FormGroup;
+  message = signal<string>('');
+  status = signal<string>('');
 
   onSubmit() {
-    console.log(this.signinForm.value);
     this.userService.loginAdmin(this.signinForm.value).subscribe(
+      // you might think you want to strong type this to be a UserResponse
+      // DONT. Things will break! Desructuring things to save to local storage
+      // becomes a nightmare
       (response: any) => {
-        this.authService.login();
+        this.message.set(response.message);
+        this.status.set(response.status);
+        console.log(response.data.users);
 
-        console.log(response);
-        this.message = response.message;
         if (response.data.users['role'] == 'admin') {
-          //TODO: make this work
-          ////delay to read message
           setTimeout(() => {
             // save critical data to local storage
-            this.localStorageSerive.clear();
-            this.localStorageSerive.setItem('id', response.data.users['id']);
+            this.localStorageService.clear();
+            this.localStorageService.setItem('id', response.data.users['id']);
             //NOTE:either email/username will be stored. not both
-            this.localStorageSerive.setItem('username',response.data.users['username'],);
-            this.localStorageSerive.setItem('email',response.data.users['email'],);
-            this.localStorageSerive.setItem('role',response.data.users['role'],);
+            this.localStorageService.setItem( 'username', response.data.users['username'],);
+            this.localStorageService.setItem( 'email', response.data.users['email'],);
+            this.localStorageService.setItem( 'role', response.data.users['role'],);
 
             //login the user
-            this.authService.login()
-            console.log(this.authService.login())
-
+            this.authService.login();
             this.router.navigate(['dashboard']);
-          }, 1000);
+          }, 1500);
         }
       },
-      (error: any) => {
-        console.log(error);
-        this.message = error.data.error;
-        this.status = error.status;
+      (error: errorResponse) => {
+        console.log('An error occurred: ', error);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
-    // this.signinForm.reset()
+    this.signinForm.reset();
   }
 
   ngOnInit(): void {
