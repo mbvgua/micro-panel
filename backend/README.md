@@ -1,7 +1,5 @@
 # Backend
 
-## Prerequisites
-
 The backend is built with NodeJs with the express framework. To get started, you need to first ensure that you have node and a package manager of choice installed on your machine. This project used [pnpm](https://pnpm.io) as the package manager of choice, although `npm` will also work the same.
 To confirm that they are installed, run the following command:
 
