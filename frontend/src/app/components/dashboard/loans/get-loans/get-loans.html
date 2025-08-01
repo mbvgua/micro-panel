@@ -15,21 +15,31 @@
       </tr>
     </thead>
     <tbody>
-      @for (loan of loans; track loan.username) {
+      @for (loan of loans(); track loan.username) {
         <tr>
           <th scope="row">1</th>
           <td>{{ loan.username }}</td>
           <td>{{ loan.email }}</td>
           <td>{{ loan.type }}</td>
           <td>{{ loan.amount }}</td>
-          <td>{{ loan.repayment_period }}</td>
+          <td>{{ loan.repayment_period }} months</td>
           <td>{{ loan.status }}</td>
           <td class="d-grid gap-3">
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Update
+            <button
+              type="button"
+              class="btn btn-primary bt-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <a (click)="updateLoan(loan.loan_id)"> Update </a>
             </button>
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Delete
+
+            <button
+              id="{{ loan.loan_id }}"
+              type="button"
+              class="btn btn-primary bt-sm"
+            >
+              <a (click)="deleteLoan(loan.loan_id)"> Delete </a>
             </button>
           </td>
         </tr>

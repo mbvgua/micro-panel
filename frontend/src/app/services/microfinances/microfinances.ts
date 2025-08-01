@@ -28,8 +28,6 @@ export class Microfinances {
 
   //delete microfinances
   deleteMicrofinance( admin_id: string, microfinance_id: string,): Observable<any> {
-    console.log(admin_id)
-    console.log(microfinance_id)
     return this.http.put(
       this.microfinanceUrl + `/delete/${admin_id}`,
       { microfinance_id }, //made it an object for backend destructuring.else an error

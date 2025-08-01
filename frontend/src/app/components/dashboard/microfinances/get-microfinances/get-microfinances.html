@@ -15,7 +15,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (microfinance of microfinances; track microfinance.id) {
+      @for (microfinance of microfinances(); track microfinance.id) {
         <tr>
           <th scope="row">1</th>
           <td>{{ microfinance.reg_number }}</td>

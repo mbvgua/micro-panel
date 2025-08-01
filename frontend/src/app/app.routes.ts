@@ -38,7 +38,7 @@ export const routes: Routes = [
     path: 'dashboard',
     loadComponent: () =>
       import('./components/dashboard/dashboard').then((m) => m.Dashboard),
-    //canActivate: [authGuard],
+    canActivate: [authGuard],
     title: 'Dashboard',
     children: [
       {
@@ -87,14 +87,6 @@ export const routes: Routes = [
                 (m) => m.AddUsers,
               ),
           },
-          //update users
-          {
-            path: 'update-users',
-            loadComponent: () =>
-              import(
-                './components/dashboard/users/update-users/update-users'
-              ).then((m) => m.UpdateUsers),
-          },
         ],
       },
       {
@@ -117,14 +109,6 @@ export const routes: Routes = [
               import('./components/dashboard/loans/add-loans/add-loans').then(
                 (m) => m.AddLoans,
               ),
-          },
-          //update loan
-          {
-            path: 'update-loans',
-            loadComponent: () =>
-              import(
-                './components/dashboard/loans/update-loans/update-loans'
-              ).then((m) => m.UpdateLoans),
           },
         ],
       },

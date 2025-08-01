@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Microfinances } from '../../../../services/microfinances/microfinances';
 import {
   IMicrofinance,
@@ -24,36 +24,36 @@ export class GetMicrofinances implements OnInit {
     private localStorageService: LocalStorage,
   ) {}
 
-  microfinances: IMicrofinance[] = [];
-  error!: string;
-  admin_id!: string;
-  microfinance_id!: string;
+  microfinances = signal<IMicrofinance[]>([]);
+  error = signal<string>('');
+  admin_id = signal<string>('');
+  microfinance_id = signal<string>('');
   updateMicrofinanceForm!: FormGroup;
 
   //method to deleteMicrofinance
   deleteMicrofinance(microfinance_id: string) {
     //assign it as null if value not in local storage
-    this.admin_id = this.localStorageService.getItem('id') ?? '';
-    this.microfinance_id = microfinance_id;
+    this.admin_id.set(this.localStorageService.getItem('id') ?? '');
+    this.microfinance_id.set(microfinance_id);
 
     this.microfinancesService
-      .deleteMicrofinance(this.admin_id, this.microfinance_id)
+      .deleteMicrofinance(this.admin_id(), this.microfinance_id())
       .subscribe(
         (response: MicrofinanceResponse) => {
-          this.microfinances = response.data.microfinances;
+          this.microfinances.set(response.data.microfinances);
         },
         (error: MicrofinanceResponse) => {
           console.log('An error occurred: ', error);
-          this.error = error.message;
+          this.error.set(error.message);
         },
       );
   }
 
   //method to updateMicrofinance
   updateMicrofinance(microfinance_id: string) {
-    this.microfinance_id = microfinance_id;
+    this.microfinance_id.set(microfinance_id);
 
-    console.log(this.updateMicrofinanceForm.value)
+    console.log(this.updateMicrofinanceForm.value);
     //this.microfinancesService
     //  .updateMicrofinance(
     //    this.microfinance_id,
@@ -72,11 +72,11 @@ export class GetMicrofinances implements OnInit {
   ngOnInit() {
     this.microfinancesService.getMicrofinances().subscribe(
       (response: MicrofinanceResponse) => {
-        this.microfinances = response.data.microfinances;
+        this.microfinances.set(response.data.microfinances);
       },
       (error: MicrofinanceResponse) => {
         console.log('An error occurred: ', error);
-        this.error = error.message;
+        this.error.set(error.message);
       },
     );
 
@@ -98,10 +98,5 @@ export class GetMicrofinances implements OnInit {
       ]),
       location: new FormControl('', Validators.required),
     });
-
-
-
-    //this.updateMicrofinanceForm.setValue(["name","Hussein"])
-    //console.log(this.updateMicrofinanceForm.value)
   }
 }
