@@ -111,6 +111,8 @@ To run the setup/teardown script, you need to make it an executable first, then 
 
 > [!NOTE]
 > To setup the database using the `setup` script contained, you will need to have `python3.10` or higher installed on your machine. Scripting was primarily done on `python3.13` and might fail in older versions.
+>
 > You also need to have `mysql-cli` installed. Do not confuse this with the `MySql Work Bench` application, as they are not the same. The latter cannot be run from the terminal and is a GUI app. Installing the former ensures an easier workflow.
+>
 > The `shebang` on the python script is primarily built to run on linux(and *nix) oprerating systems by extension. If you are running this code on a different operating system, say Mac or Windows, you need to figure out the path for linux on your system, then replace the shebang on the script accordingly. A good place to start might be running `which python` on your terminal.
 
