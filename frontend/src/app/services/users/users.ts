@@ -33,4 +33,7 @@ export class Users {
   //update user
 
   //delete users
+  deleteUser(admin_id: string, user_id: string): Observable<any> {
+    return this.http.put(this.userUrl + `delete/${admin_id}`, { user_id });
+  }
 }

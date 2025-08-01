@@ -5,7 +5,7 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Microfinance ID</th>
+        <th scope="col">User ID</th>
         <th scope="col">Username</th>
         <th scope="col">Email</th>
         <th scope="col">Phone Number</th>
@@ -15,7 +15,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (user of users; track user.id) {
+      @for (user of users(); track user.id) {
         <tr>
           <th scope="row">1</th>
           <td>{{ user.microfinance_id }}</td>
@@ -25,11 +25,21 @@
           <td>{{ user.role }}</td>
           <td>{{ user.status }}</td>
           <td class="d-grid gap-3">
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Update
+            <button
+              type="button"
+              class="btn btn-primary bt-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <a (click)="updateUser(user.id)"> Update </a>
             </button>
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Delete
+
+            <button
+              id="{{ user.id }}"
+              type="button"
+              class="btn btn-primary bt-sm"
+            >
+              <a (click)="deleteUser(user.id)"> Delete </a>
             </button>
           </td>
         </tr>
