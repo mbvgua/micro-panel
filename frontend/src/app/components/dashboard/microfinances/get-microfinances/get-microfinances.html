@@ -1,4 +1,30 @@
 <div class="text-center">
+  @if (message()) {
+    <!--if success-->
+    @if (status() == "success") {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Congratulations!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    } @else if (status() == "error") {
+      <!--if error-->
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Oops!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    }
+  }
+  <!--show alert message -->
   <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
   <h3>Microfinances List</h3>
   <table class="table table-secondary table-striped table-hover">
@@ -15,7 +41,7 @@
       </tr>
     </thead>
     <tbody>
-      @for (microfinance of microfinances; track microfinance.id) {
+      @for (microfinance of microfinances(); track microfinance.id) {
         <tr>
           <th scope="row">1</th>
           <td>{{ microfinance.reg_number }}</td>
@@ -25,11 +51,234 @@
           <td>{{ microfinance.location }}</td>
           <td>{{ microfinance.status }}</td>
           <td class="d-grid gap-3">
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Update
+            <button
+              type="button"
+              class="btn btn-primary bt-sm"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <a (click)="updateMicrofinance(microfinance.id)"> Update </a>
             </button>
-            <button type="button" class="btn btn-primary bt-sm" disabled>
-              Delete
+
+            <!-- Modal -->
+            <div
+              class="modal modal-lg fade"
+              id="exampleModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true"
+            >
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">
+                      Update Microfinance ID:
+                    </h1>
+                    <button
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+
+                  {{ microfinance.id }}
+                  {{ microfinance.name }}
+                  <!--actual form start-->
+                  <!--<div class="card modal-body">-->
+                  <!--  <form-->
+                  <!--    [formGroup]="updateMicrofinanceForm"-->
+                  <!--    (ngSubmit)="updateMicrofinance(microfinance_id)"-->
+                  <!--    class="form-card"-->
+                  <!--  >-->
+                  <!--    <div class="row justify-content-between text-left py-2">-->
+                  <!--      <div class="form-group col-sm-6 flex-column d-flex">-->
+                  <!--        <label for="reg_number"-->
+                  <!--          >Reg. Number<span class="text-danger"> *</span></label-->
+                  <!--        >-->
+                  <!--        <input-->
+                  <!--          id="reg_number"-->
+                  <!--          formControlName="reg_number"-->
+                  <!--          class="form-control form-control-lg"-->
+                  <!--          type="text"-->
+                  <!--          placeholder="Enter the reg. number"-->
+                  <!--        />-->
+                  <!---->
+                  <!--        @if (-->
+                  <!--          updateMicrofinanceForm.get("reg_number")?.touched ||-->
+                  <!--          updateMicrofinanceForm.get("reg_number")?.dirty-->
+                  <!--        ) {-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm.get("reg_number")?.hasError("required")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Registration number is required-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm-->
+                  <!--              .get("reg_number")-->
+                  <!--              ?.hasError("maxlength")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Registration cannot be more than 150 characters long-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--        }-->
+                  <!--      </div>-->
+                  <!--      <div class="form-group col-sm-6 flex-column d-flex">-->
+                  <!--        <label for="name"-->
+                  <!--          >Microfinance Name<span class="text-danger"> *</span></label-->
+                  <!--        >-->
+                  <!--        <input-->
+                  <!--          formControlName="name"-->
+                  <!--          id="name"-->
+                  <!--          class="form-control form-control-lg"-->
+                  <!--          type="text"-->
+                  <!--          placeholder="Enter the name"-->
+                  <!--        />-->
+                  <!--        @if (-->
+                  <!--          updateMicrofinanceForm.get("name")?.touched ||-->
+                  <!--          updateMicrofinanceForm.get("name")?.dirty-->
+                  <!--        ) {-->
+                  <!--          @if (updateMicrofinanceForm.get("name")?.hasError("required")) {-->
+                  <!--            <div class="form-text text-danger">Name is required</div>-->
+                  <!--          }-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm.get("name")?.hasError("maxlength")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Name cannot be more than 60 characters long-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--        }-->
+                  <!--      </div>-->
+                  <!--    </div>-->
+                  <!--    <div class="row justify-content-between text-left py-2">-->
+                  <!--      <div class="form-group col-sm-6 flex-column d-flex">-->
+                  <!--        <label for="email"-->
+                  <!--          >Microfinance Email<span class="text-danger"> *</span></label-->
+                  <!--        >-->
+                  <!--        <input-->
+                  <!--          formControlName="email"-->
+                  <!--          id="email"-->
+                  <!--          class="form-control form-control-lg"-->
+                  <!--          type="email"-->
+                  <!--          placeholder="example@gmail.com"-->
+                  <!--        />-->
+                  <!--        @if (-->
+                  <!--          updateMicrofinanceForm.get("email")?.touched ||-->
+                  <!--          updateMicrofinanceForm.get("email")?.dirty-->
+                  <!--        ) {-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm.get("email")?.hasError("required")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">Email is required</div>-->
+                  <!--          }-->
+                  <!--          @if (updateMicrofinanceForm.get("email")?.hasError("email")) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Please input a valid email-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--        }-->
+                  <!--      </div>-->
+                  <!--      <div class="form-group col-sm-6 flex-column d-flex">-->
+                  <!--        <label for="phone_number"-->
+                  <!--          >Phone No.<span class="text-danger"> *</span></label-->
+                  <!--        >-->
+                  <!--        <input-->
+                  <!--          formControlName="phone_number"-->
+                  <!--          id="phone_number"-->
+                  <!--          class="form-control form-control-lg"-->
+                  <!--          type="text"-->
+                  <!--          placeholder="Enter the phone number"-->
+                  <!--        />-->
+                  <!--        @if (-->
+                  <!--          updateMicrofinanceForm.get("phone_number")?.touched ||-->
+                  <!--          updateMicrofinanceForm.get("phone_number")?.dirty-->
+                  <!--        ) {-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm-->
+                  <!--              .get("phone_number")-->
+                  <!--              ?.hasError("required")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Phone number is required-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm-->
+                  <!--              .get("phone_number")-->
+                  <!--              ?.hasError("minlength")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Phone number cannot be less than 10 digits-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm-->
+                  <!--              .get("phone_number")-->
+                  <!--              ?.hasError("maxlength")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">-->
+                  <!--              Phone number cannot exceed 10 digits-->
+                  <!--            </div>-->
+                  <!--          }-->
+                  <!--        }-->
+                  <!--      </div>-->
+                  <!--    </div>-->
+                  <!--    <div class="row justify-content-between text-left py-2">-->
+                  <!--      <div class="form-group col-sm-6 flex-column d-flex">-->
+                  <!--        <label for="location"-->
+                  <!--          >Location<span class="text-danger"> *</span></label-->
+                  <!--        >-->
+                  <!--        <input-->
+                  <!--          formControlName="location"-->
+                  <!--          id="location"-->
+                  <!--          class="form-control form-control-lg"-->
+                  <!--          type="text"-->
+                  <!--          placeholder="Enter the location"-->
+                  <!--        />-->
+                  <!--        @if (-->
+                  <!--          updateMicrofinanceForm.get("location")?.touched ||-->
+                  <!--          updateMicrofinanceForm.get("location")?.dirty-->
+                  <!--        ) {-->
+                  <!--          @if (-->
+                  <!--            updateMicrofinanceForm.get("location")?.hasError("required")-->
+                  <!--          ) {-->
+                  <!--            <div class="form-text text-danger">Location if required</div>-->
+                  <!--          }-->
+                  <!--        }-->
+                  <!--      </div>-->
+                  <!--    </div>-->
+                  <!--  </form>-->
+                  <!--</div>-->
+                  <!--form end-->
+
+                  <div class="modal-footer">
+                    <button
+                      [disabled]="updateMicrofinanceForm.invalid"
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Close
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                      Save changes
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--End Modal-->
+
+            <button
+              id="{{ microfinance.id }}"
+              type="button"
+              class="btn btn-primary bt-sm"
+            >
+              <a (click)="deleteMicrofinance(microfinance.id)"> Delete </a>
             </button>
           </td>
         </tr>

@@ -38,6 +38,7 @@ export interface ILoans {
 //unique response since fetching from a view
 //not a table
 export interface DetailedLoans {
+  loan_id: string;
   username: string;
   email: string;
   name: string;

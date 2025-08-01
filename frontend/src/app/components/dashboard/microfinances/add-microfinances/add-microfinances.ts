@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +6,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Microfinances } from '../../../../services/microfinances/microfinances';
-import { responseBody } from '../../../../models/response.models';
+import {
+  errorResponse,
+  responseBody,
+} from '../../../../models/response.models';
 
 @Component({
   selector: 'app-add-microfinances',
@@ -16,9 +19,9 @@ import { responseBody } from '../../../../models/response.models';
 })
 export class AddMicrofinances implements OnInit {
   constructor(private microfinanceService: Microfinances) {}
-  //build the response and error vars
-  message!: string;
-  status!: string;
+
+  message = signal<string>('');
+  status = signal<string>('');
   addMicrofinanceForm!: FormGroup;
 
   // add microfinance on submit
@@ -27,15 +30,16 @@ export class AddMicrofinances implements OnInit {
       .createMicrofinance(this.addMicrofinanceForm.value)
       .subscribe(
         (response: responseBody) => {
-          this.status = response.status;
-          this.message = response.message;
+          this.status.set(response.status);
+          this.message.set(response.message);
         },
-        (error: any) => {
+        (error: errorResponse) => {
           console.log('An error occurred: ', error);
-          this.message = error.error.data.error;
+          this.status.set(error.error.status);
+          this.message.set(error.error.message);
         },
       );
-    this.addMicrofinanceForm.reset;
+    this.addMicrofinanceForm.reset();
   }
 
   ngOnInit(): void {
@@ -56,11 +60,6 @@ export class AddMicrofinances implements OnInit {
         Validators.maxLength(10),
       ]),
       location: new FormControl('', Validators.required),
-    });
-
-    this.addMicrofinance();
-    this.addMicrofinanceForm.valueChanges.subscribe(() => {
-      this.message = '';
     });
   }
 }

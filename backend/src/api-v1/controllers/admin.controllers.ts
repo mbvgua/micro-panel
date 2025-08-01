@@ -158,7 +158,7 @@ export async function adminLogin(request: Request, response: Response) {
             users: {
               id: users[0].id,
               microfinance_id: users[0].microfinance_id,
-              email: username_or_email,
+              username: username_or_email,
               role: users[0].role,
               status: users[0].status,
             },
