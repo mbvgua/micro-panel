@@ -11,6 +11,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { errorResponse } from '../../../../models/response.models';
 
 @Component({
   selector: 'app-get-microfinances',
@@ -25,7 +26,8 @@ export class GetMicrofinances implements OnInit {
   ) {}
 
   microfinances = signal<IMicrofinance[]>([]);
-  error = signal<string>('');
+  message = signal<string>('');
+  status = signal<string>('');
   admin_id = signal<string>('');
   microfinance_id = signal<string>('');
   updateMicrofinanceForm!: FormGroup;
@@ -40,11 +42,13 @@ export class GetMicrofinances implements OnInit {
       .deleteMicrofinance(this.admin_id(), this.microfinance_id())
       .subscribe(
         (response: MicrofinanceResponse) => {
-          this.microfinances.set(response.data.microfinances);
+          this.status.set(response.status);
+          this.message.set(response.message);
         },
-        (error: MicrofinanceResponse) => {
+        (error: errorResponse) => {
           console.log('An error occurred: ', error);
-          this.error.set(error.message);
+          this.status.set(error.error.status);
+          this.message.set(error.error.message);
         },
       );
   }
@@ -63,8 +67,8 @@ export class GetMicrofinances implements OnInit {
     //    (response: MicrofinanceResponse) => {
     //      this.microfinances = response.data.microfinances;
     //    },
-    //    (error: MicrofinanceResponse) => {
-    //      this.error = error.data;
+    //    (message: MicrofinanceResponse) => {
+    //      this.message = message.data;
     //    },
     //  );
   }
@@ -74,9 +78,10 @@ export class GetMicrofinances implements OnInit {
       (response: MicrofinanceResponse) => {
         this.microfinances.set(response.data.microfinances);
       },
-      (error: MicrofinanceResponse) => {
+      (error: errorResponse) => {
         console.log('An error occurred: ', error);
-        this.error.set(error.message);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
 

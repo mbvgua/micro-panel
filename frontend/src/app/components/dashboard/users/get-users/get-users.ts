@@ -3,6 +3,7 @@ import { Users } from '../../../../services/users/users';
 import { IUsers, UserResponse } from '../../../../models/users.models';
 import { LocalStorage } from '../../../../services/local-storage/local-storage';
 import { FormGroup } from '@angular/forms';
+import { errorResponse } from '../../../../models/response.models';
 
 @Component({
   selector: 'app-get-users',
@@ -20,7 +21,8 @@ export class GetUsers implements OnInit {
   //NOTE:worked like magic!! replicate this in all other components
   //Removes the click twice to work issue!!
   users = signal<IUsers[]>([]);
-  error = signal<string>('');
+  message = signal<string>('');
+  status = signal<string>('');
   admin_id = signal<string>('');
   user_id = signal<string>('');
   updateUserForm!: FormGroup;
@@ -32,11 +34,31 @@ export class GetUsers implements OnInit {
 
     this.usersService.deleteUser(this.admin_id(), this.user_id()).subscribe(
       (response: UserResponse) => {
-        this.users.set(response.data.users);
+        this.status.set(response.status);
+        this.message.set(response.message);
       },
-      (error: UserResponse) => {
+      (error: errorResponse) => {
         console.log('An error occurred: ', error);
-        this.error.set(error.message);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
+      },
+    );
+  }
+
+  //acivateUser
+  activateUser(user_id: string) {
+    this.admin_id.set(this.localStorageService.getItem('id') ?? '');
+    this.user_id.set(user_id);
+
+    this.usersService.activateUser(this.admin_id(), this.user_id()).subscribe(
+      (response: UserResponse) => {
+        this.status.set(response.status);
+        this.message.set(response.message);
+      },
+      (error: errorResponse) => {
+        console.log('An error occurred: ', error);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
   }
@@ -52,9 +74,10 @@ export class GetUsers implements OnInit {
       (response: UserResponse) => {
         this.users.set(response.data.users);
       },
-      (error: any) => {
+      (error: errorResponse) => {
         console.log('An error occurred: ', error);
-        this.error.set(error.error.message);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
   }

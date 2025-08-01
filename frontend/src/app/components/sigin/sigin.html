@@ -1,10 +1,20 @@
 <div class="container-fluid px-1 py-1 mx-auto">
-  <!-- display message from backend on DOM -->
-  @if (message) {
+  @if (message()) {
     <!--if success-->
-    @if (status == "success") {
+    @if (status() == "success") {
       <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Congratulations!</strong> {{ message }}
+        <strong>Congratulations!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+    } @else if (status() == "error") {
+      <!--if error-->
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>Oops!</strong> {{ message() }}
         <button
           type="button"
           class="btn-close"
@@ -13,16 +23,6 @@
         ></button>
       </div>
     }
-    <!--if error-->
-    <div class="alert alert-warning alert-dismissible fade show" role="alert">
-      <strong>Oops!</strong> {{ message }}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-      ></button>
-    </div>
   }
   <!--show alert message -->
 
@@ -56,7 +56,9 @@
                 signinForm.get("username_or_email")?.touched ||
                 signinForm.get("username_or_email")?.dirty
               ) {
-                @if (signinForm.get("username_or_email")?.hasError("required")) {
+                @if (
+                  signinForm.get("username_or_email")?.hasError("required")
+                ) {
                   <span class="fst-italic fs-6 text-danger"
                     >Username/Email is required
                   </span>
