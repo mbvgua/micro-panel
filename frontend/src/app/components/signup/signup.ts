@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Users } from '../../services/users/users';
@@ -13,6 +13,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserResponse } from '../../models/users.models';
+import { errorResponse } from '../../models/response.models';
 
 @Component({
   selector: 'app-signup',
@@ -23,33 +24,28 @@ import { UserResponse } from '../../models/users.models';
 export class Signup implements OnInit {
   constructor(private userService: Users) {}
 
-  signupForm!: FormGroup;
-  message!: string;
-  status!: string;
   router = inject(Router); //navigation to login
-  ufala!: any;
+  signupForm!: FormGroup;
+  message = signal<string>('');
+  status = signal<string>('');
 
   onSubmit() {
-    //console.log(this.signupForm.value);
     this.userService.registerAdmin(this.signupForm.value).subscribe(
       (response: UserResponse) => {
-        //console.log(response);
-        this.message = response.message;
-        this.status = response.status;
-        //console.log('the message: ', this.message);
-        //console.log('the status: ', this.status);
+        this.message.set(response.message);
+        this.status.set(response.status);
         setTimeout(() => {
           //redirect to login page if succesful
           this.router.navigate(['/auth/login']);
-        }, 1000);
+        }, 1500);
       },
-      (error: any) => {
-        console.log(error);
-        this.message = error.data.error;
-        this.status = error.status;
+      (error: errorResponse) => {
+        console.log('An error occurred: ', error);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
-    //this.signupForm.reset();
+    this.signupForm.reset();
   }
 
   ngOnInit(): void {

@@ -1,15 +1,36 @@
 <div class="container-fluid px-1 mx-auto">
+  @if (message()) {
+    <!--if success-->
+    @if (status() == "success") {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>congratulations!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="close"
+        ></button>
+      </div>
+    } @else if (status() == "error") {
+      <!--if error-->
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>oops!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="close"
+        ></button>
+      </div>
+    }
+  }
+  <!--show alert message -->
   <div class="row d-flex justify-content-center">
     <div class="text-center">
-      <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
       <h3>Add User Loans into the System</h3>
-      <!--<p class="text-primary fs-5">-->
-      <!--  Start managing your birds the smart way.<br />-->
-      <!--  It only takes a minute to get set up-->
-      <!--</p>-->
       <div class="card">
         <form
-          [formGroup]="addLoansForm"
+          [formGroup]="addLoanForm"
           (ngSubmit)="addLoan()"
           class="form-card"
         >
@@ -29,12 +50,10 @@
               />
 
               @if (
-                addLoansForm.get("microfinance_id")?.touched ||
-                addLoansForm.get("microfinance_id")?.dirty
+                addLoanForm.get("microfinance_id")?.touched ||
+                addLoanForm.get("microfinance_id")?.dirty
               ) {
-                @if (
-                  addLoansForm.get("microfinance_id")?.hasError("required")
-                ) {
+                @if (addLoanForm.get("microfinance_id")?.hasError("required")) {
                   <div class="form-text text-danger">
                     Microfinance number is required
                   </div>
@@ -53,20 +72,20 @@
                 placeholder="Enter the user id"
               />
               @if (
-                addLoansForm.get("user_id")?.touched ||
-                addLoansForm.get("user_id")?.dirty
+                addLoanForm.get("user_id")?.touched ||
+                addLoanForm.get("user_id")?.dirty
               ) {
-                @if (addLoansForm.get("user_id")?.hasError("required")) {
-                  <div class="form-text text-danger">user_id is required</div>
+                @if (addLoanForm.get("user_id")?.hasError("required")) {
+                  <div class="form-text text-danger">User id is required</div>
                 }
-                @if (addLoansForm.get("user_id")?.hasError("maxlength")) {
+                @if (addLoanForm.get("user_id")?.hasError("maxlength")) {
                   <div class="form-text text-danger">
-                    user_id cannot be more than 20 characters long
+                    User id cannot be more than 20 characters long
                   </div>
                 }
-                @if (addLoansForm.get("user_id")?.hasError("minlength")) {
+                @if (addLoanForm.get("user_id")?.hasError("minlength")) {
                   <div class="form-text text-danger">
-                    user_id cannot be less than 3 characters long
+                    User id cannot be less than 3 characters long
                   </div>
                 }
               }
@@ -90,10 +109,10 @@
                 placeholder="Enter the loan type"
               />
               @if (
-                addLoansForm.get("type")?.touched ||
-                addLoansForm.get("type")?.dirty
+                addLoanForm.get("type")?.touched ||
+                addLoanForm.get("type")?.dirty
               ) {
-                @if (addLoansForm.get("type")?.hasError("required")) {
+                @if (addLoanForm.get("type")?.hasError("required")) {
                   <div class="form-text text-danger">Loan type is required</div>
                 }
               }
@@ -111,11 +130,11 @@
                 placeholder="Enter the repayment period"
               />
               @if (
-                addLoansForm.get("repayment_period")?.touched ||
-                addLoansForm.get("repayment_period")?.dirty
+                addLoanForm.get("repayment_period")?.touched ||
+                addLoanForm.get("repayment_period")?.dirty
               ) {
                 @if (
-                  addLoansForm.get("repayment_period")?.hasError("required")
+                  addLoanForm.get("repayment_period")?.hasError("required")
                 ) {
                   <div class="form-text text-danger">
                     Repayment period is required
@@ -143,10 +162,10 @@
                 placeholder="Enter the amount"
               />
               @if (
-                addLoansForm.get("amount")?.touched ||
-                addLoansForm.get("amount")?.dirty
+                addLoanForm.get("amount")?.touched ||
+                addLoanForm.get("amount")?.dirty
               ) {
-                @if (addLoansForm.get("amount")?.hasError("required")) {
+                @if (addLoanForm.get("amount")?.hasError("required")) {
                   <div class="form-text text-danger">
                     Amount in Ksh is required
                   </div>
@@ -166,10 +185,10 @@
                 placeholder="Enter the interest rate"
               />
               @if (
-                addLoansForm.get("interest_rate")?.touched ||
-                addLoansForm.get("interest_rate")?.dirty
+                addLoanForm.get("interest_rate")?.touched ||
+                addLoanForm.get("interest_rate")?.dirty
               ) {
-                @if (addLoansForm.get("interest_rate")?.hasError("required")) {
+                @if (addLoanForm.get("interest_rate")?.hasError("required")) {
                   <div class="form-text text-danger">
                     Interest rate is required
                   </div>
@@ -199,11 +218,11 @@
                   placeholder="Enter the guarantor id "
                 />
                 @if (
-                  addLoansForm.get("guarantor_details.id")?.touched ||
-                  addLoansForm.get("guarantor_details.id")?.dirty
+                  addLoanForm.get("guarantor_details.id")?.touched ||
+                  addLoanForm.get("guarantor_details.id")?.dirty
                 ) {
                   @if (
-                    addLoansForm
+                    addLoanForm
                       .get("guarantor_details.id")
                       ?.hasError("required")
                   ) {
@@ -225,11 +244,11 @@
                   placeholder="Enter the phone number"
                 />
                 @if (
-                  addLoansForm.get("guarantor_details.phone_number")?.touched ||
-                  addLoansForm.get("guarantor_details.phone_number")?.dirty
+                  addLoanForm.get("guarantor_details.phone_number")?.touched ||
+                  addLoanForm.get("guarantor_details.phone_number")?.dirty
                 ) {
                   @if (
-                    addLoansForm
+                    addLoanForm
                       .get("guarantor_details.phone_number")
                       ?.hasError("required")
                   ) {
@@ -238,7 +257,7 @@
                     </div>
                   }
                   @if (
-                    addLoansForm
+                    addLoanForm
                       .get("guarantor_details.phone_number")
                       ?.hasError("minlength")
                   ) {
@@ -247,7 +266,7 @@
                     </div>
                   }
                   @if (
-                    addLoansForm
+                    addLoanForm
                       .get("guarantor_details.phone_number")
                       ?.hasError("maxlength")
                   ) {
@@ -274,16 +293,20 @@
                   placeholder="example@gmail.com"
                 />
                 @if (
-                  addLoansForm.get("guarantor_details.email")?.touched ||
-                  addLoansForm.get("guarantor_details.email")?.dirty
+                  addLoanForm.get("guarantor_details.email")?.touched ||
+                  addLoanForm.get("guarantor_details.email")?.dirty
                 ) {
                   @if (
-                    addLoansForm.get("guarantor_details.email")?.hasError("required")
+                    addLoanForm
+                      .get("guarantor_details.email")
+                      ?.hasError("required")
                   ) {
                     <div class="form-text text-danger">Email is required</div>
                   }
                   @if (
-                    addLoansForm.get("guarantor_details.email")?.hasError("email")
+                    addLoanForm
+                      .get("guarantor_details.email")
+                      ?.hasError("email")
                   ) {
                     <div class="form-text text-danger">
                       Please input a valid email
@@ -303,11 +326,11 @@
                   placeholder="Enter the phone number"
                 />
                 @if (
-                  addLoansForm.get("guarantor_details.relationship")?.touched ||
-                  addLoansForm.get("guarantor_details.relationship")?.dirty
+                  addLoanForm.get("guarantor_details.relationship")?.touched ||
+                  addLoanForm.get("guarantor_details.relationship")?.dirty
                 ) {
                   @if (
-                    addLoansForm
+                    addLoanForm
                       .get("guarantor_details.relationship")
                       ?.hasError("required")
                   ) {
@@ -325,7 +348,7 @@
           <div class="row justify-content-center mt-4">
             <div class="col-sm-6 d-grid">
               <button
-                [disabled]="addLoansForm.invalid"
+                [disabled]="addLoanForm.invalid"
                 class="btn btn-primary btn-lg text-capitalize"
               >
                 create loan

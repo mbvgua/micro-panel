@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,6 +9,7 @@ import {
 import { Users } from '../../../../services/users/users';
 import { IUsers, UserResponse } from '../../../../models/users.models';
 import { LocalStorage } from '../../../../services/local-storage/local-storage';
+import { errorResponse } from '../../../../models/response.models';
 
 @Component({
   selector: 'app-add-users',
@@ -21,9 +22,9 @@ export class AddUsers implements OnInit {
     private userService: Users,
     private localStorageService: LocalStorage,
   ) {}
-  //build the response and error vars
-  message!: string;
-  status!: string;
+
+  message = signal<string>('');
+  status = signal<string>('');
   addUserForm!: FormGroup;
   user!: {};
 
@@ -41,18 +42,19 @@ export class AddUsers implements OnInit {
       phone_number: this.addUserForm.get('phone_number')?.value,
       password: this.addUserForm.get('password')?.value,
     };
-    console.log(this.user);
+
     this.userService.addUser(this.user).subscribe(
       (response: UserResponse) => {
-        this.status = response.status;
-        this.message = response.message;
+        this.status.set(response.status);
+        this.message.set(response.message);
       },
-      (error: any) => {
+      (error: errorResponse) => {
         console.log('An error occurred: ', error);
-        this.message = error.error.data.error;
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
-    this.addUserForm.reset;
+    this.addUserForm.reset();
   }
 
   ngOnInit(): void {
@@ -73,12 +75,6 @@ export class AddUsers implements OnInit {
         Validators.maxLength(10),
       ]),
       password: new FormControl('', Validators.required),
-    });
-
-    this.addUser();
-
-    this.addUserForm.valueChanges.subscribe(() => {
-      this.message = '';
     });
   }
 }

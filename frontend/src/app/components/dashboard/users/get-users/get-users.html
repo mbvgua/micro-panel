@@ -1,5 +1,31 @@
 <div class="text-center">
-  <!--<div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">-->
+  @if (message()) {
+    <!--if success-->
+    @if (status() == "success") {
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>congratulations!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="close"
+        ></button>
+      </div>
+    } @else if (status() == "error") {
+      <!--if error-->
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <strong>oops!</strong> {{ message() }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="close"
+        ></button>
+      </div>
+    }
+  }
+  <!--show alert message -->
+
   <h3>Users List</h3>
   <table class="table table-secondary table-striped table-hover">
     <thead>
@@ -17,15 +43,17 @@
     <tbody>
       @for (user of users(); track user.id) {
         <tr>
-          <th scope="row">1</th>
-          <td>{{ user.microfinance_id }}</td>
+          <td scope="row">1</td>
+          <td>{{ user.id }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.phone_number }}</td>
           <td>{{ user.role }}</td>
           <td>{{ user.status }}</td>
           <td class="d-grid gap-3">
+            <!--start update button-->
             <button
+              id="{{ user.id }}"
               type="button"
               class="btn btn-primary bt-sm"
               data-bs-toggle="modal"
@@ -33,14 +61,37 @@
             >
               <a (click)="updateUser(user.id)"> Update </a>
             </button>
+            <!--end update button-->
 
+            <!--start activate button-->
+            <!--show is user is not an admin/ status is pending-->
+            @if (
+              (user.role == "member" || user.role == "support") &&
+              user.status == "pending"
+            ) {
+              <button
+                id="{{ user.id }}"
+                type="button"
+                class="btn btn-primary bt-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                <a (click)="activateUser(user.id)"> Activate </a>
+              </button>
+            }
+            <!--end activate button-->
+
+            <!--start delete button-->
             <button
               id="{{ user.id }}"
               type="button"
               class="btn btn-primary bt-sm"
             >
-              <a (click)="deleteUser(user.id)"> Delete </a>
+              <a (click)="deleteUser(user.id)">
+                <i class="bi bi-trash3-fill"></i>Delete
+              </a>
             </button>
+            <!--end delete button-->
           </td>
         </tr>
       } @empty {

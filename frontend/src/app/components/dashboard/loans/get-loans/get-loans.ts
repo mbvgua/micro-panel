@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Loans } from '../../../../services/loans/loans';
 import { DetailedLoans, LoanResponse } from '../../../../models/loans.models';
 import { LocalStorage } from '../../../../services/local-storage/local-storage';
+import { errorResponse } from '../../../../models/response.models';
 
 @Component({
   selector: 'app-get-loans',
@@ -16,7 +17,8 @@ export class GetLoans implements OnInit {
   ) {}
 
   loans = signal<DetailedLoans[]>([]);
-  error = signal<string>('');
+  status = signal<string>('');
+  message = signal<string>('');
   admin_id = signal<string>('');
   loan_id = signal<string>('');
   updateLoanForm = signal<string>('');
@@ -25,8 +27,20 @@ export class GetLoans implements OnInit {
   deleteLoan(loan_id: string) {
     this.loan_id.set(loan_id);
     this.admin_id.set(this.localStorageService.getItem('id') ?? '');
-    console.log(this.admin_id());
+
+    this.loansService.deleteLoan(this.admin_id(), this.loan_id()).subscribe(
+      (response: LoanResponse) => {
+        this.status.set(response.status);
+        this.message.set(response.message);
+      },
+      (error: errorResponse) => {
+        console.log('An error occurred: ', error);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
+      },
+    );
   }
+
   //updateLoan
   updateLoan(loan_id: string) {
     this.loan_id.set(loan_id);
@@ -38,8 +52,10 @@ export class GetLoans implements OnInit {
       (response: LoanResponse) => {
         this.loans.set(response.data.detailed_loans);
       },
-      (error: any) => {
-        this.error.set(error.error.data);
+      (error: errorResponse) => {
+        console.log('An error occurred: ', error);
+        this.status.set(error.error.status);
+        this.message.set(error.error.message);
       },
     );
   }
