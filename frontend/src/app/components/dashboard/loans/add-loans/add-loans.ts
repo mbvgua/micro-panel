@@ -24,14 +24,15 @@ export class AddLoans implements OnInit {
 
   message = signal<string>('');
   status = signal<string>('');
+  admin_id!: string;
   addLoanForm!: FormGroup;
   loan!: {};
 
   // add loans
   addLoan() {
-    console.log(this.addLoanForm.value)
+    this.admin_id = this.localStorageService.getItem('id') ?? '';
+
     this.loan = {
-      admin_id: this.localStorageService.getItem('id'),
       microfinance_id: this.addLoanForm.get('microfinance_id')?.value,
       user_id: this.addLoanForm.get('user_id')?.value,
       type: this.addLoanForm.get('type')?.value,
@@ -41,7 +42,7 @@ export class AddLoans implements OnInit {
       guarantor_details: this.addLoanForm.get('guarantor_details')?.value,
     };
 
-    this.loanService.addLoan(this.loan).subscribe(
+    this.loanService.addLoan(this.admin_id, this.loan).subscribe(
       (response: LoanResponse) => {
         this.status.set(response.status);
         this.message.set(response.message);
@@ -52,6 +53,8 @@ export class AddLoans implements OnInit {
         this.message.set(error.error.message);
       },
     );
+    //reset form
+    this.addLoanForm.reset()
   }
 
   ngOnInit(): void {
