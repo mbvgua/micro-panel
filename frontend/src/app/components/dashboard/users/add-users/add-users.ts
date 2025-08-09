@@ -30,7 +30,6 @@ export class AddUsers implements OnInit {
 
   // add user on submit
   addUser() {
-    // define user value
     // HACK:since admin Id is gotten from local storage
     this.user = {
       admin_id: this.localStorageService.getItem('id'),
