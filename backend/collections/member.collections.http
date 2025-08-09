@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
     "admin_id":"09d05331-7977-423f-9dcf-905c46084aa9",
-    "microfinance_id":"c23848b5-4408-4671-8d76-83b6fb30e325",
+    "microfinance_id":"46736c80-8d55-44da-904b-b428f0c66165",
     "firstname":"olivia",
     "lastname":"dean",
     "username":"dinero",
@@ -23,11 +23,11 @@ GET http://localhost:4000/v1/members
 ###
 # activate exixting members in system
 
-PUT http://localhost:4000/v1/members/activate/2138bb62-3ac2-4960-bf2a-29860462632a
+PUT http://localhost:4000/v1/members/activate/09d05331-7977-423f-9dcf-905c46084aa9
 Content-Type: application/json
 
 {
-    "user_id":"7b80a07f-5c33-4cac-8518-cd8732ac7f3d"
+    "user_id":"4fe93b1e-194c-4570-b30a-9acd44419463"
 }
 ###
 # update user details
