@@ -4,10 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
+        "comment":"dev environment",
         "test": "jest --watch --verbose --detectOpenHandles",
-        "start:build": "tsc -w",
-        "start:run": "nodemon dist/server.js",
-        "start": "concurrently npm:start:*"
+        "start:dev:build": "tsc -w",
+        "start:dev:run": "nodemon dist/server.js",
+        "start:dev": "concurrently npm:start:dev:*",
+        "comment":"prod environment",
+        "start:prod:build":"tsc",
+        "start:prod":"node dist/server.js"
     },
     "keywords": [],
     "author": "",
