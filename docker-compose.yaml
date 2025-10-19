@@ -1,0 +1,19 @@
+services:
+
+  frontend:
+    container_name: micropanel-frontend
+    image: mbvgua/micropanel-frontend
+    ports:
+      - "4200:4200"
+    restart: unless-stopped
+
+  backend:
+    container_name: micropanel-backend
+    image: mbvgua/micropanel-backend
+    ports:
+      - "4000:4000"
+    restart: unless-stopped
+
+  # NOTE: quite tricky to implement
+  # database:
+
