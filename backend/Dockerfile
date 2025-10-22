@@ -25,6 +25,6 @@ COPY . .
 
 # stsrt the prod server, which compiles the needed js files
 # else the dev server keeps you in a loop
-RUN pnpm start:prod:build
+RUN pnpm prod:build
 
-CMD ["pnpm","start:prod"]
+CMD ["pnpm","prod"]
