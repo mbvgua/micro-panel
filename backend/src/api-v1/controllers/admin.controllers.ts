@@ -53,7 +53,7 @@ export async function adminRegistration(request: Request, response: Response) {
     connection.release();
 
     //send response
-    const message: string = "Admin successfully registered";
+    const message: string = `${username} successfully registered`;
     const data = {
       users: {
         id,
@@ -103,7 +103,7 @@ export async function adminLogin(request: Request, response: Response) {
         );
 
         if (is_match) {
-          const message: string = "Successful admin login";
+          const message: string = `Successful login ${users[0].username}`;
           const data = {
             users: {
               id: users[0].id,
@@ -153,7 +153,7 @@ export async function adminLogin(request: Request, response: Response) {
           users[0].hashed_password,
         );
         if (is_match) {
-          const message: string = "Successful admin login";
+          const message: string = `Successful login ${users[0].username}`;
           const data = {
             users: {
               id: users[0].id,

@@ -29,6 +29,14 @@ More detailed info on project setup can be found within each subdirectory's READ
 >
 > The backend is also built in `typescript` and compiled to `javascript` so ensure you have it installed to prevent any possible errors. Some database scripting with `python` will be added, hence it would be nice to also have it installed on your system.
 
+## Setup with Docker
+
+To run the project with docker, simply add the database password of your choosing in the root project directory `.env` file, then start it:
+```bash
+cp .env-example .env
+# open the .env file and add missing values
+docker compose up
+```
 ## Trade-offs
 
 1. Did not use Laravel as the backend stack: due to time constraints, did not see it feasible to both understand and use laravel for building the backend. As I needed to move fast, I will employ something that I am familiar with.
@@ -38,4 +46,4 @@ More detailed info on project setup can be found within each subdirectory's READ
 
 1. Python scripting: build a python script to setup and teardown the db on one command. Recently learnt this and it will be fun to implement this here also.
 1. Validation of inputs passed both in the frontend and the backend. Appropriate error messages and response codes also make debugging easier.
-1. Basic testing of the backend module with jest.
+3. Basic testing of the backend module with jest.

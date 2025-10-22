@@ -1,19 +1,39 @@
 services:
 
   frontend:
-    container_name: micropanel-frontend
+    container_name: micropanel_frontend
     image: mbvgua/micropanel-frontend
     ports:
       - "4200:4200"
     restart: unless-stopped
 
   backend:
-    container_name: micropanel-backend
+    container_name: micropanel_backend
     image: mbvgua/micropanel-backend
     ports:
       - "4000:4000"
     restart: unless-stopped
+    environment:
+      # NOTE: this var is passed to backend sqlConfig object host var
+      # allowing it to connect to the database container, since it
+      # cant access the db in the "localhost" container
+      - DB_HOST=${DB_HOST}
+    depends_on:
+    - database
 
-  # NOTE: quite tricky to implement
-  # database:
+  database:
+    container_name: micropanel_database
+    image: mbvgua/micropanel-database
+    # NOTE: not needed, useful if you want to connect to db from localhost
+    # though docker exec might be used also
+    ports:
+      - "3307:3306"
+    restart: unless-stopped
+    environment:
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_store:/var/lib/mysql
+
+volumes:
+  db_store:
 
