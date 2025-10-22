@@ -32,3 +32,10 @@ To get the server up and running, simply begin by installing the desired package
     $ npm start
 ```
 
+## Setup with Docker
+
+To run the frontend application with docker:
+
+```bash
+docker run -p 4000:4000 mbvgua/micropanel-backend:latest
+```

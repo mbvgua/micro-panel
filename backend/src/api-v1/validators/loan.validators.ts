@@ -1,12 +1,6 @@
 import Joi from "joi";
 
 export const loanSchema = Joi.object({
-  admin_id: Joi.string().required().trim().messages({
-    "string.base": "Admin id must be a string",
-    "any.required": "Admin id is required",
-    "string.trim":
-      "Admin id cannot contain any whistespace character before or after it",
-  }),
   user_id: Joi.string().required().trim().messages({
     "string.base": "User id must be a string",
     "any.required": "User id is required",

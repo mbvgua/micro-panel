@@ -8,7 +8,7 @@ import {
 
 const loanRouter = Router();
 
-loanRouter.post("/loans", applyLoan);
+loanRouter.post("/loans/:id", applyLoan);
 loanRouter.get("/loans", getLoans);
 loanRouter.put("/loans/update/:id", updateLoan);
 loanRouter.put("/loans/delete/:id", deleteLoan);

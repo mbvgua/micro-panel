@@ -12,8 +12,8 @@ export class Loans {
   constructor(private http: HttpClient) {}
 
   //create loans
-  addLoan(newLoan: any): Observable<any> {
-    return this.http.post(this.baseUrl, newLoan);
+  addLoan(admin_id: string, loan_details: any): Observable<any> {
+    return this.http.post(this.baseUrl + `/${admin_id}`, loan_details);
   }
 
   //get loans
