@@ -59,11 +59,10 @@ CREATE PROCEDURE activateUserById(
     IN user_id VARCHAR(255)
 )
 BEGIN
-    UPDATE users
-    SET status="active" WHERE id=user_id;
+    UPDATE users SET status="active" WHERE id=user_id;
 END#
 
---updateUser
+-- updateUser
 CREATE PROCEDURE updateUser(
     IN user_id VARCHAR(255),
     IN new_microfinance_id VARCHAR(255),
@@ -78,7 +77,7 @@ BEGIN
     UPDATE users SET microfinance_id=new_microfinance_id,firstname=new_firstname,lastname=new_lastname,username=new_username,email=new_email,phone_number=new_phone_number,hashed_password=new_hashed_password WHERE id=user_id;
 END#
 
---deleteUser
+-- deleteUser
 CREATE PROCEDURE deleteUser(
     IN user_id VARCHAR(255)
 )
@@ -107,7 +106,7 @@ BEGIN
     SELECT * FROM microfinances WHERE is_deleted=0;
 END#
 
---getMicrofinanceById
+-- getMicrofinanceById
 CREATE PROCEDURE getMicrofinanceById(
     IN microfinance_id VARCHAR(255)
 )
@@ -115,7 +114,7 @@ BEGIN
     SELECT * FROM microfinances WHERE id=microfinance_id AND is_deleted=0;
 END#
 
---updateMicrofinance
+-- updateMicrofinance
 CREATE PROCEDURE updateMicrofinance(
     IN microfinance_id VARCHAR(255),
     IN new_reg_number VARCHAR(100),
@@ -128,7 +127,7 @@ BEGIN
     UPDATE microfinances SET reg_number=new_reg_number,name=new_name,email=new_email,phone_number=new_phone_number,location=new_location WHERE id=microfinance_id;
 END#
 
---deleteMicrofinance
+-- deleteMicrofinance
 CREATE PROCEDURE deleteMicrofinance(
     IN microfinance_id VARCHAR(255)
 )
@@ -166,7 +165,7 @@ BEGIN
     SELECT * FROM loans WHERE is_deleted=0;
 END#
 
---getLoanById
+-- getLoanById
 CREATE PROCEDURE getLoanById(
     IN loan_id VARCHAR(255)
 )
@@ -180,7 +179,7 @@ BEGIN
     SELECT * FROM detailed_loans_view;
 END#
 
---updateLoan
+-- updateLoan
 CREATE PROCEDURE updateLoan(
     IN loan_id VARCHAR(255),
     IN new_type ENUM('emergency','development','work','miscallenous'),
@@ -192,7 +191,7 @@ BEGIN
     UPDATE loans SET type=new_type,amount=new_amount,interest_rate=new_interest_rate,repayment_period=new_repayment_period WHERE id=loan_id;
 END#
 
---deleteLoan
+-- deleteLoan
 CREATE PROCEDURE deleteLoan(
     IN loan_id VARCHAR(255)
 )

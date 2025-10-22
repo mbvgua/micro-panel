@@ -15,9 +15,6 @@ import {
   response500Helper,
 } from "../helpers/response.helpers";
 
-//BUG: major bug will add loan for entire length of loans array.
-//Break it and build from scratch. Too many if...else are confusing
-//reduce those.
 export async function applyLoan(request: Request, response: Response) {
   /*
    * admin applies on behalf of member. A member recives loan if:
@@ -25,8 +22,8 @@ export async function applyLoan(request: Request, response: Response) {
    * loan will default to pending after submission.
    */
   const id = uid();
+  const admin_id = request.params.id;
   const {
-    admin_id,
     user_id,
     microfinance_id,
     type,
@@ -40,23 +37,20 @@ export async function applyLoan(request: Request, response: Response) {
     //validate request body
     validationHelper(request, response, loanSchema);
 
-    //if no validation error
+    //if no validation error get admin user
     const connection = await pool.getConnection();
     const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
       admin_id,
     ]);
-    const user = rows[0] as Users[];
-    connection.release();
+    const admin_user = rows[0] as Users[];
 
-    // NOTE: 1st if check -> ensure user applying is an admin
-    if (user[0].role == "admin") {
+    //ensure user applying is an admin
+    if (admin_user[0].role == "admin") {
       const [rows]: any = await connection.execute(`CALL getUserById(?);`, [
         user_id,
       ]);
       const applicant_user = rows[0] as Users[];
-      connection.release();
 
-      //NOTE: 2nd if check -> ensure user being applied for is active
       if (applicant_user.length > 0 && applicant_user[0].status == "active") {
         // ensure no pending loans
         const [results]: any = await connection.execute(
@@ -66,71 +60,61 @@ export async function applyLoan(request: Request, response: Response) {
         const loans = results[0] as Loans[];
         connection.release();
 
-        //NOTE: 3rd if check -> check if active member has any loans
+        // check if active member has any loans
         if (loans.length > 0) {
-          //NOTE:loops through loans array
-          for (let i = 0; i < loans.length; i++) {
-            //NOTE: 4th if check -> if any is pending, no loan
-            if (loans[i].status == "pending") {
-              const message: string = "Forbidden. User has pending loans";
-              const data = {
-                users: {
-                  id: applicant_user[0].id,
-                  microfinance_id: applicant_user[0].microfinance_id,
-                  username: applicant_user[0].username,
-                  email: applicant_user[0].email,
-                  role: applicant_user[0].role,
-                  status: applicant_user[0].status,
-                },
-                loans: { loans },
-              };
+          // NOTE: loops through loans array see if any is pending
+          // evaluate to true if any loan has a pending status,
+          // else it evaluetes to false
+          const has_pending_loan = loans.some(
+            (loan) => loan.status === LoanStatus.pending,
+          );
 
-              return response403Helper(response, message, data);
-            } else {
-              //NOTE:close 4th if check -> if loans exist, but none is existing, issue loans
-              const [rows]: any = await connection.execute(
-                `CALL addLoan(?,?,?,?,?,?,?,?);`,
-                [
-                  id,
-                  user_id,
-                  microfinance_id,
-                  type,
-                  amount,
-                  interest_rate,
-                  repayment_period,
-                  guarantor_details,
-                ],
-              );
-              const user_loan = rows[0] as Loans[];
-              connection.release();
+          if (has_pending_loan) {
+            const message: string = "Forbidden. User has pending loans";
+            const data = {
+              users: {
+                id: applicant_user[0].id,
+                microfinance_id: applicant_user[0].microfinance_id,
+                username: applicant_user[0].username,
+                email: applicant_user[0].email,
+                role: applicant_user[0].role,
+                status: applicant_user[0].status,
+              },
+              loans: { loans },
+            };
 
-              const message: string = "Loan successfully created";
-              const data = {
-                users: {
-                  id: applicant_user[0].id,
-                  microfinance_id: applicant_user[0].microfinance_id,
-                  username: applicant_user[0].username,
-                  email: applicant_user[0].email,
-                  role: applicant_user[0].role,
-                  status: applicant_user[0].status,
-                },
-                loans: {
-                  id: user_loan[0].id,
-                  user_id: user_loan[0].user_id,
-                  microfinance_id: user_loan[0].microfinance_id,
-                  amount: user_loan[0].amount,
-                  status: user_loan[0].status,
-                  disbursment_date: user_loan[0].disbursment_date,
-                  guarantor_details: user_loan[0].guarantor_details,
-                },
-              };
+            return response403Helper(response, message, data);
+          } else {
+            // if all user loans are approved
+            await connection.execute(`CALL addLoan(?,?,?,?,?,?,?,?);`, [
+              id,
+              user_id,
+              microfinance_id,
+              type,
+              amount,
+              interest_rate,
+              repayment_period,
+              guarantor_details,
+            ]);
+            const user_loan = rows[0] as Loans[];
+            connection.release();
 
-              return response201Helper(response, message, data);
-            }
+            const message: string = "Loan successfully created";
+            const data = {
+              users: {
+                id: applicant_user[0].id,
+                microfinance_id: applicant_user[0].microfinance_id,
+                username: applicant_user[0].username,
+                email: applicant_user[0].email,
+                role: applicant_user[0].role,
+                status: applicant_user[0].status,
+              },
+            };
+
+            return response201Helper(response, message, data);
           }
         } else {
-          //NOTE: close 3rd if check -> if user status="active" and no loans
-          // issue the loans
+          // if user status="active" and no loans issue the loans
           await connection.execute(`CALL addLoan(?,?,?,?,?,?,?,?);`, [
             id,
             user_id,
@@ -159,8 +143,7 @@ export async function applyLoan(request: Request, response: Response) {
           return response201Helper(response, message, data);
         }
       } else {
-        // NOTE: close 2nd if check -> if user status is pending.
-        // or array length is 0. no loan
+        // if user status is pending. or array length is 0. no loan
         const message: string =
           "Forbidden. User does not exist or has a pending status.";
         const data = {
@@ -176,23 +159,24 @@ export async function applyLoan(request: Request, response: Response) {
 
         return response403Helper(response, message, data);
       }
-    } else if (user[0].role == "member" || user[0].role == "support") {
-      // NOTE: close 1st if check -> not an admin initiating action. no loans
+    } else if (
+      admin_user[0].role == "member" ||
+      admin_user[0].role == "support"
+    ) {
       const message: string = "Unauthorized. Only admins can apply for loans";
       const data = {
         users: {
-          id: user[0].id,
-          microfinance_id: user[0].microfinance_id,
-          username: user[0].username,
-          email: user[0].email,
-          role: user[0].role,
-          status: user[0].status,
+          id: admin_user[0].id,
+          microfinance_id: admin_user[0].microfinance_id,
+          username: admin_user[0].username,
+          email: admin_user[0].email,
+          role: admin_user[0].role,
+          status: admin_user[0].status,
         },
       };
 
       return response401Helper(response, message, data);
     } else {
-      //NOTE: error check 1st if check-> if user does not exist. no loans
       const message: string = "User not found";
       const data = null;
 
